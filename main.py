@@ -1,12 +1,17 @@
-import sys,os
+import builtins
+import sys,os,json
+from os import close
 from pathlib import Path
 from typing import Optional
 from PyQt5 import QtGui
-from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QColor,QPalette
+from PyQt5.QtCore import Qt,pyqtSlot
 from PyQt5.QtWidgets import *
 import youtubedl_gui_class as MainUi
 import downloader as dl
 import youtubedl_about_class as aboutWnd
+
+from settingsGuis.themePrompt_class import Ui_ChangeTheme as ThemesGui
 
 class Program(MainUi.Ui_MainWindow):
     window = None
@@ -24,12 +29,33 @@ class Program(MainUi.Ui_MainWindow):
     bigWindowHeight = 717
     smallWindowHeight = 436
 
+    darkTheme = palette = QPalette()
+    palette.setColor(QPalette.Window, QColor(53, 53, 53))
+    palette.setColor(QPalette.WindowText, Qt.white)
+    palette.setColor(QPalette.Base, QColor(25, 25, 25))
+    palette.setColor(QPalette.AlternateBase, QColor(53, 53, 53))
+    palette.setColor(QPalette.ToolTipBase, Qt.black)
+    palette.setColor(QPalette.ToolTipText, Qt.white)
+    palette.setColor(QPalette.Text, Qt.white)
+    palette.setColor(QPalette.Button, QColor(53, 53, 53))
+    palette.setColor(QPalette.ButtonText, Qt.white)
+    palette.setColor(QPalette.BrightText, Qt.red)
+    palette.setColor(QPalette.Link, QColor(42, 130, 218))
+    palette.setColor(QPalette.Highlight, QColor(42, 130, 218))
+    palette.setColor(QPalette.HighlightedText, Qt.black)
+
+    isDarkTheme = False
+
     def setupUi(self, MainWindow):
         self.window = MainWindow
 
         resp=super().setupUi(MainWindow)
 
         self.VideoOption.setChecked(True)
+
+        self.isDarkTheme = self.GetJSON("settings.json")["isDarkTheme"]
+
+        self.ChangeTheme(self.isDarkTheme)
 
         self.ViewConsole.setStyleSheet("QCheckBox::indicator:checked"
                                        "{"
@@ -62,7 +88,40 @@ class Program(MainUi.Ui_MainWindow):
         
         self.AboutMenu.triggered.connect(self.aboutDialog.exec)
 
+        self.themeSettingGui = ThemesGui()
+        self.themeSettingPrompt = QDialog(self.window,Qt.WindowType.WindowCloseButtonHint)
+        self.themeSettingGui.setupUi(self.themeSettingPrompt)
+        self.themeSettingPrompt.setModal(True)
+        self.themeSettingGui.CancelBtn.pressed.connect(self.themeSettingPrompt.close)
+        self.themeSettingGui.OKBtn.pressed.connect(self.SaveTheme)
+
+        self.Theme.triggered.connect(self.themeSettingPrompt.exec)
+
         return resp
+    
+    def GetJSON(self,file):
+        with open(file) as j:
+            try:
+                return json.load(j)
+            except ValueError as e:
+                close(file)
+                raise Exception('Invalid json: {}'.format(e)) from None
+
+    def ChangeTheme(self,dark=None):
+        if dark == None:
+            dark = self.themeSettingGui.Dark.isChecked()
+        
+        if dark:
+            self.window.setPalette(self.darkTheme)
+        else:
+            self.window.setPalette(QPalette())
+
+    def SaveTheme(self):
+        currentSettings = self.GetJSON("settings.json")
+        currentSettings["isDarkTheme"] = self.isDarkTheme
+        json.dumps(currentSettings)
+
+        self.ChangeTheme()
     
     def ConsoleAddLine(self,text):
         self.DownloadProgress.setEnabled(True)
@@ -196,6 +255,7 @@ class Program(MainUi.Ui_MainWindow):
 
 def window():
     app = QApplication(sys.argv)
+    app.setStyle("Fusion")
     window = QMainWindow()
 
     hellowindow = Program()

@@ -1,4 +1,4 @@
 *.pyc
 .qt_for_python/*
-cpx.json
-settings.json
+.vscode/cpx.json
+.vscode/settings.json
