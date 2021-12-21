@@ -26,7 +26,7 @@ class Ui_MainWindow(object):
         font.setFamily("Segoe UI")
         MainWindow.setFont(font)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("assets/window.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("assets/ytdl.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         MainWindow.setToolTip("")
         MainWindow.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)

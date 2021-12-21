@@ -2,6 +2,7 @@ import sys,os
 from pathlib import Path
 from typing import Optional
 from PyQt5 import QtGui
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import *
 import youtubedl_gui_class as MainUi
 import downloader as dl
@@ -78,13 +79,26 @@ class Program(MainUi.Ui_MainWindow):
     def ToggleConsole(self):
         self.showConsole = not self.showConsole
         if self.showConsole:
+            self.window.setMinimumHeight(656)
             self.window.setMaximumHeight(656)
             self.window.resize(531, 656)
         else:
+            self.window.setMinimumHeight(395)
             self.window.setMaximumHeight(395)
             self.window.resize(531, 395)
 
+    def DisableDownloadGui(self,disable):
+        self.FileSizeLabel.setEnabled(not disable)
+        self.DownloadSpeedLabel.setEnabled(not disable)
+        self.ETALabel.setEnabled(not disable)
+        self.DownloadProgress.setEnabled(not disable)
+        self.DownloadButton.setEnabled(disable)
 
+        if disable:
+            self.DownloadProgress.setValue(0)
+            self.FileSizeLabel.setText("Total file size: ")
+            self.DownloadSpeedLabel.setText("Speed: ")
+            self.ETALabel.setText("ETA: ")
     
     def SetDirectory(self):
         self.FilePrompt = QFileDialog()
@@ -109,8 +123,7 @@ class Program(MainUi.Ui_MainWindow):
         print(self.output)
 
     def Download(self):
-        self.DownloadButton.setEnabled(True)
-        self.DownloadButton.setEnabled(False)
+        self.DisableDownloadGui(False)
         self.MainWidget.update()
         self.url = self.UrlTextBox.text()
 
@@ -122,7 +135,6 @@ class Program(MainUi.Ui_MainWindow):
         #print(str(Config))
         #self.ExecuteDownload(Config)
         self.ConsoleWidget.setPlainText("")
-        self.DownloadProgress.setValue(0)
         self.downloader.StartDownload(Config)
 
 
@@ -133,21 +145,25 @@ class Program(MainUi.Ui_MainWindow):
         self.ConsoleAddLine("Download complete")
 
         msg = QMessageBox()
-        msg.setIconPixmap(QtGui.QPixmap("./assets/window.png"))
+        msg.setWindowIcon(QtGui.QIcon('assets/ytdl.png'))
 
         if errorcode!=0:
-            msg.setIcon(QMessageBox.Critical)
-            msg.setText("Download failed!")
-            msg.setInformativeText("Check \"View details\" for info regarding this issue.")
+            msg.setIconPixmap(QtGui.QPixmap("assets/ytdlError.png"))
+            msg.setText("Finished downloading unsuccessfully!")
+            msg.setInformativeText("Check \"Console\" for detail regarding this issue.")
             msg.setWindowTitle("youtube-dl GUI")
             msg.setStandardButtons(QMessageBox.Ok)
         else:
-            msg.setIcon(QMessageBox.Information)
-            msg.setText("Download successful!")
+            msg.setIconPixmap(QtGui.QPixmap("assets/ytdlSuccess.png"))
+            msg.setText("Finished downloading successfully!")
             msg.setWindowTitle("youtube-dl GUI")
             msg.setStandardButtons(QMessageBox.Ok)
+        
+        msg.exec()
 
-        msg.exec_()
+        self.DisableDownloadGui(True)
+
+        
 
 
 def window():

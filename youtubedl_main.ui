@@ -38,7 +38,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>assets/window.png</normaloff>assets/window.png</iconset>
+    <normaloff>assets/ytdl.png</normaloff>assets/ytdl.png</iconset>
   </property>
   <property name="toolTip">
    <string/>
