@@ -1,1 +1,4 @@
 *.pyc
+.qt_for_python/*
+cpx.json
+settings.json

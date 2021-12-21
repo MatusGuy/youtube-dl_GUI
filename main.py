@@ -55,7 +55,7 @@ class Program(MainUi.Ui_MainWindow):
         self.downloader = dl.Downloader(".\\youtube-dl\\",self.ConsoleAddLine,self.Downloaded_Ended)
 
         self.aboutGui = aboutWnd.Ui_About()
-        self.aboutDialog = QDialog(self.window)
+        self.aboutDialog = QDialog(self.window,Qt.WindowType.WindowCloseButtonHint)
         self.aboutGui.setupUi(self.aboutDialog)
         self.aboutDialog.setModal(True)
         self.aboutGui.OKbt.pressed.connect(self.aboutDialog.close)
