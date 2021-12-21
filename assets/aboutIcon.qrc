@@ -1,0 +1,11 @@
+<RCC>
+  <qresource prefix="ytdl">
+    <file>ytdlError.png</file>
+    <file>ytdlSuccess.png</file>
+    <file>ytdl.png</file>
+  </qresource>
+  <qresource prefix="arrows">
+    <file>closedArrow.png</file>
+    <file>openedArrow.png</file>
+  </qresource>
+</RCC>

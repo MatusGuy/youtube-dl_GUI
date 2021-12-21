@@ -102,7 +102,7 @@
       </font>
      </property>
      <property name="toolTip">
-      <string/>
+      <string>Insert the YouTube video/playlist/channel you want to download from.</string>
      </property>
      <property name="whatsThis">
       <string/>
@@ -159,6 +159,9 @@
         <height>21</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Option to download audio-only. Ideal for music</string>
+      </property>
       <property name="text">
        <string>Audio-only</string>
       </property>
@@ -171,6 +174,9 @@
         <width>111</width>
         <height>20</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Option to download video and audio</string>
       </property>
       <property name="text">
        <string>Video + audio</string>
@@ -223,8 +229,11 @@
        <height>21</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>Select the output's destination</string>
+     </property>
      <property name="text">
-      <string>Set</string>
+      <string>Select</string>
      </property>
     </widget>
     <widget class="QLabel" name="DestinationLabel">
@@ -249,6 +258,9 @@
        <height>21</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>Copy the output path you selected</string>
+     </property>
      <property name="readOnly">
       <bool>true</bool>
      </property>
@@ -261,9 +273,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>370</y>
+      <y>380</y>
       <width>511</width>
-      <height>251</height>
+      <height>241</height>
      </rect>
     </property>
     <property name="palette">
@@ -377,15 +389,21 @@
      <rect>
       <x>10</x>
       <y>340</y>
-      <width>91</width>
+      <width>131</width>
       <height>20</height>
      </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="toolTip">
+     <string>Click to toggle background console output view</string>
     </property>
     <property name="layoutDirection">
      <enum>Qt::LeftToRight</enum>
     </property>
     <property name="text">
-     <string>Console</string>
+     <string>Console output</string>
     </property>
    </widget>
    <widget class="Line" name="ConsoleSeperation">
@@ -428,6 +446,9 @@
        <stylestrategy>PreferAntialias</stylestrategy>
       </font>
      </property>
+     <property name="toolTip">
+      <string>Finally, download!</string>
+     </property>
      <property name="text">
       <string>Download!</string>
      </property>
@@ -449,6 +470,9 @@
      </property>
     </widget>
     <widget class="QLabel" name="FileSizeLabel">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>350</x>
@@ -462,6 +486,9 @@
      </property>
     </widget>
     <widget class="QLabel" name="DownloadSpeedLabel">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>220</x>
@@ -488,6 +515,9 @@
      </property>
     </widget>
     <widget class="QLabel" name="ETALabel">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>130</x>
@@ -500,9 +530,22 @@
       <string>ETA:</string>
      </property>
     </widget>
+    <widget class="Line" name="DwInfoSeperation_2">
+     <property name="geometry">
+      <rect>
+       <x>330</x>
+       <y>50</y>
+       <width>20</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </widget>
    </widget>
   </widget>
-  <widget class="QMenuBar" name="menubar">
+  <widget class="QMenuBar" name="MenuBar">
    <property name="enabled">
     <bool>true</bool>
    </property>
@@ -514,23 +557,13 @@
      <height>26</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuAbout">
+   <widget class="QMenu" name="Help">
     <property name="title">
      <string>Help</string>
     </property>
-    <widget class="QMenu" name="menuLinks">
-     <property name="title">
-      <string>Support links</string>
-     </property>
-     <addaction name="actionTutorials"/>
-     <addaction name="actionDownload_CMD_version"/>
-     <addaction name="actionDocumentation"/>
-    </widget>
-    <addaction name="actionAbout_2"/>
-    <addaction name="separator"/>
-    <addaction name="menuLinks"/>
+    <addaction name="AboutMenu"/>
    </widget>
-   <addaction name="menuAbout"/>
+   <addaction name="Help"/>
   </widget>
   <action name="actionAbout">
    <property name="text">
@@ -552,7 +585,7 @@
     <string>Contact</string>
    </property>
   </action>
-  <action name="actionAbout_2">
+  <action name="About">
    <property name="text">
     <string>About</string>
    </property>
@@ -575,6 +608,31 @@
   <action name="actionDocumentation">
    <property name="text">
     <string>Documentation</string>
+   </property>
+  </action>
+  <action name="AboutMenu">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="Tutorials">
+   <property name="text">
+    <string>Tutorials</string>
+   </property>
+  </action>
+  <action name="Downloads">
+   <property name="text">
+    <string>Downloads</string>
+   </property>
+  </action>
+  <action name="Docs">
+   <property name="text">
+    <string>Documentation</string>
+   </property>
+  </action>
+  <action name="Links">
+   <property name="text">
+    <string>Support links</string>
    </property>
   </action>
  </widget>

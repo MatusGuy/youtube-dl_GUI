@@ -1,3 +1,4 @@
+from posixpath import split
 import sys,os
 import subprocess as sp
 from PyQt5 import QtCore
@@ -32,6 +33,13 @@ class Downloader(QtCore.QThread):
         cut1 = pathText.split("/")
         cut2 = cut1[len(cut1)-1].split(".")
         return cut2[len(cut2)-1]
+
+    def _GetOutput(self,outName,audioOnly=False,playlist=False):
+        tmp = "" if not audioOnly else "(tmp)"
+        if playlist:
+            return f'--output \"{outName}{tmp}\"'
+        else:
+            return f'--output \"{outName}{tmp}\"'
     
     def _GetCommand(self,params):
         downloader = f"{self.downloaderPath}{self.downloaderApp}"
@@ -43,10 +51,14 @@ class Downloader(QtCore.QThread):
             tmp = "(tmp)"
         else:
             options = f"--format {self._CutToExtension(params['OUTPUT'])} "
-        
-        output = f'--output \"{params["OUTPUT"]}{tmp}\"'
+        output = self._GetOutput(params["OUTPUT"],params["AUDIO_ONLY"],params["PLAYLIST"])
 
-        return f'{downloader} \"{params["URL"]}\" {options}{output}'
+        if params["PLAYLIST"]:
+            options += "--yes-playlist "
+
+        command = f'{downloader} \"{params["URL"]}\" {options}{output}'
+        print(command)
+        return command
 
     def Notify(self,text):
         if self.console_callback:

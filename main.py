@@ -6,6 +6,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import *
 import youtubedl_gui_class as MainUi
 import downloader as dl
+import youtubedl_about_class as aboutWnd
 
 class Program(MainUi.Ui_MainWindow):
     window = None
@@ -14,6 +15,9 @@ class Program(MainUi.Ui_MainWindow):
     audioOnly = False
     downloader = dl.Downloader()
     showConsole = False
+    
+    aboutDialog=None
+    aboutGui=None
 
     def setupUi(self, MainWindow):
         self.window = MainWindow
@@ -44,6 +48,14 @@ class Program(MainUi.Ui_MainWindow):
         #self.Downloader = dl.Downloader(".\\youtube-dl\\")
 
         self.downloader = dl.Downloader(".\\youtube-dl\\",self.ConsoleAddLine,self.Downloaded_Ended)
+
+        self.aboutGui = aboutWnd.Ui_About()
+        self.aboutDialog = QDialog(self.window)
+        self.aboutGui.setupUi(self.aboutDialog)
+        self.aboutDialog.setModal(True)
+        self.aboutGui.OKbt.pressed.connect(self.aboutDialog.close)
+        
+        self.AboutMenu.triggered.connect(self.aboutDialog.exec)
 
         return resp
     
@@ -131,6 +143,7 @@ class Program(MainUi.Ui_MainWindow):
             "URL":self.url,
             "AUDIO_ONLY":self.audioOnly,
             "OUTPUT":self.output,
+            "PLAYLIST":"/playlist?" in self.url,
         }
         #print(str(Config))
         #self.ExecuteDownload(Config)
@@ -148,13 +161,13 @@ class Program(MainUi.Ui_MainWindow):
         msg.setWindowIcon(QtGui.QIcon('assets/ytdl.png'))
 
         if errorcode!=0:
-            msg.setIconPixmap(QtGui.QPixmap("assets/ytdlError.png"))
+            msg.setIcon(QMessageBox.Critical)
             msg.setText("Finished downloading unsuccessfully!")
-            msg.setInformativeText("Check \"Console\" for detail regarding this issue.")
+            msg.setInformativeText("Check \"Console output\" for detail regarding this issue.")
             msg.setWindowTitle("youtube-dl GUI")
             msg.setStandardButtons(QMessageBox.Ok)
         else:
-            msg.setIconPixmap(QtGui.QPixmap("assets/ytdlSuccess.png"))
+            msg.setIcon(QMessageBox.Information)
             msg.setText("Finished downloading successfully!")
             msg.setWindowTitle("youtube-dl GUI")
             msg.setStandardButtons(QMessageBox.Ok)
@@ -162,9 +175,6 @@ class Program(MainUi.Ui_MainWindow):
         msg.exec()
 
         self.DisableDownloadGui(True)
-
-        
-
 
 def window():
     app = QApplication(sys.argv)
