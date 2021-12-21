@@ -56,19 +56,33 @@ class Program(MainUi.Ui_MainWindow):
         #print (txt)
         self.ConsoleWidget.appendPlainText(txt)
 
-        if "%" in txt:
+        if "%" in txt and "[download] " in txt:
             cut1 = txt.split("] ")[1]
-            cut2 = cut1.split("%")[0]
-            result = cut2.replace(" ","0")
+            cut2 = cut1.split("% ")
+            result = cut2[0].replace(" ","0")
 
             self.DownloadProgress.setValue(int(float(result)))
+
+            if not os.path.exists(self.output):
+                otherInfo = cut2[1].split(" ")
+                fileSize = otherInfo[1]
+                dwSpeed = otherInfo[3]
+                eta = otherInfo[5]
+
+                self.FileSizeLabel.setText("Total file size: "+fileSize)
+                self.DownloadSpeedLabel.setText("Speed: "+dwSpeed)
+                self.ETALabel.setText("ETA: "+eta)
+
+
 
     def ToggleConsole(self):
         self.showConsole = not self.showConsole
         if self.showConsole:
-            self.window.resize(531, 607)
+            self.window.setMaximumHeight(656)
+            self.window.resize(531, 656)
         else:
-            self.window.resize(531, 345)
+            self.window.setMaximumHeight(395)
+            self.window.resize(531, 395)
 
 
     

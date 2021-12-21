@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>531</width>
-    <height>345</height>
+    <height>395</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,13 +19,13 @@
   <property name="minimumSize">
    <size>
     <width>531</width>
-    <height>345</height>
+    <height>395</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>531</width>
-    <height>607</height>
+    <height>395</height>
    </size>
   </property>
   <property name="font">
@@ -254,44 +254,6 @@
      </property>
     </widget>
    </widget>
-   <widget class="QCommandLinkButton" name="DownloadButton">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>250</y>
-      <width>131</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Segoe UI</family>
-      <pointsize>10</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-      <stylestrategy>PreferAntialias</stylestrategy>
-     </font>
-    </property>
-    <property name="text">
-     <string>Download!</string>
-    </property>
-   </widget>
-   <widget class="QProgressBar" name="DownloadProgress">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>140</x>
-      <y>250</y>
-      <width>381</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="value">
-     <number>0</number>
-    </property>
-   </widget>
    <widget class="QPlainTextEdit" name="ConsoleWidget">
     <property name="enabled">
      <bool>true</bool>
@@ -299,7 +261,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>320</y>
+      <y>370</y>
       <width>511</width>
       <height>251</height>
      </rect>
@@ -414,19 +376,135 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>290</y>
-      <width>131</width>
+      <y>340</y>
+      <width>91</width>
       <height>20</height>
      </rect>
     </property>
-    <property name="text">
-     <string>View details</string>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
     </property>
+    <property name="text">
+     <string>Console</string>
+    </property>
+   </widget>
+   <widget class="Line" name="ConsoleSeperation">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>320</y>
+      <width>511</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QWidget" name="widget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>250</y>
+      <width>511</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <widget class="QCommandLinkButton" name="DownloadButton">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>10</y>
+       <width>131</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Segoe UI</family>
+       <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+       <stylestrategy>PreferAntialias</stylestrategy>
+      </font>
+     </property>
+     <property name="text">
+      <string>Download!</string>
+     </property>
+    </widget>
+    <widget class="QProgressBar" name="DownloadProgress">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>130</x>
+       <y>20</y>
+       <width>371</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="value">
+      <number>0</number>
+     </property>
+    </widget>
+    <widget class="QLabel" name="FileSizeLabel">
+     <property name="geometry">
+      <rect>
+       <x>350</x>
+       <y>50</y>
+       <width>151</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Total file size:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="DownloadSpeedLabel">
+     <property name="geometry">
+      <rect>
+       <x>220</x>
+       <y>50</y>
+       <width>121</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Speed:</string>
+     </property>
+    </widget>
+    <widget class="Line" name="DwInfoSeperation">
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>50</y>
+       <width>20</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </widget>
+    <widget class="QLabel" name="ETALabel">
+     <property name="geometry">
+      <rect>
+       <x>130</x>
+       <y>50</y>
+       <width>71</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>ETA:</string>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="geometry">
     <rect>
@@ -442,13 +520,12 @@
     </property>
     <widget class="QMenu" name="menuLinks">
      <property name="title">
-      <string>Links</string>
+      <string>Support links</string>
      </property>
      <addaction name="actionTutorials"/>
      <addaction name="actionDownload_CMD_version"/>
      <addaction name="actionDocumentation"/>
     </widget>
-    <addaction name="actionContact_2"/>
     <addaction name="actionAbout_2"/>
     <addaction name="separator"/>
     <addaction name="menuLinks"/>
