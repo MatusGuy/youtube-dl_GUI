@@ -19,6 +19,11 @@ class Program(MainUi.Ui_MainWindow):
     aboutDialog=None
     aboutGui=None
 
+    videos=0
+
+    bigWindowHeight = 717
+    smallWindowHeight = 436
+
     def setupUi(self, MainWindow):
         self.window = MainWindow
 
@@ -85,19 +90,28 @@ class Program(MainUi.Ui_MainWindow):
                 self.FileSizeLabel.setText("Total file size: "+fileSize)
                 self.DownloadSpeedLabel.setText("Speed: "+dwSpeed)
                 self.ETALabel.setText("ETA: "+eta)
+        
+        if "[download] Downloading" in txt and "of" in txt and "/playlist?" in self.url:
+            cut = txt.split(" ")
+            currentFilePos = cut[3]
+            listLength = cut[5]
 
-
+            self.FilesLabel.setText(f"Files: {currentFilePos}/{listLength}")
+        
+        if "[download] Destination: " in txt and "/playlist?" in self.url:
+            currentFile = txt.removeprefix("[download] Destination: ")
+            self.CurrentFile.setText("Current: "+currentFile)
 
     def ToggleConsole(self):
         self.showConsole = not self.showConsole
         if self.showConsole:
-            self.window.setMinimumHeight(656)
-            self.window.setMaximumHeight(656)
-            self.window.resize(531, 656)
+            self.window.setMinimumHeight(self.bigWindowHeight)
+            self.window.setMaximumHeight(self.bigWindowHeight)
+            self.window.resize(531, self.bigWindowHeight)
         else:
-            self.window.setMinimumHeight(395)
-            self.window.setMaximumHeight(395)
-            self.window.resize(531, 395)
+            self.window.setMinimumHeight(self.smallWindowHeight)
+            self.window.setMaximumHeight(self.smallWindowHeight)
+            self.window.resize(531, self.smallWindowHeight)
 
     def DisableDownloadGui(self,disable):
         self.FileSizeLabel.setEnabled(not disable)
@@ -105,12 +119,16 @@ class Program(MainUi.Ui_MainWindow):
         self.ETALabel.setEnabled(not disable)
         self.DownloadProgress.setEnabled(not disable)
         self.DownloadButton.setEnabled(disable)
+        self.CurrentFile.setEnabled(not disable)
+        self.FilesLabel.setEnabled(not disable)
 
         if disable:
             self.DownloadProgress.setValue(0)
             self.FileSizeLabel.setText("Total file size: ")
             self.DownloadSpeedLabel.setText("Speed: ")
             self.ETALabel.setText("ETA: ")
+            self.FilesLabel.setText("Files: ")
+            self.CurrentFile.setText("Current: ")
     
     def SetDirectory(self):
         self.FilePrompt = QFileDialog()
