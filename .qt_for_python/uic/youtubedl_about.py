@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'youtubedl_about.ui'
+# Form implementation generated from reading ui file 'c:\Users\mateus\Documents\python\youtubedl_GUI_pyqt\youtubedl_about.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.6
 #
