@@ -19,13 +19,13 @@
   <property name="minimumSize">
    <size>
     <width>531</width>
-    <height>395</height>
+    <height>436</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>531</width>
-    <height>750</height>
+    <height>436</height>
    </size>
   </property>
   <property name="palette">
@@ -453,7 +453,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>assets/ytdl.png</normaloff>assets/ytdl.png</iconset>
+    <normaloff>C:/Users/Mateus/.designer/backup/assets/ytdl.png</normaloff>C:/Users/Mateus/.designer/backup/assets/ytdl.png</iconset>
   </property>
   <property name="toolTip">
    <string/>
@@ -1037,7 +1037,14 @@
     <property name="title">
      <string>Preferences</string>
     </property>
-    <addaction name="Theme"/>
+    <widget class="QMenu" name="ThemeMenu">
+     <property name="title">
+      <string>Theme</string>
+     </property>
+     <addaction name="LightOption"/>
+     <addaction name="DarkOption"/>
+    </widget>
+    <addaction name="ThemeMenu"/>
    </widget>
    <addaction name="Preferences"/>
    <addaction name="Help"/>
@@ -1112,12 +1119,36 @@
     <string>Support links</string>
    </property>
   </action>
-  <action name="Theme">
+  <action name="LightOption">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
    <property name="text">
-    <string>Theme</string>
+    <string>Light</string>
+   </property>
+  </action>
+  <action name="DarkOption">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Dark</string>
    </property>
   </action>
  </widget>
+ <tabstops>
+  <tabstop>UrlTextBox</tabstop>
+  <tabstop>VideoOption</tabstop>
+  <tabstop>AudioOption</tabstop>
+  <tabstop>DestinationButton</tabstop>
+  <tabstop>DestinationInput</tabstop>
+  <tabstop>DownloadButton</tabstop>
+  <tabstop>ViewConsole</tabstop>
+  <tabstop>ConsoleWidget</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

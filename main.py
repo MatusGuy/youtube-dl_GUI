@@ -1,6 +1,7 @@
 import builtins
+from json import decoder
 import sys,os,json
-from os import close
+from os import close, curdir, fdopen
 from pathlib import Path
 from typing import Optional
 from PyQt5 import QtGui
@@ -11,10 +12,14 @@ import youtubedl_gui_class as MainUi
 import downloader as dl
 import youtubedl_about_class as aboutWnd
 
-from settingsGuis.themePrompt_class import Ui_ChangeTheme as ThemesGui
+#from settingsGuis.themePrompt_class import Ui_ChangeTheme as ThemesGui
+
+sjson = "settings.json"
 
 class Program(MainUi.Ui_MainWindow):
     window = None
+    app = None
+
     url = ""
     output = ""
     audioOnly = False
@@ -46,27 +51,28 @@ class Program(MainUi.Ui_MainWindow):
 
     isDarkTheme = False
 
-    def setupUi(self, MainWindow):
+    def setupUi(self, MainWindow, app):
+        self.app = app
+        self.app.setStyle("Fusion")
+
         self.window = MainWindow
 
         resp=super().setupUi(MainWindow)
 
         self.VideoOption.setChecked(True)
 
-        self.isDarkTheme = self.GetJSON("settings.json")["isDarkTheme"]
+        currentSettings,file = self.GetJSON(sjson)
+        self.isDarkTheme = currentSettings["isDarkTheme"]
+        file.close()
 
-        self.ChangeTheme(self.isDarkTheme)
+        if self.isDarkTheme:
+            self.ToDarkTheme()
+        else:
+            self.ToLightTheme()
 
-        self.ViewConsole.setStyleSheet("QCheckBox::indicator:checked"
-                                       "{"
-                                       "border-image : url(assets/openedArrow.png);"
-                                       "}"
-                                       "QCheckBox::indicator:unchecked"
-                                       "{"
-                                       "border-image : url(assets/closedArrow.png);"
-                                       "}")
-
-        #MainWindow.setWindowIcon(QtGui.QIcon().addPixmap(QtGui.QPixmap("./assets/window.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off))
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("assets/ytdl.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.window.setWindowIcon(icon)
 
         self.UrlTextBox.setText("https://www.youtube.com/watch?v=jNQXAC9IVRw")
         self.DestinationInput.setText(str(Path.home())+"\MyVideo.mp4")
@@ -86,43 +92,61 @@ class Program(MainUi.Ui_MainWindow):
         self.aboutDialog.setModal(True)
         self.aboutGui.OKbt.pressed.connect(self.aboutDialog.close)
         
-        self.AboutMenu.triggered.connect(self.aboutDialog.exec)
+        self.AboutMenu.triggered.connect(self.aboutDialog.exec_)
 
-        self.themeSettingGui = ThemesGui()
-        self.themeSettingPrompt = QDialog(self.window,Qt.WindowType.WindowCloseButtonHint)
-        self.themeSettingGui.setupUi(self.themeSettingPrompt)
-        self.themeSettingPrompt.setModal(True)
-        self.themeSettingGui.CancelBtn.pressed.connect(self.themeSettingPrompt.close)
-        self.themeSettingGui.OKBtn.pressed.connect(self.SaveTheme)
-
-        self.Theme.triggered.connect(self.themeSettingPrompt.exec)
+        self.LightOption.triggered.connect(self.ToLightTheme)
+        self.DarkOption.triggered.connect(self.ToDarkTheme)
 
         return resp
     
-    def GetJSON(self,file):
+    def GetJSON(self,file,closeFile=True):
         with open(file) as j:
             try:
-                return json.load(j)
+                return json.load(j),j
             except ValueError as e:
-                close(file)
+                if closeFile: j.close()
                 raise Exception('Invalid json: {}'.format(e)) from None
 
-    def ChangeTheme(self,dark=None):
-        if dark == None:
-            dark = self.themeSettingGui.Dark.isChecked()
-        
-        if dark:
-            self.window.setPalette(self.darkTheme)
-        else:
-            self.window.setPalette(QPalette())
+    def SetJSON(self,file,data,closeFile=True):
+        with open(file, "w") as outfile:
+            json.dump(data,outfile)
 
-    def SaveTheme(self):
-        currentSettings = self.GetJSON("settings.json")
+    def SaveTheme(self,dark):
+        self.DarkOption.setChecked(dark)
+        self.LightOption.setChecked(not dark)
+        self.isDarkTheme = self.DarkOption.isChecked()
+
+        currentSettings,file = self.GetJSON(sjson)
         currentSettings["isDarkTheme"] = self.isDarkTheme
-        json.dumps(currentSettings)
-
-        self.ChangeTheme()
+        self.SetJSON(sjson, currentSettings)
+        file.close()
     
+    def ToLightTheme(self):
+        self.app.setPalette(QPalette())
+        self.window.setPalette(QPalette())
+        self.ViewConsole.setStyleSheet("QCheckBox::indicator:checked"
+                                       "{"
+                                       "border-image : url(assets/openedArrow.png);"
+                                       "}"
+                                       "QCheckBox::indicator:unchecked"
+                                       "{"
+                                       "border-image : url(assets/closedArrow.png);"
+                                       "}")
+        self.SaveTheme(False)
+    
+    def ToDarkTheme(self):
+        self.app.setPalette(self.darkTheme)
+        self.window.setPalette(self.darkTheme)
+        self.ViewConsole.setStyleSheet("QCheckBox::indicator:checked"
+                                       "{"
+                                       "border-image : url(assets/openedArrowDark.png);"
+                                       "}"
+                                       "QCheckBox::indicator:unchecked"
+                                       "{"
+                                       "border-image : url(assets/closedArrowDark.png);"
+                                       "}")
+        self.SaveTheme(True)
+
     def ConsoleAddLine(self,text):
         self.DownloadProgress.setEnabled(True)
 
@@ -255,11 +279,11 @@ class Program(MainUi.Ui_MainWindow):
 
 def window():
     app = QApplication(sys.argv)
-    app.setStyle("Fusion")
+
     window = QMainWindow()
 
     hellowindow = Program()
-    hellowindow.setupUi(window)
+    hellowindow.setupUi(window,app)
 
     window.show()
     sys.exit(app.exec_())

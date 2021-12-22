@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'youtubedl_main.ui'
+# Form implementation generated from reading ui file '.\youtubedl_main.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.6
 #
@@ -20,8 +20,8 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
         MainWindow.setSizePolicy(sizePolicy)
-        MainWindow.setMinimumSize(QtCore.QSize(531, 395))
-        MainWindow.setMaximumSize(QtCore.QSize(531, 750))
+        MainWindow.setMinimumSize(QtCore.QSize(531, 436))
+        MainWindow.setMaximumSize(QtCore.QSize(531, 436))
         palette = QtGui.QPalette()
         brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
         brush.setStyle(QtCore.Qt.SolidPattern)
@@ -354,6 +354,8 @@ class Ui_MainWindow(object):
         self.Help.setObjectName("Help")
         self.Preferences = QtWidgets.QMenu(self.MenuBar)
         self.Preferences.setObjectName("Preferences")
+        self.ThemeMenu = QtWidgets.QMenu(self.Preferences)
+        self.ThemeMenu.setObjectName("ThemeMenu")
         MainWindow.setMenuBar(self.MenuBar)
         self.actionAbout = QtWidgets.QAction(MainWindow)
         self.actionAbout.setObjectName("actionAbout")
@@ -383,15 +385,29 @@ class Ui_MainWindow(object):
         self.Docs.setObjectName("Docs")
         self.Links = QtWidgets.QAction(MainWindow)
         self.Links.setObjectName("Links")
-        self.Theme = QtWidgets.QAction(MainWindow)
-        self.Theme.setObjectName("Theme")
+        self.LightOption = QtWidgets.QAction(MainWindow)
+        self.LightOption.setCheckable(True)
+        self.LightOption.setChecked(True)
+        self.LightOption.setObjectName("LightOption")
+        self.DarkOption = QtWidgets.QAction(MainWindow)
+        self.DarkOption.setCheckable(True)
+        self.DarkOption.setObjectName("DarkOption")
         self.Help.addAction(self.AboutMenu)
-        self.Preferences.addAction(self.Theme)
+        self.ThemeMenu.addAction(self.LightOption)
+        self.ThemeMenu.addAction(self.DarkOption)
+        self.Preferences.addAction(self.ThemeMenu.menuAction())
         self.MenuBar.addAction(self.Preferences.menuAction())
         self.MenuBar.addAction(self.Help.menuAction())
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        MainWindow.setTabOrder(self.UrlTextBox, self.VideoOption)
+        MainWindow.setTabOrder(self.VideoOption, self.AudioOption)
+        MainWindow.setTabOrder(self.AudioOption, self.DestinationButton)
+        MainWindow.setTabOrder(self.DestinationButton, self.DestinationInput)
+        MainWindow.setTabOrder(self.DestinationInput, self.DownloadButton)
+        MainWindow.setTabOrder(self.DownloadButton, self.ViewConsole)
+        MainWindow.setTabOrder(self.ViewConsole, self.ConsoleWidget)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -421,6 +437,7 @@ class Ui_MainWindow(object):
         self.ViewConsole.setText(_translate("MainWindow", "Console output"))
         self.Help.setTitle(_translate("MainWindow", "Help"))
         self.Preferences.setTitle(_translate("MainWindow", "Preferences"))
+        self.ThemeMenu.setTitle(_translate("MainWindow", "Theme"))
         self.actionAbout.setText(_translate("MainWindow", "About"))
         self.actionContacts.setText(_translate("MainWindow", "Contact"))
         self.actionContact.setText(_translate("MainWindow", "Contact"))
@@ -435,4 +452,5 @@ class Ui_MainWindow(object):
         self.Downloads.setText(_translate("MainWindow", "Downloads"))
         self.Docs.setText(_translate("MainWindow", "Documentation"))
         self.Links.setText(_translate("MainWindow", "Support links"))
-        self.Theme.setText(_translate("MainWindow", "Theme"))
+        self.LightOption.setText(_translate("MainWindow", "Light"))
+        self.DarkOption.setText(_translate("MainWindow", "Dark"))
