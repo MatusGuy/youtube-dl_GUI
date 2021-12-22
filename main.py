@@ -1,4 +1,3 @@
-import builtins
 from json import decoder
 import sys,os,json
 from os import close, curdir, fdopen
@@ -155,7 +154,7 @@ class Program(MainUi.Ui_MainWindow):
         else:
             txt=text
         #print (txt)
-        self.ConsoleWidget.appendPlainText(txt)
+        self.ConsoleOutput.appendPlainText(txt)
 
         if "%" in txt and "[download] " in txt:
             cut1 = txt.split("] ")[1]
@@ -257,7 +256,7 @@ class Program(MainUi.Ui_MainWindow):
         }
         #print(str(Config))
         #self.ExecuteDownload(Config)
-        self.ConsoleWidget.setPlainText("")
+        self.ConsoleOutput.setPlainText("")
         self.downloader.StartDownload(Config)
 
 
