@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Optional
 from PyQt5 import QtGui
 from PyQt5.QtGui import QColor,QPalette
-from PyQt5.QtCore import Qt,pyqtSlot
+from PyQt5.QtCore import QRect, Qt,pyqtSlot
 from PyQt5.QtWidgets import *
 import youtubedl_gui_class as MainUi
 import downloader as dl
@@ -30,8 +30,7 @@ class Program(MainUi.Ui_MainWindow):
 
     videos=0
 
-    bigWindowHeight = 600
-    smallWindowHeight = 480
+    console_height=89
 
     darkTheme = palette = QPalette()
     palette.setColor(QPalette.Window, QColor(53, 53, 53))
@@ -57,6 +56,9 @@ class Program(MainUi.Ui_MainWindow):
         self.window = MainWindow
 
         resp=super().setupUi(MainWindow)
+
+        self.window.resize(0,390)
+        self.ConsoleOutput.setHidden(not self.showConsole)
 
         self.VideoOption.setChecked(True)
 
@@ -194,15 +196,22 @@ class Program(MainUi.Ui_MainWindow):
             self.CurrentFile.setText("Current: "+currentFile)
 
     def ToggleConsole(self):
+
+        X,Y,WW,WH=self.window.geometry().getRect()
+        print(f"MAIN WINDOW :({X},{Y}..{WW},{WH})")
+        
+        if self.showConsole:
+            CX,CY,CW,CH =self.ConsoleOutput.geometry().getRect()
+            self.console_height=CH 
+            print(f"CONSOLE:({CX},{CY}..{CW},{CH})")
+        
         self.showConsole = not self.showConsole
         if self.showConsole:
-            self.window.setMinimumHeight(self.bigWindowHeight)
-            self.window.setMaximumHeight(self.bigWindowHeight)
-            self.window.resize(531, self.bigWindowHeight)
+            self.window.resize(WW,WH+self.console_height)
         else:
-            self.window.setMinimumHeight(self.smallWindowHeight)
-            self.window.setMaximumHeight(self.smallWindowHeight)
-            self.window.resize(531, self.smallWindowHeight)
+            self.window.resize(WW,WH-self.console_height)
+        
+        self.ConsoleOutput.setHidden(not self.showConsole)
 
     def DisableDownloadGui(self,disable):
         self.FileSizeLabel.setEnabled(not disable)
