@@ -179,15 +179,20 @@ class Program(MainUi.Ui_MainWindow):
                     self.ETALabel.setText("ETA: "+eta)
         
         if "[download] Downloading" in txt and "of" in txt and "/playlist?" in self.url:
-            cut = txt.split(" ")
-            currentFilePos = cut[3]
-            listLength = cut[5]
+            cut1 = txt.split(" ")
+            currentFilePos = cut1[3]
+            listLength = cut1[5]
 
             self.FilesLabel.setText(f"Files: {currentFilePos}/{listLength}")
+        else:
+            self.FilesLabel.setText("Files: 1/1")
         
-        if "[download] Destination: " in txt and "/playlist?" in self.url:
-            currentFile = txt.removeprefix("[download] Destination: ")
-            self.CurrentFile.setText("Current: \n"+currentFile)
+        if "[download] Destination: " in txt:
+            prefixRemoval1 = txt.removeprefix("[download] Destination: ")
+            cut1 = prefixRemoval1.split("\\")
+            currentFile = cut1[len(cut1)-1]
+
+            self.CurrentFile.setText("Current: "+currentFile)
 
     def ToggleConsole(self):
         self.showConsole = not self.showConsole
