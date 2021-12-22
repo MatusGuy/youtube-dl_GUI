@@ -165,14 +165,18 @@ class Program(MainUi.Ui_MainWindow):
             self.DownloadProgress.setValue(int(float(result)))
 
             if not os.path.exists(self.output):
-                otherInfo = cut2[1].split(" ")
-                fileSize = otherInfo[1]
-                dwSpeed = otherInfo[3]
-                eta = otherInfo[5]
+                if "100%" in txt:
+                    self.DownloadSpeedLabel.setText("Speed: ")
+                    self.ETALabel.setText("ETA: ")
+                else:
+                    otherInfo = cut2[1].split(" ")
+                    fileSize = otherInfo[1]
+                    dwSpeed = otherInfo[3]
+                    eta = otherInfo[5]
 
-                self.FileSizeLabel.setText("Total file size: "+fileSize)
-                self.DownloadSpeedLabel.setText("Speed: "+dwSpeed)
-                self.ETALabel.setText("ETA: "+eta)
+                    self.FileSizeLabel.setText("Total file size: "+fileSize)
+                    self.DownloadSpeedLabel.setText("Speed: "+dwSpeed)
+                    self.ETALabel.setText("ETA: "+eta)
         
         if "[download] Downloading" in txt and "of" in txt and "/playlist?" in self.url:
             cut = txt.split(" ")
@@ -183,7 +187,7 @@ class Program(MainUi.Ui_MainWindow):
         
         if "[download] Destination: " in txt and "/playlist?" in self.url:
             currentFile = txt.removeprefix("[download] Destination: ")
-            self.CurrentFile.setText("Current: "+currentFile)
+            self.CurrentFile.setText("Current: \n"+currentFile)
 
     def ToggleConsole(self):
         self.showConsole = not self.showConsole
