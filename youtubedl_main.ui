@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>850</width>
-    <height>541</height>
+    <width>640</width>
+    <height>480</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,8 +18,8 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>531</width>
-    <height>436</height>
+    <width>640</width>
+    <height>480</height>
    </size>
   </property>
   <property name="maximumSize">
@@ -474,13 +474,13 @@
       <property name="minimumSize">
        <size>
         <width>0</width>
-        <height>70</height>
+        <height>80</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
         <width>16777215</width>
-        <height>70</height>
+        <height>80</height>
        </size>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_8">
@@ -509,13 +509,13 @@
          </property>
          <property name="minimumSize">
           <size>
-           <width>130</width>
+           <width>150</width>
            <height>0</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>130</width>
+           <width>150</width>
            <height>16777215</height>
           </size>
          </property>
@@ -571,7 +571,7 @@
          <property name="maximumSize">
           <size>
            <width>16777215</width>
-           <height>70</height>
+           <height>80</height>
           </size>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -830,7 +830,7 @@
          </property>
          <property name="minimumSize">
           <size>
-           <width>65</width>
+           <width>80</width>
            <height>0</height>
           </size>
          </property>
@@ -849,7 +849,7 @@
         <widget class="QPushButton" name="DestinationButton">
          <property name="maximumSize">
           <size>
-           <width>40</width>
+           <width>44</width>
            <height>16777215</height>
           </size>
          </property>
@@ -911,6 +911,12 @@
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
         <widget class="QLabel" name="UrlLabel">
+         <property name="minimumSize">
+          <size>
+           <width>80</width>
+           <height>0</height>
+          </size>
+         </property>
          <property name="text">
           <string>Youtube URL</string>
          </property>
@@ -1151,54 +1157,56 @@
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
         <widget class="QWidget" name="MediaType" native="true">
-         <widget class="QRadioButton" name="AudioOption">
-          <property name="geometry">
-           <rect>
-            <x>180</x>
-            <y>10</y>
-            <width>91</width>
-            <height>21</height>
-           </rect>
+         <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="0,0,1">
+          <property name="leftMargin">
+           <number>0</number>
           </property>
-          <property name="toolTip">
-           <string>Option to download audio-only. Ideal for music</string>
+          <property name="topMargin">
+           <number>0</number>
           </property>
-          <property name="text">
-           <string>Audio-only</string>
+          <property name="rightMargin">
+           <number>0</number>
           </property>
-         </widget>
-         <widget class="QRadioButton" name="VideoOption">
-          <property name="geometry">
-           <rect>
-            <x>70</x>
-            <y>10</y>
-            <width>111</width>
-            <height>20</height>
-           </rect>
+          <property name="bottomMargin">
+           <number>0</number>
           </property>
-          <property name="toolTip">
-           <string>Option to download video and audio</string>
-          </property>
-          <property name="text">
-           <string>Video + audio</string>
-          </property>
-         </widget>
-         <widget class="QLabel" name="Label">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>10</y>
-            <width>65</width>
-            <height>21</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>Export</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
+          <item>
+           <widget class="QLabel" name="Label">
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Export</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="VideoOption">
+            <property name="toolTip">
+             <string>Option to download video and audio</string>
+            </property>
+            <property name="text">
+             <string>Video + audio</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="AudioOption">
+            <property name="toolTip">
+             <string>Option to download audio-only. Ideal for music</string>
+            </property>
+            <property name="text">
+             <string>Audio-only</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
       </layout>
@@ -1221,8 +1229,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>850</width>
-     <height>21</height>
+     <width>640</width>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="Help">

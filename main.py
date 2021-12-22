@@ -30,8 +30,8 @@ class Program(MainUi.Ui_MainWindow):
 
     videos=0
 
-    bigWindowHeight = 717
-    smallWindowHeight = 436
+    bigWindowHeight = 600
+    smallWindowHeight = 480
 
     darkTheme = palette = QPalette()
     palette.setColor(QPalette.Window, QColor(53, 53, 53))
