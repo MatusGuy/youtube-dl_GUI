@@ -165,7 +165,7 @@ class Program(MainUi.Ui_MainWindow):
             txt=text.decode("ASCII")
         else:
             txt=text
-        #print (txt)
+        ##print (txt)
         self.ConsoleOutput.appendPlainText(txt)
 
         if "%" in txt and "[download] " in txt:
@@ -205,7 +205,7 @@ class Program(MainUi.Ui_MainWindow):
         
         if "ERROR: " in txt:
             self.error = txt.removeprefix("ERROR: ").capitalize()
-            print(self.error)
+            #print(self.error)
     
     def OnUrlEdit(self):
         newUrl = self.UrlTextBox.text()
@@ -221,12 +221,12 @@ class Program(MainUi.Ui_MainWindow):
     def ToggleConsole(self):
 
         X,Y,WW,WH=self.window.geometry().getRect()
-        print(f"MAIN WINDOW :({X},{Y}..{WW},{WH})")
+        #print(f"MAIN WINDOW :({X},{Y}..{WW},{WH})")
         
         if self.showConsole:
             CX,CY,CW,CH =self.ConsoleOutput.geometry().getRect()
             self.console_height=CH 
-            print(f"CONSOLE:({CX},{CY}..{CW},{CH})")
+            #print(f"CONSOLE:({CX},{CY}..{CW},{CH})")
         
         self.showConsole = not self.showConsole
         if self.showConsole:
@@ -238,8 +238,8 @@ class Program(MainUi.Ui_MainWindow):
     
     def resizeEvent(self,event):
         X,Y,WW,WH=self.window.geometry().getRect()
-        print(f"MAIN WINDOW :({X},{Y}..{WW},{WH})")
-        print(f"Event:{event}")
+        #print(f"MAIN WINDOW :({X},{Y}..{WW},{WH})")
+        #print(f"Event:{event}")
         QMainWindow.resizeEvent(self, event)
 
     def DisableDownloadGui(self,disable):
@@ -279,11 +279,11 @@ class Program(MainUi.Ui_MainWindow):
 
         self.DestinationInput.setText(filename[0] if len(filename[0]) else self.output)
         self.output = self.DestinationInput.text()
-        print(self.output)
+        #print(self.output)
 
     def Download(self):
         if self.downloader.IsDownloading():
-            print ("Cancel!!!??!?")
+            #print ("Cancel!!!??!?")
             self.downloader.CancelDownload()
         else:
             self.DisableDownloadGui(False)
@@ -301,7 +301,7 @@ class Program(MainUi.Ui_MainWindow):
                 "OUTPUT":self.output,
                 "TEMPLATE":self.TemplateInput.text(),
             }
-            #print(str(Config))
+            ##print(str(Config))
             #self.ExecuteDownload(Config)
             self.ConsoleOutput.setPlainText("")
             self.currentFilePos = 1

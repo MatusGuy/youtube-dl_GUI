@@ -66,7 +66,7 @@ class Downloader(QtCore.QThread):
         options += "--yes-playlist "
 
         command = f'{downloader} \"{params["URL"]}\" {options}{output}'
-        print(command)
+        #print(command)
         return command
 
     def Notify(self,text):
@@ -83,10 +83,10 @@ class Downloader(QtCore.QThread):
             self.isdownloading=False
 
     def StartDownload(self,params):
-        #print(params)
+        ##print(params)
 
         self.command = self._GetCommand(params)
-        #print(self.command)
+        ##print(self.command)
 
         self.isdownloading=True
         self.start()
@@ -101,7 +101,7 @@ class Downloader(QtCore.QThread):
         line=b''
         while self._isworking:
             c=self.process.stdout.read(1)
-            #print (c,end='')
+            ##print (c,end='')
             if c==b'\r': c=b'\n'
             line+=c
 
