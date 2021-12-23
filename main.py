@@ -49,6 +49,8 @@ class Program(MainUi.Ui_MainWindow):
 
     isDarkTheme = False
 
+    multipleFiles = False
+
     def setupUi(self, MainWindow, app):
         self.app = app
         self.app.setStyle("Fusion")
@@ -61,6 +63,8 @@ class Program(MainUi.Ui_MainWindow):
         self.ConsoleOutput.setHidden(not self.showConsole)
 
         self.VideoOption.setChecked(True)
+
+        self.DownloadButton.setEnabled(self.UrlTextBox.text()=="")
 
         currentSettings,file = self.GetJSON(sjson)
         self.isDarkTheme = currentSettings["isDarkTheme"]
@@ -100,6 +104,9 @@ class Program(MainUi.Ui_MainWindow):
 
         self.LightOption.triggered.connect(self.ToLightTheme)
         self.DarkOption.triggered.connect(self.ToDarkTheme)
+
+        self.UrlTextBox.textEdited.connect(self.OnUrlEdit)
+        self.DestinationInput.textEdited.connect(self.OnOutputEdit)
 
         return resp
     
@@ -197,6 +204,18 @@ class Program(MainUi.Ui_MainWindow):
             currentFile = cut1[len(cut1)-1]
 
             self.CurrentFile.setText("Current: "+currentFile)
+    
+    def OnUrlEdit(self):
+        newUrl = self.UrlTextBox.text()
+        urlIsEmpty = newUrl == ""
+
+        self.DownloadButton.setDisabled(urlIsEmpty)
+        self.multipleFiles = "/playlist?" in self.url
+    
+    def OnOutputEdit(self):
+        newOutput = self.DestinationInput.text()
+        self.DownloadButton.setDisabled(newOutput == "")
+        self.output = newOutput
 
     def ToggleConsole(self):
 
@@ -215,6 +234,12 @@ class Program(MainUi.Ui_MainWindow):
             self.window.resize(WW,WH-self.console_height)
         
         self.ConsoleOutput.setHidden(not self.showConsole)
+    
+    def resizeEvent(self,event):
+        X,Y,WW,WH=self.window.geometry().getRect()
+        print(f"MAIN WINDOW :({X},{Y}..{WW},{WH})")
+        print(f"Event:{event}")
+        QMainWindow.resizeEvent(self, event)
 
     def DisableDownloadGui(self,disable):
         self.FileSizeLabel.setEnabled(not disable)
@@ -264,7 +289,8 @@ class Program(MainUi.Ui_MainWindow):
             "URL":self.url,
             "AUDIO_ONLY":self.audioOnly,
             "OUTPUT":self.output,
-            "PLAYLIST":"/playlist?" in self.url,
+            "PLAYLIST":self.multipleFiles,
+            "TEMPLATE":self.TemplateInput.text(),
         }
         #print(str(Config))
         #self.ExecuteDownload(Config)

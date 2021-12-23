@@ -36,12 +36,12 @@ class Downloader(QtCore.QThread):
 
     def _GetOutput(self,outName,audioOnly=False,multiplefiles=False,template="(%(title)s)"):
         tmp = "" if not audioOnly else "(tmp)"
+        dot=outName.rfind(".")
+        name=outName[:dot]+template+outName[dot:]
         if multiplefiles:
-            dot=outName.rfind(".")
-            name=outName[:dot]+template+outName[dot:]
             return f'--output \"{name}{tmp}\"'
         else:
-            return f'--output \"{outName}{tmp}\"'
+            return f'--output \"{name}{tmp}\"'
     
     def _GetCommand(self,params):
         downloader = f"{self.downloaderPath}{self.downloaderApp}"
@@ -53,7 +53,13 @@ class Downloader(QtCore.QThread):
             tmp = "(tmp)"
         else:
             options = f"--format {self._CutToExtension(params['OUTPUT'])} "
-        output = self._GetOutput(params["OUTPUT"],params["AUDIO_ONLY"],params["PLAYLIST"])
+        
+        output = self._GetOutput(
+            params["OUTPUT"],
+            audioOnly=params["AUDIO_ONLY"],
+            multiplefiles=params["PLAYLIST"],
+            template=params["TEMPLATE"]
+        )
 
         if params["PLAYLIST"]:
             options += "--yes-playlist "
