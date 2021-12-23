@@ -18,6 +18,10 @@ class Downloader(QtCore.QThread):
 
     exitcode=-1
 
+    isdownloading=False
+    
+    _isworking=False
+
     def __init__(self,ytdlPath="./",console_callback=None,process_ended_callback=None):
         self.downloaderPath = ytdlPath
         self.console_callback=console_callback
@@ -68,11 +72,15 @@ class Downloader(QtCore.QThread):
     def Notify(self,text):
         if self.console_callback:
             self.console_callback(text)
-            
+
+    def IsDownloading(self):
+        return self.isdownloading        
     
     def EndWork(self,error):
+       
         if self.process_ended_callback:
             self.process_ended_callback(error)
+            self.isdownloading=False
 
     def StartDownload(self,params):
         #print(params)
@@ -80,24 +88,19 @@ class Downloader(QtCore.QThread):
         self.command = self._GetCommand(params)
         #print(self.command)
 
+        self.isdownloading=True
         self.start()
+        
 
-        #os.system(command) ##First Method
-
-        #second method
-        #console=sp.check_output(self.command,shell=False)
-        #self.Notify(console)
-
-        #self.Notify("Done!")
-        #self.EndWork(0)
     
     def run(self):
+        self._isworking=True
         self.data_ready.emit("Start Download ...")
-        process = sp.Popen(self.command, shell=True, stdout=sp.PIPE, stderr=sp.STDOUT)
+        self.process = sp.Popen(self.command, shell=True, stdout=sp.PIPE, stderr=sp.STDOUT)
         # Poll process for new output until finished
         line=b''
-        while True:
-            c=process.stdout.read(1)
+        while self._isworking:
+            c=self.process.stdout.read(1)
             #print (c,end='')
             if c==b'\r': c=b'\n'
             line+=c
@@ -109,11 +112,20 @@ class Downloader(QtCore.QThread):
             if c==b'': break
 
 
-        process.wait()
-        self.exitcode = process.returncode
+        self.process.wait()
+        self._isworking=False
+        self.exitcode = self.process.returncode
         self.data_complete.emit(self.exitcode)
         #self.join()
         return 
+
+    def CancelDownload(self):
+        if not self._isworking:
+            return
+        self._isworking=False
+        self.data_ready.emit("Cancel download!!!")
+        self.process.terminate()
+
 
     
     

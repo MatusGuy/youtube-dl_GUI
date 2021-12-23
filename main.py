@@ -4,7 +4,7 @@ from os import close, curdir, fdopen
 from pathlib import Path
 from typing import Optional
 from PyQt5 import QtGui
-from PyQt5.QtGui import QColor,QPalette,QMovie
+from PyQt5.QtGui import QColor, QIcon,QPalette,QMovie
 from PyQt5.QtCore import QRect, Qt,pyqtSlot
 from PyQt5.QtWidgets import *
 import youtubedl_gui_class as MainUi
@@ -63,7 +63,7 @@ class Program(MainUi.Ui_MainWindow):
 
         self.VideoOption.setChecked(True)
 
-        self.DownloadButton.setEnabled(self.UrlTextBox.text()=="")
+        self.DownloadButton.setIcon(QIcon("assets/miniArrow.png"))        
 
         currentSettings,file = self.GetJSON(sjson)
         self.isDarkTheme = currentSettings["isDarkTheme"]
@@ -242,7 +242,7 @@ class Program(MainUi.Ui_MainWindow):
         self.DownloadSpeedLabel.setEnabled(not disable)
         self.ETALabel.setEnabled(not disable)
         self.DownloadProgress.setEnabled(not disable)
-        self.DownloadButton.setEnabled(disable)
+        #self.DownloadButton.setEnabled(disable)
         self.CurrentFile.setEnabled(not disable)
         self.FilesLabel.setEnabled(not disable)
 
@@ -277,30 +277,43 @@ class Program(MainUi.Ui_MainWindow):
         print(self.output)
 
     def Download(self):
-        self.DisableDownloadGui(False)
-        self.MainWidget.update()
-        self.url = self.UrlTextBox.text()
-        self.audioOnly = self.AudioOption.isChecked()
+        if self.downloader.IsDownloading():
+            print ("Cancel!!!??!?")
+            self.downloader.CancelDownload()
+        else:
+            self.DisableDownloadGui(False)
 
-        Config={
-            "URL":self.url,
-            "AUDIO_ONLY":self.audioOnly,
-            "OUTPUT":self.output,
-            "TEMPLATE":self.TemplateInput.text(),
-        }
-        #print(str(Config))
-        #self.ExecuteDownload(Config)
-        self.ConsoleOutput.setPlainText("")
-        self.currentFilePos = 1
-        self.listLength = 1
-        self.downloader.StartDownload(Config)
+            self.DownloadButton.setText("Cancel\ndownload")
+            self.DownloadButton.setIcon(QIcon("assets/miniCross.png"))
+
+            self.MainWidget.update()
+            self.url = self.UrlTextBox.text()
+            self.audioOnly = self.AudioOption.isChecked()
+
+            Config={
+                "URL":self.url,
+                "AUDIO_ONLY":self.audioOnly,
+                "OUTPUT":self.output,
+                "TEMPLATE":self.TemplateInput.text(),
+            }
+            #print(str(Config))
+            #self.ExecuteDownload(Config)
+            self.ConsoleOutput.setPlainText("")
+            self.currentFilePos = 1
+            self.listLength = 1
+            self.downloader.StartDownload(Config)
 
 
     def Downloaded_Ended(self,errorcode):
         self.DownloadProgress.setEnabled(False)
         self.DownloadButton.setEnabled(True)
 
-        self.ConsoleAddLine("Download complete")
+        print("error: "+str(errorcode))
+
+        self.ConsoleAddLine("Download process ended")
+
+        self.DownloadButton.setIcon(QIcon("assets/miniArrow.png"))
+        self.DownloadButton.setText("Start\ndownload!") 
 
         msg = QMessageBox()
         msg.setWindowIcon(QtGui.QIcon('assets/ytdl.png'))
