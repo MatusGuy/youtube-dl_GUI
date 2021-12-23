@@ -49,7 +49,6 @@ class Program(MainUi.Ui_MainWindow):
 
     isDarkTheme = False
 
-    multipleFiles = False
 
     def setupUi(self, MainWindow, app):
         self.app = app
@@ -189,28 +188,25 @@ class Program(MainUi.Ui_MainWindow):
                     self.DownloadSpeedLabel.setText("Speed: "+dwSpeed)
                     self.ETALabel.setText("ETA: "+eta)
         
-        if "[download] Downloading" in txt and "of" in txt and "/playlist?" in self.url:
+        if "[download] Downloading video" in txt and "of" in txt:
             cut1 = txt.split(" ")
-            currentFilePos = cut1[3]
-            listLength = cut1[5]
-
-            self.FilesLabel.setText(f"Files: {currentFilePos}/{listLength}")
-        else:
-            self.FilesLabel.setText("Files: 1/1")
+            self.currentFilePos = cut1[3]
+            self.listLength = cut1[5]
         
+
         if "[download] Destination: " in txt:
             prefixRemoval1 = txt.removeprefix("[download] Destination: ")
             cut1 = prefixRemoval1.split("\\")
             currentFile = cut1[len(cut1)-1]
 
             self.CurrentFile.setText("Current: "+currentFile)
+            self.FilesLabel.setText(f"Files: {self.currentFilePos}/{self.listLength}")
     
     def OnUrlEdit(self):
         newUrl = self.UrlTextBox.text()
         urlIsEmpty = newUrl == ""
 
         self.DownloadButton.setDisabled(urlIsEmpty)
-        self.multipleFiles = "/playlist?" in self.url
     
     def OnOutputEdit(self):
         newOutput = self.DestinationInput.text()
@@ -290,12 +286,13 @@ class Program(MainUi.Ui_MainWindow):
             "URL":self.url,
             "AUDIO_ONLY":self.audioOnly,
             "OUTPUT":self.output,
-            "PLAYLIST":self.multipleFiles,
             "TEMPLATE":self.TemplateInput.text(),
         }
         #print(str(Config))
         #self.ExecuteDownload(Config)
         self.ConsoleOutput.setPlainText("")
+        self.currentFilePos = 1
+        self.listLength = 1
         self.downloader.StartDownload(Config)
 
 
