@@ -10,10 +10,14 @@ from PyQt5.QtWidgets import *
 import youtubedl_gui_class as MainUi
 import downloader as dl
 import youtubedl_about_class as aboutWnd
+from dist import pydist as pd
 
 #from settingsGuis.themePrompt_class import Ui_ChangeTheme as ThemesGui
 
-sjson = "settings.json"
+sjson = pd.__PyDist__._WorkDir+"settings.json"
+
+import ctypes
+ctypes.windll.user32.ShowWindow( ctypes.windll.kernel32.GetConsoleWindow(), 0 )
 
 class Program(MainUi.Ui_MainWindow):
     window = None
@@ -64,7 +68,7 @@ class Program(MainUi.Ui_MainWindow):
 
         self.VideoOption.setChecked(True)
 
-        self.DownloadButton.setIcon(QIcon("assets/miniArrow.png"))        
+        self.DownloadButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/miniArrow.png"))        
 
         currentSettings,file = self.GetJSON(sjson)
         self.isDarkTheme = currentSettings["isDarkTheme"]
@@ -76,7 +80,7 @@ class Program(MainUi.Ui_MainWindow):
             self.ToLightTheme()
 
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("assets/ytdl.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(pd.__PyDist__._WorkDir+"assets/ytdl.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.window.setWindowIcon(icon)
 
         self.UrlTextBox.setText("https://www.youtube.com/watch?v=jNQXAC9IVRw")
@@ -89,12 +93,17 @@ class Program(MainUi.Ui_MainWindow):
 
         #self.Downloader = dl.Downloader(".\\youtube-dl\\")
 
-        self.downloader = dl.Downloader(".\\youtube-dl\\",self.ConsoleAddLine,self.Downloaded_Ended)
+        self.downloader = dl.Downloader(pd.__PyDist__._WorkDir+".\\youtube-dl\\",self.ConsoleAddLine,self.Downloaded_Ended)
 
         self.aboutGui = aboutWnd.Ui_About()
         self.aboutDialog = QDialog(self.window,Qt.WindowType.WindowCloseButtonHint)
         self.aboutGui.setupUi(self.aboutDialog)
-        gif = QMovie("assets/ytdl.gif")
+        gif = QMovie(pd.__PyDist__._WorkDir+"assets/ytdl.gif")
+        
+        version=pd.__PyDist__.GetAppVersion()
+        version="[0.0.0.0]" if not version else version
+        self.aboutGui.Version.setText("Version "+version)
+
         self.aboutGui.IconGif.setMovie(gif)
         gif.start()
         self.aboutDialog.setModal(True)
@@ -135,27 +144,18 @@ class Program(MainUi.Ui_MainWindow):
     def ToLightTheme(self):
         self.app.setPalette(QPalette())
         self.window.setPalette(QPalette())
-        self.ViewConsole.setStyleSheet("QCheckBox::indicator:checked"
-                                       "{"
-                                       "border-image : url(assets/openedArrow.png);"
-                                       "}"
-                                       "QCheckBox::indicator:unchecked"
-                                       "{"
-                                       "border-image : url(assets/closedArrow.png);"
-                                       "}")
+        imgpath=pd.__PyDist__._WorkDir.replace("\\","/")
+        self.ViewConsole.setStyleSheet("QCheckBox::indicator:checked{border-image : url("+imgpath+"assets/openedArrow.png);}QCheckBox::indicator:unchecked{border-image : url("+imgpath+"assets/closedArrow.png);}")
         self.SaveTheme(False)
     
     def ToDarkTheme(self):
         self.app.setPalette(self.darkTheme)
         self.window.setPalette(self.darkTheme)
+        imgpath=pd.__PyDist__._WorkDir.replace("\\","/")
         self.ViewConsole.setStyleSheet("QCheckBox::indicator:checked"
-                                       "{"
-                                       "border-image : url(assets/openedArrowDark.png);"
-                                       "}"
+                                       "{border-image : url("+imgpath+"assets/openedArrowDark.png);}"
                                        "QCheckBox::indicator:unchecked"
-                                       "{"
-                                       "border-image : url(assets/closedArrowDark.png);"
-                                       "}")
+                                       "{border-image : url("+imgpath+"assets/closedArrowDark.png);}")
         self.SaveTheme(True)
 
     def ConsoleAddLine(self,text):
@@ -165,10 +165,12 @@ class Program(MainUi.Ui_MainWindow):
             txt=text.decode("ASCII")
         else:
             txt=text
-        ##print (txt)
         self.ConsoleOutput.appendPlainText(txt)
 
-        if "%" in txt and "[download] " in txt:
+        txt = txt.upper()
+        print(txt)
+
+        if "%" in txt and "[DOWNLOAD] " in txt:
             cut1 = txt.split("] ")[1]
             cut2 = cut1.split("% ")
             result = cut2[0].replace(" ","0")
@@ -189,14 +191,14 @@ class Program(MainUi.Ui_MainWindow):
                     self.DownloadSpeedLabel.setText("Speed: "+dwSpeed)
                     self.ETALabel.setText("ETA: "+eta)
         
-        if "[download] Downloading video" in txt and "of" in txt:
+        if "[DOWNLOAD] DOWNLOADING VIDEO" in txt and "of" in txt:
             cut1 = txt.split(" ")
             self.currentFilePos = cut1[3]
             self.listLength = cut1[5]
         
 
-        if "[download] Destination: " in txt:
-            prefixRemoval1 = txt.removeprefix("[download] Destination: ")
+        if "[DOWNLOAD] DESTINATION: " in txt:
+            prefixRemoval1 = txt.removeprefix("[DOWNLOAD] DESTINATION: ")
             cut1 = prefixRemoval1.split("\\")
             currentFile = cut1[len(cut1)-1]
 
@@ -204,7 +206,10 @@ class Program(MainUi.Ui_MainWindow):
             self.FilesLabel.setText(f"Files: {self.currentFilePos}/{self.listLength}")
         
         if "ERROR: " in txt:
-            self.error = txt.removeprefix("ERROR: ").capitalize()
+            if "YOUTUBE-DL.EXE: ":
+                self.error = txt.removeprefix("YOUTUBE-DL.EXE: ERROR: ").capitalize()
+            else:
+                self.error = txt.removeprefix("ERROR: ").capitalize()
             #print(self.error)
     
     def OnUrlEdit(self):
@@ -289,7 +294,7 @@ class Program(MainUi.Ui_MainWindow):
             self.DisableDownloadGui(False)
 
             self.DownloadButton.setText("Cancel\ndownload")
-            self.DownloadButton.setIcon(QIcon("assets/miniCross.png"))
+            self.DownloadButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/miniCross.png"))
 
             self.MainWidget.update()
             self.url = self.UrlTextBox.text()
@@ -315,22 +320,23 @@ class Program(MainUi.Ui_MainWindow):
 
         self.ConsoleAddLine("Download process ended")
 
-        self.DownloadButton.setIcon(QIcon("assets/miniArrow.png"))
+        self.DownloadButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/miniArrow.png"))
         self.DownloadButton.setText("Start\ndownload!") 
 
         msg = QMessageBox()
-        msg.setWindowIcon(QtGui.QIcon('assets/ytdl.png'))
+        msg.setWindowIcon(QtGui.QIcon(pd.__PyDist__._WorkDir+'assets/ytdl.png'))
         msg.setWindowTitle("youtube-dl GUI")
         msg.setStandardButtons(QMessageBox.Ok)
 
         if errorcode!=0 and self.error != "":
             msg.setIcon(QMessageBox.Critical)
             msg.setText("Finished downloading unsuccessfully!")
-            msg.setInformativeText(self.error)
+            msg.setInformativeText(str(self.error))
         elif errorcode!=0:
             msg.setIcon(QMessageBox.Information)
-            msg.setText("Canceled!")
+            msg.setText("Canceled by user!")
         else:
+            msg.setText("Finished downloading successfully!")
             msg.setIcon(QMessageBox.Information)
         
         msg.exec()

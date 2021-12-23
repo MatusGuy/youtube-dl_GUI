@@ -2,3 +2,4 @@
 .qt_for_python/*
 .vscode/cpx.json
 .vscode/settings.json
+build/*

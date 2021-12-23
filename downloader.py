@@ -66,7 +66,7 @@ class Downloader(QtCore.QThread):
         options += "--yes-playlist "
 
         command = f'{downloader} \"{params["URL"]}\" {options}{output}'
-        #print(command)
+        print(command)
         return command
 
     def Notify(self,text):
