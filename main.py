@@ -4,7 +4,7 @@ from os import close, curdir, fdopen
 from pathlib import Path
 from typing import Optional
 from PyQt5 import QtGui
-from PyQt5.QtGui import QColor,QPalette
+from PyQt5.QtGui import QColor,QPalette,QMovie
 from PyQt5.QtCore import QRect, Qt,pyqtSlot
 from PyQt5.QtWidgets import *
 import youtubedl_gui_class as MainUi
@@ -79,7 +79,7 @@ class Program(MainUi.Ui_MainWindow):
         self.DestinationInput.setText(str(Path.home())+"\MyVideo.mp4")
         self.output = self.DestinationInput.text()
 
-        self.DestinationButton.pressed.connect(self.SetDirectory)
+        self.DestinationButton.pressed.connect(self.SetOutput)
         self.DownloadButton.pressed.connect(self.Download)
         self.ViewConsole.toggled.connect(self.ToggleConsole)
 
@@ -90,6 +90,9 @@ class Program(MainUi.Ui_MainWindow):
         self.aboutGui = aboutWnd.Ui_About()
         self.aboutDialog = QDialog(self.window,Qt.WindowType.WindowCloseButtonHint)
         self.aboutGui.setupUi(self.aboutDialog)
+        gif = QMovie("assets/ytdl.gif")
+        self.aboutGui.IconGif.setMovie(gif)
+        gif.start()
         self.aboutDialog.setModal(True)
         self.aboutGui.OKbt.pressed.connect(self.aboutDialog.close)
         
@@ -230,7 +233,7 @@ class Program(MainUi.Ui_MainWindow):
             self.FilesLabel.setText("Files: ")
             self.CurrentFile.setText("Current: ")
     
-    def SetDirectory(self):
+    def SetOutput(self):
         self.FilePrompt = QFileDialog()
         filenameFilter = ""
         self.audioOnly = self.AudioOption.isChecked()
