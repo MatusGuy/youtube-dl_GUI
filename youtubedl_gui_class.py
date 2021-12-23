@@ -283,7 +283,7 @@ class Ui_MainWindow(object):
         self.DownloadButtonWidget.setMaximumSize(QtCore.QSize(150, 16777215))
         self.DownloadButtonWidget.setObjectName("DownloadButtonWidget")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.DownloadButtonWidget)
-        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_2.setContentsMargins(0, 0, 11, 0)
         self.verticalLayout_2.setSpacing(0)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.DownloadButton = QtWidgets.QCommandLinkButton(self.DownloadButtonWidget)
