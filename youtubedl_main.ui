@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>745</width>
-    <height>681</height>
+    <width>800</width>
+    <height>661</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,7 +18,7 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>640</width>
+    <width>800</width>
     <height>390</height>
    </size>
   </property>
@@ -861,7 +861,7 @@
               <widget class="QWidget" name="FilesInfo" native="true">
                <layout class="QHBoxLayout" name="horizontalLayout_6">
                 <property name="bottomMargin">
-                 <number>3</number>
+                 <number>6</number>
                 </property>
                 <item>
                  <widget class="QLabel" name="FilesLabel">
@@ -960,6 +960,9 @@
                 <property name="topMargin">
                  <number>3</number>
                 </property>
+                <property name="bottomMargin">
+                 <number>11</number>
+                </property>
                 <item>
                  <widget class="QLabel" name="ETALabel">
                   <property name="enabled">
@@ -990,7 +993,7 @@
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>100</width>
+                    <width>125</width>
                     <height>16777215</height>
                    </size>
                   </property>
@@ -1363,7 +1366,10 @@
              </size>
             </property>
             <property name="toolTip">
-             <string>When downloading multiple files, add a peice of information at the end of the video title.</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Append information to the end of your chosen output.&lt;/p&gt;&lt;p&gt;• &lt;span style=&quot; font-weight:600;&quot;&gt;%(title)s&lt;/span&gt; - video title&lt;/p&gt;&lt;p&gt;• &lt;span style=&quot; font-weight:600;&quot;&gt;%(alt_title)s&lt;/span&gt; - alternative video title&lt;/p&gt;&lt;p&gt;• &lt;span style=&quot; font-weight:600;&quot;&gt;%(id)s&lt;/span&gt; - video id&lt;/p&gt;&lt;p&gt;• &lt;span style=&quot; font-weight:600;&quot;&gt;%(creator)s&lt;/span&gt; - video creator&lt;/p&gt;&lt;p&gt;• &lt;span style=&quot; font-weight:600;&quot;&gt;%(playlist_title)s&lt;/span&gt; - playlist title&lt;/p&gt;&lt;p&gt;• &lt;span style=&quot; font-weight:600;&quot;&gt;%(playlist_index)s&lt;/span&gt; - video position in the playlist&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Need the full list? Look for youtube-dl's README.md file at GitHub.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="toolTipDuration">
+             <number>-1</number>
             </property>
             <property name="text">
              <string>%(title)s</string>
@@ -1386,7 +1392,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>745</width>
+     <width>800</width>
      <height>26</height>
     </rect>
    </property>
