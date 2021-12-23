@@ -1,6 +1,6 @@
 from json import decoder
 import sys,os,json
-from os import close, curdir, fdopen
+from os import close, curdir, error, fdopen
 from pathlib import Path
 from typing import Optional
 from PyQt5 import QtGui
@@ -49,6 +49,7 @@ class Program(MainUi.Ui_MainWindow):
 
     isDarkTheme = False
 
+    error = ""
 
     def setupUi(self, MainWindow, app):
         self.app = app
@@ -201,6 +202,10 @@ class Program(MainUi.Ui_MainWindow):
 
             self.CurrentFile.setText("Current: "+currentFile)
             self.FilesLabel.setText(f"Files: {self.currentFilePos}/{self.listLength}")
+        
+        if "ERROR: " in txt:
+            self.error = txt.removeprefix("ERROR: ").capitalize()
+            print(self.error)
     
     def OnUrlEdit(self):
         newUrl = self.UrlTextBox.text()
@@ -308,8 +313,6 @@ class Program(MainUi.Ui_MainWindow):
         self.DownloadProgress.setEnabled(False)
         self.DownloadButton.setEnabled(True)
 
-        print("error: "+str(errorcode))
-
         self.ConsoleAddLine("Download process ended")
 
         self.DownloadButton.setIcon(QIcon("assets/miniArrow.png"))
@@ -317,18 +320,18 @@ class Program(MainUi.Ui_MainWindow):
 
         msg = QMessageBox()
         msg.setWindowIcon(QtGui.QIcon('assets/ytdl.png'))
+        msg.setWindowTitle("youtube-dl GUI")
+        msg.setStandardButtons(QMessageBox.Ok)
 
-        if errorcode!=0:
+        if errorcode!=0 and self.error != "":
             msg.setIcon(QMessageBox.Critical)
             msg.setText("Finished downloading unsuccessfully!")
-            msg.setInformativeText("Check \"Console output\" for detail regarding this issue.")
-            msg.setWindowTitle("youtube-dl GUI")
-            msg.setStandardButtons(QMessageBox.Ok)
+            msg.setInformativeText(self.error)
+        elif errorcode!=0:
+            msg.setIcon(QMessageBox.Information)
+            msg.setText("Canceled!")
         else:
             msg.setIcon(QMessageBox.Information)
-            msg.setText("Finished downloading successfully!")
-            msg.setWindowTitle("youtube-dl GUI")
-            msg.setStandardButtons(QMessageBox.Ok)
         
         msg.exec()
 
