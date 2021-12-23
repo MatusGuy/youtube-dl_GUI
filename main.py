@@ -284,6 +284,7 @@ class Program(MainUi.Ui_MainWindow):
         self.DisableDownloadGui(False)
         self.MainWidget.update()
         self.url = self.UrlTextBox.text()
+        self.audioOnly = self.AudioOption.isChecked()
 
         Config={
             "URL":self.url,

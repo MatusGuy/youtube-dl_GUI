@@ -106,7 +106,7 @@ class Downloader(QtCore.QThread):
             line+=c
 
             if c==b'\n':
-                if len(line): self.data_ready.emit(str(line[:-1],"ASCII"))
+                if len(line): self.data_ready.emit(str(line[:-1],"latin-1"))
                 else: break
                 line=b''
             if c==b'': break
