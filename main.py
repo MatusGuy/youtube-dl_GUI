@@ -1,6 +1,7 @@
 from json import decoder
 import sys,os,json
 from os import close, curdir, error, fdopen
+import ctypes
 from pathlib import Path
 from typing import Optional
 from PyQt5 import QtGui
@@ -14,10 +15,8 @@ from dist import pydist as pd
 
 #from settingsGuis.themePrompt_class import Ui_ChangeTheme as ThemesGui
 
-sjson = pd.__PyDist__._WorkDir+"settings.json"
+sjson = pd.__PyDist__._ExecDir+"settings.json"
 
-import ctypes
-ctypes.windll.user32.ShowWindow( ctypes.windll.kernel32.GetConsoleWindow(), 0 )
 
 class Program(MainUi.Ui_MainWindow):
     window = None
@@ -354,5 +353,17 @@ def window():
     window.show()
     sys.exit(app.exec_())
 
+def prepSettings():
+    #print (f"IS EXECUTABLE: {pd.__PyDist__._isBundle}")
+    #print (f"Exec Path: {pd.__PyDist__._ExecDir}")
+    #print (f"Temp Path: {pd.__PyDist__._WorkDir}")
+
+    if (pd.__PyDist__._isBundle) and not os.path.exists(sjson):
+        os.system(f"copy {pd.__PyDist__._WorkDir}\\settings.json {pd.__PyDist__._ExecDir} ")
+
 if __name__ == '__main__':
+    ctypes.windll.user32.ShowWindow( ctypes.windll.kernel32.GetConsoleWindow(), 0 )
+
+    prepSettings()
+
     window()
