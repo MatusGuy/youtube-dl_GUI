@@ -19,7 +19,7 @@
   <property name="minimumSize">
    <size>
     <width>768</width>
-    <height>390</height>
+    <height>420</height>
    </size>
   </property>
   <property name="maximumSize">
@@ -1082,6 +1082,9 @@ download!</string>
        <bool>false</bool>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
+       <property name="spacing">
+        <number>7</number>
+       </property>
        <item>
         <widget class="QLabel" name="UrlLabel">
          <property name="minimumSize">
@@ -1176,19 +1179,19 @@ download!</string>
       <property name="sizePolicy">
        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
         <horstretch>0</horstretch>
-        <verstretch>70</verstretch>
+        <verstretch>100</verstretch>
        </sizepolicy>
       </property>
       <property name="minimumSize">
        <size>
         <width>0</width>
-        <height>70</height>
+        <height>100</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
         <width>16777215</width>
-        <height>70</height>
+        <height>100</height>
        </size>
       </property>
       <property name="font">
@@ -1213,16 +1216,16 @@ download!</string>
         <enum>QLayout::SetDefaultConstraint</enum>
        </property>
        <property name="leftMargin">
-        <number>10</number>
+        <number>11</number>
        </property>
        <property name="topMargin">
-        <number>7</number>
+        <number>11</number>
        </property>
        <property name="rightMargin">
-        <number>10</number>
+        <number>11</number>
        </property>
        <property name="bottomMargin">
-        <number>7</number>
+        <number>11</number>
        </property>
        <item>
         <widget class="QWidget" name="MediaType" native="true">
@@ -1235,16 +1238,16 @@ download!</string>
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>37</height>
+           <height>60</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
            <width>16777215</width>
-           <height>37</height>
+           <height>60</height>
           </size>
          </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="0,0,0">
+         <layout class="QFormLayout" name="formLayout">
           <property name="sizeConstraint">
            <enum>QLayout::SetDefaultConstraint</enum>
           </property>
@@ -1260,8 +1263,8 @@ download!</string>
           <property name="bottomMargin">
            <number>0</number>
           </property>
-          <item>
-           <widget class="QLabel" name="Label">
+          <item row="0" column="0">
+           <widget class="QLabel" name="ExportTypeLabel">
             <property name="minimumSize">
              <size>
               <width>80</width>
@@ -1276,7 +1279,7 @@ download!</string>
             </property>
            </widget>
           </item>
-          <item>
+          <item row="0" column="1">
            <widget class="QRadioButton" name="VideoOption">
             <property name="toolTip">
              <string>Option to download video and audio</string>
@@ -1286,7 +1289,7 @@ download!</string>
             </property>
            </widget>
           </item>
-          <item>
+          <item row="1" column="1">
            <widget class="QRadioButton" name="AudioOption">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
@@ -1306,17 +1309,23 @@ download!</string>
         </widget>
        </item>
        <item>
-        <widget class="Line" name="ConfigSep1">
+        <widget class="Line" name="ConfigSeperator">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
            <horstretch>0</horstretch>
-           <verstretch>37</verstretch>
+           <verstretch>60</verstretch>
           </sizepolicy>
          </property>
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>37</height>
+           <height>60</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>60</height>
           </size>
          </property>
          <property name="orientation">
@@ -1325,7 +1334,7 @@ download!</string>
         </widget>
        </item>
        <item>
-        <widget class="QWidget" name="TemplateWidget" native="true">
+        <widget class="QWidget" name="ConfigOutputWidget" native="true">
          <property name="enabled">
           <bool>true</bool>
          </property>
@@ -1338,19 +1347,16 @@ download!</string>
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>37</height>
+           <height>60</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
            <width>16777215</width>
-           <height>37</height>
+           <height>60</height>
           </size>
          </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_10" stretch="0,0">
-          <property name="spacing">
-           <number>7</number>
-          </property>
+         <layout class="QFormLayout" name="formLayout_2">
           <property name="sizeConstraint">
            <enum>QLayout::SetDefaultConstraint</enum>
           </property>
@@ -1366,14 +1372,14 @@ download!</string>
           <property name="bottomMargin">
            <number>0</number>
           </property>
-          <item>
+          <item row="0" column="0">
            <widget class="QLabel" name="OutTemplateLabel">
             <property name="text">
              <string>Output template</string>
             </property>
            </widget>
           </item>
-          <item>
+          <item row="0" column="1">
            <widget class="QLineEdit" name="TemplateInput">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -1395,6 +1401,20 @@ download!</string>
             </property>
             <property name="text">
              <string>%(title)s</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="RangeLabel">
+            <property name="text">
+             <string>Download Range </string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="RangeInput">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the range for download. &lt;/p&gt;&lt;p&gt;• &lt;span style=&quot; font-weight:600;&quot;&gt;'' &lt;/span&gt;Leave empty to download all&lt;/p&gt;&lt;p&gt;• &lt;span style=&quot; font-weight:600;&quot;&gt;m-n &lt;/span&gt;Download from specified range&lt;/p&gt;&lt;p&gt;•&lt;span style=&quot; font-weight:600;&quot;&gt; 1,2,..n &lt;/span&gt;Download selected items&lt;/p&gt;&lt;p&gt;• &lt;span style=&quot; font-weight:600;&quot;&gt;x,m-n,y,z&lt;/span&gt; Download specific item and ranges&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
            </widget>
           </item>

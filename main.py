@@ -167,10 +167,10 @@ class Program(MainUi.Ui_MainWindow):
             txt=text
         self.ConsoleOutput.appendPlainText(txt)
 
-        txt = txt.upper()
-        print(txt)
+        uppered = txt.upper()
+        #print(uppered)
 
-        if "%" in txt and "[DOWNLOAD] " in txt:
+        if "%" in uppered and "[DOWNLOAD] " in uppered:
             cut1 = txt.split("] ")[1]
             cut2 = cut1.split("% ")
             result = cut2[0].replace(" ","0")
@@ -178,7 +178,7 @@ class Program(MainUi.Ui_MainWindow):
             self.DownloadProgress.setValue(int(float(result)))
 
             if not os.path.exists(self.output):
-                if "100%" in txt:
+                if "100%" in uppered:
                     self.DownloadSpeedLabel.setText("Speed: ")
                     self.ETALabel.setText("ETA: ")
                 else:
@@ -191,23 +191,23 @@ class Program(MainUi.Ui_MainWindow):
                     self.DownloadSpeedLabel.setText("Speed: "+dwSpeed)
                     self.ETALabel.setText("ETA: "+eta)
         
-        if "[DOWNLOAD] DOWNLOADING VIDEO" in txt and "of" in txt:
+        if "[DOWNLOAD] DOWNLOADING VIDEO" in uppered and "OF" in uppered:
             cut1 = txt.split(" ")
             self.currentFilePos = cut1[3]
             self.listLength = cut1[5]
         
 
-        if "[DOWNLOAD] DESTINATION: " in txt:
-            prefixRemoval1 = txt.removeprefix("[DOWNLOAD] DESTINATION: ")
+        if "[DOWNLOAD] DESTINATION: " in uppered:
+            prefixRemoval1 = txt.removeprefix("[download] Destination: ")
             cut1 = prefixRemoval1.split("\\")
             currentFile = cut1[len(cut1)-1]
 
             self.CurrentFile.setText("Current: "+currentFile)
             self.FilesLabel.setText(f"Files: {self.currentFilePos}/{self.listLength}")
         
-        if "ERROR: " in txt:
+        if "ERROR: " in uppered:
             if "YOUTUBE-DL.EXE: ":
-                self.error = txt.removeprefix("YOUTUBE-DL.EXE: ERROR: ").capitalize()
+                self.error = txt.removeprefix("youtube-dl.EXE: error: ").capitalize()
             else:
                 self.error = txt.removeprefix("ERROR: ").capitalize()
             #print(self.error)
@@ -305,6 +305,7 @@ class Program(MainUi.Ui_MainWindow):
                 "AUDIO_ONLY":self.audioOnly,
                 "OUTPUT":self.output,
                 "TEMPLATE":self.TemplateInput.text(),
+                "RANGE":self.RangeInput.text(),
             }
             ##print(str(Config))
             #self.ExecuteDownload(Config)
@@ -342,10 +343,15 @@ class Program(MainUi.Ui_MainWindow):
         
         def OpenDownloaded(button):
             if button.text() == "Open":
-                cut1 = self.output.rfind('\\')
-                result=self.output[:cut1]
-                print (result)
-                if len(result): os.system("explorer "+result)
+                rfind1 = self.output.rfind('\\')
+                rfind2 = self.output.rfind('/')
+                if rfind1 > rfind2:
+                    result = self.output[:rfind1+1]
+                else:
+                    result = self.output[:rfind2+1]
+                wresult=result.replace('/','\\')
+                print (wresult)
+                if len(wresult): os.system("explorer "+wresult)
 
         msg.buttonClicked.connect(OpenDownloaded)
         

@@ -62,8 +62,10 @@ class Downloader(QtCore.QThread):
             template=params["TEMPLATE"]
         )
 
+        if len(params["RANGE"]):
+            options += f"--playlist-items {params['RANGE']} "
+        
         #if params["PLAYLIST"]:
-        options += "--yes-playlist "
 
         command = f'{downloader} \"{params["URL"]}\" {options}{output}'
         print(command)
