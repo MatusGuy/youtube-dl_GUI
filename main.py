@@ -5,7 +5,7 @@ import ctypes
 from pathlib import Path
 from typing import Optional
 from PyQt5 import QtGui
-from PyQt5.QtGui import QColor, QIcon,QPalette,QMovie
+from PyQt5.QtGui import QColor, QIcon,QPalette,QMovie, QPixmap
 from PyQt5.QtCore import QRect, Qt,pyqtSlot
 from PyQt5.QtWidgets import *
 import youtubedl_gui_class as MainUi
@@ -78,9 +78,10 @@ class Program(MainUi.Ui_MainWindow):
         else:
             self.ToLightTheme()
 
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(pd.__PyDist__._WorkDir+"assets/ytdl.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.window.setWindowIcon(icon)
+        self.window.setWindowIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/ytdl.png")))
+
+        self.AboutMenu.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/about.png")))
+        self.ThemeMenu.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/theme.png")))
 
         self.UrlTextBox.setText("https://www.youtube.com/watch?v=jNQXAC9IVRw")
         self.DestinationInput.setText(str(Path.home())+"\MyVideo.mp4")
