@@ -1426,6 +1426,10 @@ download!</string>
      <property name="title">
       <string>Theme</string>
      </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>assets/theme.png</normaloff>assets/theme.png</iconset>
+     </property>
      <addaction name="LightOption"/>
      <addaction name="DarkOption"/>
     </widget>
@@ -1480,6 +1484,10 @@ download!</string>
    </property>
   </action>
   <action name="AboutMenu">
+   <property name="icon">
+    <iconset>
+     <normaloff>assets/about.png</normaloff>assets/about.png</iconset>
+   </property>
    <property name="text">
     <string>About</string>
    </property>
