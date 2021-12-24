@@ -1272,7 +1272,7 @@ download!</string>
              </size>
             </property>
             <property name="text">
-             <string>Export</string>
+             <string>Export as...</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -1407,14 +1407,14 @@ download!</string>
           <item row="1" column="0">
            <widget class="QLabel" name="RangeLabel">
             <property name="text">
-             <string>Download Range </string>
+             <string>Download range </string>
             </property>
            </widget>
           </item>
           <item row="1" column="1">
            <widget class="QLineEdit" name="RangeInput">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the range for download. &lt;/p&gt;&lt;p&gt;• &lt;span style=&quot; font-weight:600;&quot;&gt;'' &lt;/span&gt;Leave empty to download all&lt;/p&gt;&lt;p&gt;• &lt;span style=&quot; font-weight:600;&quot;&gt;m-n &lt;/span&gt;Download from specified range&lt;/p&gt;&lt;p&gt;•&lt;span style=&quot; font-weight:600;&quot;&gt; 1,2,..n &lt;/span&gt;Download selected items&lt;/p&gt;&lt;p&gt;• &lt;span style=&quot; font-weight:600;&quot;&gt;x,m-n,y,z&lt;/span&gt; Download specific item and ranges&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the range for download. &lt;/p&gt;&lt;p&gt;• &lt;span style=&quot; font-weight:600;&quot;&gt;'' &lt;/span&gt;Leaving it empty downloads all items.&lt;/p&gt;&lt;p&gt;• &lt;span style=&quot; font-weight:600;&quot;&gt;m-n &lt;/span&gt;Download from specified range.&lt;/p&gt;&lt;p&gt;•&lt;span style=&quot; font-weight:600;&quot;&gt; 1,2,..n &lt;/span&gt;Download selected items.&lt;/p&gt;&lt;p&gt;• &lt;span style=&quot; font-weight:600;&quot;&gt;x,m-n,y,z&lt;/span&gt; Download specific items and from range.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
            </widget>
           </item>
