@@ -51,14 +51,15 @@ def main(argv):
     filename="dist\\Resources.rc"
     print ("\nRelease Script Tool - CM2019\n")
 
-    if (len(argv)<4):
-        print ("Usage: Build.py <app_spec> <MajorVer> <MinorVer> <BugsFixs>")
+    if (len(argv)<5):
+        print ("Usage: Build.py <app_spec> <Version> <MajorFeat> <MinorFeat> <BugsFixs>")
         return
 
     print (f"Update {filename} file")
-    Revision=GetRevisionNumber()
-    print ("SVN Revison:"+str(GetRevisionNumber()))
-    UpdateResourcesFile(filename, [argv[2],argv[3],argv[4],str(Revision+1)])
+    #Revision=GetRevisionNumber()
+    #print ("SVN Revison:"+str(GetRevisionNumber()))
+    #UpdateResourcesFile(filename, [argv[2],argv[3],argv[4],str(Revision+1)])
+    UpdateResourcesFile(filename, [argv[2],argv[3],argv[4],argv[5]])
     print (f"Done. Please verify the [{filename}] file.\n")
 
     build=input("Build the executable now? (y/N) ")
