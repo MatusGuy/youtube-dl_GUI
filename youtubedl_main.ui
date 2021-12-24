@@ -1176,7 +1176,7 @@ download!</string>
       <property name="sizePolicy">
        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
         <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
+        <verstretch>70</verstretch>
        </sizepolicy>
       </property>
       <property name="minimumSize">
@@ -1210,7 +1210,7 @@ download!</string>
         <number>7</number>
        </property>
        <property name="sizeConstraint">
-        <enum>QLayout::SetMaximumSize</enum>
+        <enum>QLayout::SetDefaultConstraint</enum>
        </property>
        <property name="leftMargin">
         <number>10</number>
@@ -1244,7 +1244,7 @@ download!</string>
            <height>37</height>
           </size>
          </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="0,0,1">
+         <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="0,0,0">
           <property name="sizeConstraint">
            <enum>QLayout::SetFixedSize</enum>
           </property>
@@ -1288,6 +1288,12 @@ download!</string>
           </item>
           <item>
            <widget class="QRadioButton" name="AudioOption">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="toolTip">
              <string>Option to download audio-only. Ideal for music</string>
             </property>
