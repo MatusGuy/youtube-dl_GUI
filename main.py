@@ -326,7 +326,7 @@ class Program(MainUi.Ui_MainWindow):
         msg = QMessageBox()
         msg.setWindowIcon(QtGui.QIcon(pd.__PyDist__._WorkDir+'assets/ytdl.png'))
         msg.setWindowTitle("youtube-dl GUI")
-        msg.setStandardButtons(QMessageBox.Ok)
+        msg.setStandardButtons(QMessageBox.StandardButton.Ok)
 
         if errorcode!=0 and self.error != "":
             msg.setIcon(QMessageBox.Critical)
@@ -338,6 +338,16 @@ class Program(MainUi.Ui_MainWindow):
         else:
             msg.setText("Finished downloading successfully!")
             msg.setIcon(QMessageBox.Information)
+            msg.setStandardButtons(QMessageBox.StandardButton.Open | QMessageBox.StandardButton.Ok)
+        
+        def OpenDownloaded(button):
+            if button.text() == "Open":
+                cut1 = self.output.rfind('\\')
+                result=self.output[:cut1]
+                print (result)
+                if len(result): os.system("explorer "+result)
+
+        msg.buttonClicked.connect(OpenDownloaded)
         
         msg.exec()
 
