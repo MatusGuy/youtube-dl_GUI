@@ -21,6 +21,9 @@ a = Analysis(['main.py'],
                             ('.\\assets\\ytdl.gif'     ,'.\\assets'),
 
                             ('.\\settings.json'     ,'.'),
+
+                            ('.\\assets\\theme.png'     ,'.\\assets'),
+                            ('.\\assets\\about.png'     ,'.\\assets'),
                             ],
                      hiddenimports=[],
                      hookspath=['.\\dist\pydisthk.py'],
