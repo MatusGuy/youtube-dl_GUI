@@ -488,7 +488,7 @@ class Ui_MainWindow(object):
         self.MediaType.setMaximumSize(QtCore.QSize(16777215, 37))
         self.MediaType.setObjectName("MediaType")
         self.horizontalLayout_9 = QtWidgets.QHBoxLayout(self.MediaType)
-        self.horizontalLayout_9.setSizeConstraint(QtWidgets.QLayout.SetFixedSize)
+        self.horizontalLayout_9.setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)
         self.horizontalLayout_9.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_9.setObjectName("horizontalLayout_9")
         self.Label = QtWidgets.QLabel(self.MediaType)
