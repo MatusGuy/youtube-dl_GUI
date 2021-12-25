@@ -101,7 +101,7 @@ class Program(MainUi.Ui_MainWindow):
         gif = QMovie(pd.__PyDist__._WorkDir+"assets/ytdl.gif")
         
         version=pd.__PyDist__.GetAppVersion()
-        version="[0.0.0.0]" if not version else version
+        version="0.0.0.0" if not version else version
         self.aboutGui.Version.setText("Version "+version)
 
         self.aboutGui.IconGif.setMovie(gif)
@@ -295,6 +295,7 @@ class Program(MainUi.Ui_MainWindow):
 
             self.DownloadButton.setText("Cancel\ndownload")
             self.DownloadButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/miniCross.png"))
+            self.DownloadButton.setToolTip("Stop downloading!")
 
             self.MainWidget.update()
             self.url = self.UrlTextBox.text()
@@ -322,7 +323,8 @@ class Program(MainUi.Ui_MainWindow):
         self.ConsoleAddLine("Download process ended")
 
         self.DownloadButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/miniArrow.png"))
-        self.DownloadButton.setText("Start\ndownload!") 
+        self.DownloadButton.setText("Start\ndownload!")
+        self.DownloadButton.setToolTip("Finally, download!")
 
         msg = QMessageBox()
         msg.setWindowIcon(QtGui.QIcon(pd.__PyDist__._WorkDir+'assets/ytdl.png'))

@@ -40,7 +40,7 @@ def GetRevisionNumber():
 
 def BuildExecutable(python, app):
     pyinstaller=python[:python.rfind('\\')+1]+'scripts\\pyinstaller.exe'
-    cmd=pyinstaller+" "+app
+    cmd='"'+pyinstaller+'" '+app
     print ("\nBuild App...\n")
     print ("Execute Command: ",cmd)
     os.system(cmd)
