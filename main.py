@@ -13,6 +13,13 @@ import downloader as dl
 import youtubedl_about_class as aboutWnd
 from dist import pydist as pd
 
+try:
+    import pyi_splash
+    pyi_splash.close()
+except:
+    pass
+
+
 #from settingsGuis.themePrompt_class import Ui_ChangeTheme as ThemesGui
 
 sjson = pd.__PyDist__._ExecDir+"settings.json"

@@ -33,10 +33,18 @@ a = Analysis(['main.py'],
                      win_private_assemblies=False,
                      cipher=block_cipher,
                      noarchive=False)
+splash = Splash('assets\\splash.png',
+                binaries=a.binaries,
+                datas=a.datas,
+                text_pos=(454, 127),
+                text_size=10,
+                text_color='white')
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,
           a.scripts,
+          splash,                   
+          splash.binaries,          
           a.binaries,
           a.zipfiles,
           a.datas,
