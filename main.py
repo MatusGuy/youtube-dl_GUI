@@ -17,13 +17,22 @@ from dist import pydist as pd
 
 sjson = pd.__PyDist__._ExecDir+"settings.json"
 
+def GetJSON(file,closeFile=True):
+        with open(file) as j:
+            try:
+                return json.load(j),j
+            except ValueError as e:
+                if closeFile: j.close()
+                raise Exception('Invalid json: {}'.format(e)) from None
+
+def SetJSON(file,data,closeFile=True):
+    with open(file, "w") as outfile:
+        json.dump(data,outfile,indent=4, default=str)
+
 class Program(MainUi.Ui_MainWindow):
     window = None
     app = None
 
-    url = ""
-    output = ""
-    audioOnly = False
     downloader = dl.Downloader()
     showConsole = False
     
@@ -68,8 +77,19 @@ class Program(MainUi.Ui_MainWindow):
 
         self.DownloadButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/miniArrow.png"))        
 
-        currentSettings,file = self.GetJSON(sjson)
+        currentSettings,file = GetJSON(sjson)
         self.isDarkTheme = currentSettings["isDarkTheme"]
+
+        savedConfig = currentSettings["savedConfig"]
+
+        self.UrlTextBox.setText(savedConfig["url"])
+
+        self.AudioOption.setChecked(savedConfig["audioOnly"])
+        self.TemplateInput.setText(savedConfig["template"])
+        self.RangeInput.setText(savedConfig["range"])
+
+        self.DestinationInput.setText(savedConfig["destination"])
+
         file.close()
 
         if self.isDarkTheme:
@@ -81,10 +101,6 @@ class Program(MainUi.Ui_MainWindow):
 
         self.AboutMenu.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/about.png")))
         self.ThemeMenu.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/theme.png")))
-
-        self.UrlTextBox.setText("https://www.youtube.com/watch?v=jNQXAC9IVRw")
-        self.DestinationInput.setText(str(Path.home())+"\MyVideo.mp4")
-        self.output = self.DestinationInput.text()
 
         self.DestinationButton.pressed.connect(self.SetOutput)
         self.DownloadButton.pressed.connect(self.Download)
@@ -113,31 +129,23 @@ class Program(MainUi.Ui_MainWindow):
         self.LightOption.triggered.connect(self.ToLightTheme)
         self.DarkOption.triggered.connect(self.ToDarkTheme)
 
-        self.UrlTextBox.textEdited.connect(self.OnUrlEdit)
-        self.DestinationInput.textEdited.connect(self.OnOutputEdit)
+        self.UrlTextBox.editingFinished.connect(self.OnUrlEdit)
+        self.DestinationInput.editingFinished.connect(self.OnOutputEdit)
+
+        self.AudioOption.toggled.connect(self.OnMediaTypeTriggered)
+        self.TemplateInput.editingFinished.connect(self.OnTemplateEdit)
+        self.RangeInput.editingFinished.connect(self.OnRangeEdit)
 
         return resp
-    
-    def GetJSON(self,file,closeFile=True):
-        with open(file) as j:
-            try:
-                return json.load(j),j
-            except ValueError as e:
-                if closeFile: j.close()
-                raise Exception('Invalid json: {}'.format(e)) from None
-
-    def SetJSON(self,file,data,closeFile=True):
-        with open(file, "w") as outfile:
-            json.dump(data,outfile)
 
     def SaveTheme(self,dark):
         self.DarkOption.setChecked(dark)
         self.LightOption.setChecked(not dark)
         self.isDarkTheme = self.DarkOption.isChecked()
 
-        currentSettings,file = self.GetJSON(sjson)
+        currentSettings,file = GetJSON(sjson)
         currentSettings["isDarkTheme"] = self.isDarkTheme
-        self.SetJSON(sjson, currentSettings)
+        SetJSON(sjson, currentSettings)
         file.close()
     
     def ToLightTheme(self):
@@ -211,19 +219,37 @@ class Program(MainUi.Ui_MainWindow):
                 self.error = txt.removeprefix("ERROR: ").capitalize()
             #print(self.error)
     
-    def OnUrlEdit(self):
-        newUrl = self.UrlTextBox.text()
-        urlIsEmpty = newUrl == ""
-
-        self.DownloadButton.setDisabled(urlIsEmpty)
+    def OnUrlEdit(self,closeFile=True):
+        currentSettings,file = GetJSON(sjson)
+        currentSettings["savedConfig"]["url"] = self.UrlTextBox.text()
+        SetJSON(sjson,currentSettings)
+        if closeFile: file.close()
     
-    def OnOutputEdit(self):
-        newOutput = self.DestinationInput.text()
-        self.DownloadButton.setDisabled(newOutput == "")
-        self.output = newOutput
+    def OnOutputEdit(self,closeFile=True):
+        currentSettings,file = GetJSON(sjson)
+        currentSettings["savedConfig"]["destination"] = self.DestinationInput.text()
+        SetJSON(sjson,currentSettings)
+        if closeFile: file.close()
+    
+    def OnMediaTypeTriggered(self,closeFile=True):
+        currentSettings,file = GetJSON(sjson)
+        currentSettings["savedConfig"]["audioOnly"] = self.AudioOption.isChecked()
+        SetJSON(sjson,currentSettings)
+        if closeFile: file.close()
+    
+    def OnTemplateEdit(self,closeFile=True):
+        currentSettings,file = GetJSON(sjson)
+        currentSettings["savedConfig"]["template"] = self.TemplateInput.text()
+        SetJSON(sjson,currentSettings)
+        if closeFile: file.close()
 
+    def OnRangeEdit(self,closeFile=True):
+        currentSettings,file = GetJSON(sjson)
+        currentSettings["savedConfig"]["range"] = self.RangeInput.text()
+        SetJSON(sjson,currentSettings)
+        if closeFile: file.close()
+    
     def ToggleConsole(self):
-
         X,Y,WW,WH=self.window.geometry().getRect()
         #print(f"MAIN WINDOW :({X},{Y}..{WW},{WH})")
         
@@ -239,12 +265,6 @@ class Program(MainUi.Ui_MainWindow):
             self.window.resize(WW,WH-self.console_height)
         
         self.ConsoleOutput.setHidden(not self.showConsole)
-    
-    def resizeEvent(self,event):
-        X,Y,WW,WH=self.window.geometry().getRect()
-        #print(f"MAIN WINDOW :({X},{Y}..{WW},{WH})")
-        #print(f"Event:{event}")
-        QMainWindow.resizeEvent(self, event)
 
     def DisableDownloadGui(self,disable):
         self.FileSizeLabel.setEnabled(not disable)
@@ -297,13 +317,11 @@ class Program(MainUi.Ui_MainWindow):
             self.DownloadButton.setToolTip("Stop downloading!")
 
             self.MainWidget.update()
-            self.url = self.UrlTextBox.text()
-            self.audioOnly = self.AudioOption.isChecked()
 
             Config={
-                "URL":self.url,
-                "AUDIO_ONLY":self.audioOnly,
-                "OUTPUT":self.output,
+                "URL":self.UrlTextBox.text(),
+                "AUDIO_ONLY":self.AudioOption.isChecked(),
+                "OUTPUT":self.DestinationInput.text(),
                 "TEMPLATE":self.TemplateInput.text(),
                 "RANGE":self.RangeInput.text(),
             }
@@ -380,17 +398,20 @@ def HideSplash():
     except:
         pass
 
-def prepSettings():
+def prepSettings(configfile):
     #print (f"IS EXECUTABLE: {pd.__PyDist__._isBundle}")
     #print (f"Exec Path: {pd.__PyDist__._ExecDir}")
     #print (f"Temp Path: {pd.__PyDist__._WorkDir}")
+    
+    json,file = GetJSON(configfile)
 
-    if (pd.__PyDist__._isBundle) and not os.path.exists(sjson):
-        os.system(f"copy {pd.__PyDist__._WorkDir}\\settings.json {pd.__PyDist__._ExecDir} ")
+    if (pd.__PyDist__._isBundle) and (not os.path.exists(configfile) or json["version"] != "1.1.0"):
+        os.system(f"copy {pd.__PyDist__._WorkDir}\\settings.json {pd.__PyDist__._ExecDir} /Y >NUL")
+    file.close()
 
 if __name__ == '__main__':
     ctypes.windll.user32.ShowWindow( ctypes.windll.kernel32.GetConsoleWindow(), 0 )
 
-    prepSettings()
+    if (pd.__PyDist__._isBundle): prepSettings(sjson)
 
     window()

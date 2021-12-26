@@ -29,6 +29,16 @@ def UpdateResourcesFile(filename, version):
     UpdateLines(lines,version)
     WriteVersionFile(filename,lines)
 
+def UpdatedUpgradeFile(filename,version=[]):
+    file = open(filename, 'r+')
+    line=file.readline()
+    params=line.split(" ")
+    file.seek(0,0)
+    line=f"{version[0]}.{version[1]}.{version[2]}.{version[3]} {params[1]}"
+    file.writelines(line)
+    print (f"Update UPG file:[{filename,}] -> {line}")
+    file.close()
+
 def GetRevisionNumber():
     svninfo=os.popen('svn info').read()
     svninfo=svninfo.split('\n')
@@ -49,17 +59,20 @@ def BuildExecutable(python, app):
 
 def main(argv):
     filename="dist\\Resources.rc"
-    print ("\nRelease Script Tool - CM2019\n")
+    print ("\nRelease Script Tool - CM2019-2022\n")
 
     if (len(argv)<5):
         print ("Usage: Build.py <app_spec> <Version> <MajorFeat> <MinorFeat> <BugsFixs>")
         return
 
+    program=argv[1][argv[1].rfind("\\")+1:argv[1].rfind(".")]
+    print (f"Building [{program}.exe]")
     print (f"Update {filename} file")
     #Revision=GetRevisionNumber()
     #print ("SVN Revison:"+str(GetRevisionNumber()))
     #UpdateResourcesFile(filename, [argv[2],argv[3],argv[4],str(Revision+1)])
     UpdateResourcesFile(filename, [argv[2],argv[3],argv[4],argv[5]])
+    UpdatedUpgradeFile(f".\\update\\{program}.upg",[argv[2],argv[3],argv[4],argv[5]])
     print (f"Done. Please verify the [{filename}] file.\n")
 
     build=input("Build the executable now? (y/N) ")
