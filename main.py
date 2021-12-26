@@ -4,8 +4,8 @@ from os import close, curdir, error, fdopen
 import ctypes
 from pathlib import Path
 from typing import Optional
-from PyQt5 import QtGui
-from PyQt5.QtGui import QColor, QIcon,QPalette,QMovie, QPixmap
+from PyQt5 import QtGui,QtCore
+from PyQt5.QtGui import QColor,QIcon,QPalette,QMovie,QPixmap
 from PyQt5.QtCore import QRect, Qt,pyqtSlot
 from PyQt5.QtWidgets import *
 import youtubedl_gui_class as MainUi
@@ -13,17 +13,9 @@ import downloader as dl
 import youtubedl_about_class as aboutWnd
 from dist import pydist as pd
 
-try:
-    import pyi_splash
-    pyi_splash.close()
-except:
-    pass
-
-
 #from settingsGuis.themePrompt_class import Ui_ChangeTheme as ThemesGui
 
 sjson = pd.__PyDist__._ExecDir+"settings.json"
-
 
 class Program(MainUi.Ui_MainWindow):
     window = None
@@ -376,8 +368,17 @@ def window():
     hellowindow = Program()
     hellowindow.setupUi(window,app)
 
+    QtCore.QTimer.singleShot(250, HideSplash)
+
     window.show()
     sys.exit(app.exec_())
+
+def HideSplash():
+    try:
+        import pyi_splash
+        pyi_splash.close()
+    except:
+        pass
 
 def prepSettings():
     #print (f"IS EXECUTABLE: {pd.__PyDist__._isBundle}")
