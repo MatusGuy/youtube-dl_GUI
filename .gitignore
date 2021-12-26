@@ -4,3 +4,4 @@
 settings.json
 build/*
 dist/youtube-dl_GUI.exe
+update/*
