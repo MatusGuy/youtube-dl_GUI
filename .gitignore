@@ -1,7 +1,8 @@
 *.pyc
 .qt_for_python/*
 .vscode/cpx.json
-settings.json
+.vscode/settings.json
+dist/settings.json
 build/*
 dist/youtube-dl_GUI.exe
 update/*
