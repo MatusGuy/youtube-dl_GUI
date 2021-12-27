@@ -414,7 +414,7 @@ def prepSettings(configfile,newConfigFile):
         
         os.system(f"copy {pd.__PyDist__._WorkDir}\\settings.json {pd.__PyDist__._ExecDir} /Y ")
     
-
+    newJsonFile.close()
     currJsonFile.close()
 
 if __name__ == '__main__':
