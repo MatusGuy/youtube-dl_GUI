@@ -185,7 +185,7 @@ class Program(MainUi.Ui_MainWindow):
 
             self.DownloadProgress.setValue(int(float(result)))
 
-            if not os.path.exists(self.output):
+            if not os.path.exists(self.DestinationInput.text()):
                 if "100%" in uppered:
                     self.DownloadSpeedLabel.setText("Speed: ")
                     self.ETALabel.setText("ETA: ")

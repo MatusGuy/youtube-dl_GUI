@@ -2,10 +2,10 @@
     "version": "1.1.0",
     "isDarkTheme": false,
     "savedConfig": {
-        "url": "https://www.youtube.com/watch?v=jNQXAC9IVRw",
-        "audioOnly": false,
+        "url": "https://www.youtube.com/playlist?list=PL2Mvzfb2o6bQJ_nyKZgdoJcNeBLqIXJ8R",
+        "audioOnly": true,
         "template": "%(title)s",
         "range": "",
-        "destination": ""
+        "destination": "C:/Users/Mateus/Music/Resistencia/Resistencia - .mp3"
     }
 }
