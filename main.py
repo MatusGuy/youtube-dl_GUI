@@ -15,7 +15,8 @@ from dist import pydist as pd
 
 #from settingsGuis.themePrompt_class import Ui_ChangeTheme as ThemesGui
 
-sjson = pd.__PyDist__._ExecDir+"settings.json"
+currSjson = pd.__PyDist__._ExecDir+"settings.json"
+newSjson = pd.__PyDist__._WorkDir+"settings.json"
 
 def GetJSON(file,closeFile=True):
         with open(file) as j:
@@ -77,7 +78,7 @@ class Program(MainUi.Ui_MainWindow):
 
         self.DownloadButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/miniArrow.png"))        
 
-        currentSettings,file = GetJSON(sjson)
+        currentSettings,file = GetJSON(currSjson)
         self.isDarkTheme = currentSettings["isDarkTheme"]
 
         savedConfig = currentSettings["savedConfig"]
@@ -143,9 +144,9 @@ class Program(MainUi.Ui_MainWindow):
         self.LightOption.setChecked(not dark)
         self.isDarkTheme = self.DarkOption.isChecked()
 
-        currentSettings,file = GetJSON(sjson)
+        currentSettings,file = GetJSON(currSjson)
         currentSettings["isDarkTheme"] = self.isDarkTheme
-        SetJSON(sjson, currentSettings)
+        SetJSON(currSjson, currentSettings)
         file.close()
     
     def ToLightTheme(self):
@@ -220,33 +221,33 @@ class Program(MainUi.Ui_MainWindow):
             #print(self.error)
     
     def OnUrlEdit(self,closeFile=True):
-        currentSettings,file = GetJSON(sjson)
+        currentSettings,file = GetJSON(currSjson)
         currentSettings["savedConfig"]["url"] = self.UrlTextBox.text()
-        SetJSON(sjson,currentSettings)
+        SetJSON(currSjson,currentSettings)
         if closeFile: file.close()
     
     def OnOutputEdit(self,closeFile=True):
-        currentSettings,file = GetJSON(sjson)
+        currentSettings,file = GetJSON(currSjson)
         currentSettings["savedConfig"]["destination"] = self.DestinationInput.text()
-        SetJSON(sjson,currentSettings)
+        SetJSON(currSjson,currentSettings)
         if closeFile: file.close()
     
     def OnMediaTypeTriggered(self,closeFile=True):
-        currentSettings,file = GetJSON(sjson)
+        currentSettings,file = GetJSON(currSjson)
         currentSettings["savedConfig"]["audioOnly"] = self.AudioOption.isChecked()
-        SetJSON(sjson,currentSettings)
+        SetJSON(currSjson,currentSettings)
         if closeFile: file.close()
     
     def OnTemplateEdit(self,closeFile=True):
-        currentSettings,file = GetJSON(sjson)
+        currentSettings,file = GetJSON(currSjson)
         currentSettings["savedConfig"]["template"] = self.TemplateInput.text()
-        SetJSON(sjson,currentSettings)
+        SetJSON(currSjson,currentSettings)
         if closeFile: file.close()
 
     def OnRangeEdit(self,closeFile=True):
-        currentSettings,file = GetJSON(sjson)
+        currentSettings,file = GetJSON(currSjson)
         currentSettings["savedConfig"]["range"] = self.RangeInput.text()
-        SetJSON(sjson,currentSettings)
+        SetJSON(currSjson,currentSettings)
         if closeFile: file.close()
     
     def ToggleConsole(self):
@@ -301,9 +302,7 @@ class Program(MainUi.Ui_MainWindow):
             filter=filenameFilter,
         )
 
-        self.DestinationInput.setText(filename[0] if len(filename[0]) else self.output)
-        self.output = self.DestinationInput.text()
-        #print(self.output)
+        self.DestinationInput.setText(filename[0] if len(filename[0]) else self.DestinationInput.text())
 
     def Download(self):
         if self.downloader.IsDownloading():
@@ -398,20 +397,29 @@ def HideSplash():
     except:
         pass
 
-def prepSettings(configfile):
+def prepSettings(configfile,newConfigFile):
     #print (f"IS EXECUTABLE: {pd.__PyDist__._isBundle}")
     #print (f"Exec Path: {pd.__PyDist__._ExecDir}")
     #print (f"Temp Path: {pd.__PyDist__._WorkDir}")
     
-    json,file = GetJSON(configfile)
+    currJsonData,currJsonFile = GetJSON(configfile)
+    newJsonData,newJsonFile = GetJSON(newConfigFile)
 
-    if (pd.__PyDist__._isBundle) and (not os.path.exists(configfile) or json["version"] != "1.1.0"):
-        os.system(f"copy {pd.__PyDist__._WorkDir}\\settings.json {pd.__PyDist__._ExecDir} /Y >NUL")
-    file.close()
+    if (pd.__PyDist__._isBundle) and (not os.path.exists(configfile) or currJsonData["version"] != newJsonData["version"]):
+        for key in newJsonData:
+            if key in currJsonData.keys():
+                newJsonData[key] = currJsonData[key]
+        
+        SetJSON(configfile,newJsonData)
+        
+        os.system(f"copy {pd.__PyDist__._WorkDir}\\settings.json {pd.__PyDist__._ExecDir} /Y ")
+    
+
+    currJsonFile.close()
 
 if __name__ == '__main__':
     ctypes.windll.user32.ShowWindow( ctypes.windll.kernel32.GetConsoleWindow(), 0 )
 
-    if (pd.__PyDist__._isBundle): prepSettings(sjson)
+    if (pd.__PyDist__._isBundle): prepSettings(currSjson,newSjson)
 
     window()
