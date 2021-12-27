@@ -3,7 +3,7 @@ import sys,os,json
 from os import close, curdir, error, fdopen
 import ctypes
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Set
 from PyQt5 import QtGui,QtCore
 from PyQt5.QtGui import QColor,QIcon,QPalette,QMovie,QPixmap
 from PyQt5.QtCore import QRect, Qt,pyqtSlot
@@ -401,21 +401,24 @@ def prepSettings(configfile,newConfigFile):
     #print (f"IS EXECUTABLE: {pd.__PyDist__._isBundle}")
     #print (f"Exec Path: {pd.__PyDist__._ExecDir}")
     #print (f"Temp Path: {pd.__PyDist__._WorkDir}")
-    
-    currJsonData,currJsonFile = GetJSON(configfile)
+
     newJsonData,newJsonFile = GetJSON(newConfigFile)
 
-    if (pd.__PyDist__._isBundle) and (not os.path.exists(configfile) or currJsonData["version"] != newJsonData["version"]):
-        for key in newJsonData:
-            if key in currJsonData.keys():
-                newJsonData[key] = currJsonData[key]
-        
-        SetJSON(configfile,newJsonData)
+    if pd.__PyDist__._isBundle:
+        if os.path.exists(configfile):
+            currJsonData,currJsonFile = GetJSON(configfile)
+
+            if currJsonData["version"] != newJsonData["version"]:
+                for key in newJsonData:
+                    if key in currJsonData.keys():
+                        newJsonData[key] = currJsonData[key]
+            
+            SetJSON(configfile, newJsonData)
+            currJsonFile.close()
         
         os.system(f"copy {pd.__PyDist__._WorkDir}\\settings.json {pd.__PyDist__._ExecDir} /Y ")
     
     newJsonFile.close()
-    currJsonFile.close()
 
 if __name__ == '__main__':
     ctypes.windll.user32.ShowWindow( ctypes.windll.kernel32.GetConsoleWindow(), 0 )
