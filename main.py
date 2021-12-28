@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Optional, Set
 from PyQt5 import QtGui,QtCore
 from PyQt5.QtGui import QColor,QIcon,QPalette,QMovie,QPixmap
-from PyQt5.QtCore import QRect, Qt,pyqtSlot
+from PyQt5.QtCore import QRect, QTimer, Qt,pyqtSlot
 from PyQt5.QtWidgets import *
 import youtubedl_gui_class as MainUi
 import downloader as dl
@@ -66,7 +66,10 @@ class Program(MainUi.Ui_MainWindow):
 
     error = ""
 
+    ignoredNewVersion = False
+
     def setupUi(self, MainWindow, app):
+
         self.app = app
         self.app.setStyle("Fusion")
 
@@ -140,8 +143,58 @@ class Program(MainUi.Ui_MainWindow):
         self.TemplateInput.editingFinished.connect(self.OnTemplateEdit)
         self.RangeInput.editingFinished.connect(self.OnRangeEdit)
 
-        return resp
+        versionAlert = QtCore.QTimer(self.app)
+        versionAlert.timeout.connect(self.AlertVersion)
+        versionAlert.start(5000)
 
+        return resp
+    
+    def AlertVersion(self):
+        print("version check")
+
+        exeapp=pd.__PyDist__.GetExecutable()
+        bakapp=exeapp[:-4]+".bak" if exeapp != None else "dist/youtube-dl_GUI.bak"
+
+        print(bakapp)
+        print(os.path.exists(bakapp))
+
+        if os.path.exists(bakapp) and self.ignoredNewVersion:
+            versionMsg = QMessageBox()
+            versionMsg.setIcon(QMessageBox.Icon.Information)
+            versionMsg.setWindowTitle("youtube-dl GUI")
+            versionMsg.setText("There's a new version of youtube-dl GUI available.\nRestart the application to apply it\n\nClose youtube-dl?")
+            versionMsg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Ignore)
+            versionMsg.setWindowIcon(QtGui.QIcon(pd.__PyDist__._WorkDir+'assets/ytdl.png'))
+
+            def OpenConfirmation(button):
+                #print(f"open confirmation\nsaid yes: {button.text() == 'Yes'}\nbutton text: {button.text()}")
+                if button.text() == "&Yes":
+                    confirmation = QMessageBox()
+                    confirmation.setIcon(QMessageBox.Icon.Warning)
+                    confirmation.setWindowTitle("youtube-dl GUI")
+                    confirmation.setText("Are you sure you want to close the application?")
+                    confirmation.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+                    confirmation.setWindowIcon(QtGui.QIcon(pd.__PyDist__._WorkDir+'assets/ytdl.png'))
+
+                    def Buttons(confirmButton):
+                        #print("buttons")
+                        if confirmButton.text() == "&Yes":
+                            self.window.close()
+                        else:
+                            confirmation.close()
+                            versionMsg.close()
+
+                    confirmation.buttonClicked.connect(Buttons)
+
+                    confirmation.exec_()
+                else:
+                    self.ignoredNewVersion = True
+                    versionMsg.close()
+            
+            versionMsg.buttonClicked.connect(OpenConfirmation)
+
+            versionMsg.exec_()
+            
     def SaveTheme(self,dark):
         self.DarkOption.setChecked(dark)
         self.LightOption.setChecked(not dark)
@@ -376,7 +429,7 @@ class Program(MainUi.Ui_MainWindow):
 
         msg.buttonClicked.connect(OpenDownloaded)
         
-        msg.exec()
+        msg.exec_()
 
         self.DisableDownloadGui(True)
 
@@ -403,6 +456,11 @@ def prepSettings(configfile,newConfigFile):
     #print (configfile)
 
     if pd.__PyDist__._isBundle:
+
+        exeapp=pd.__PyDist__.GetExecutable()
+        bakapp=exeapp[:-4]+".bak" if exeapp != None else "dist/youtube-dl_GUI.bak"
+        if os.path.exists(bakapp):  os.system(f"del {bakapp} /y>NUL")
+
         if os.path.exists(configfile):
             currJsonData,currJsonFile = GetJSON(configfile)
 
