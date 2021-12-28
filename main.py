@@ -145,7 +145,7 @@ class Program(MainUi.Ui_MainWindow):
 
         versionAlert = QtCore.QTimer(self.app)
         versionAlert.timeout.connect(self.AlertVersion)
-        versionAlert.start(5000)
+        versionAlert.start(60000)
 
         return resp
     
@@ -158,7 +158,7 @@ class Program(MainUi.Ui_MainWindow):
         print(bakapp)
         print(os.path.exists(bakapp))
 
-        if os.path.exists(bakapp) and self.ignoredNewVersion:
+        if os.path.exists(bakapp) and not self.ignoredNewVersion:
             versionMsg = QMessageBox()
             versionMsg.setIcon(QMessageBox.Icon.Information)
             versionMsg.setWindowTitle("youtube-dl GUI")
