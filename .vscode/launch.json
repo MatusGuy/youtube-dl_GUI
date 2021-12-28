@@ -5,10 +5,25 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Current File",
+            "name": "Python: Main program (youtube-dl_GUI)",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}\\main.py",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: processing - downloader (Component Test)",
+            "type": "python",
+            "request": "launch",
+            "program": "",
+            "console": "integratedTerminal",
+            "args": [".\\processing\\downloader_CompTest.py"]
+        },
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
             "console": "integratedTerminal"
         }
     ]
