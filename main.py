@@ -9,7 +9,7 @@ from PyQt5.QtGui import QColor,QIcon,QPalette,QMovie,QPixmap
 from PyQt5.QtCore import QRect, QTimer, Qt,pyqtSlot
 from PyQt5.QtWidgets import *
 import youtubedl_gui_class as MainUi
-import downloader as dl
+from processing import downloader as dl
 import youtubedl_about_class as aboutWnd
 from dist import pydist as pd
 import py_mysplash as psh

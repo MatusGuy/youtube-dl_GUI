@@ -6,6 +6,6 @@
         "audioOnly": false,
         "template": "%(title)s",
         "range": "",
-        "destination": ""
+        "destination": ".mp4"
     }
 }
