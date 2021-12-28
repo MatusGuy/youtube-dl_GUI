@@ -88,7 +88,7 @@ made for windows</string>
       <enum>Qt::RightToLeft</enum>
      </property>
      <property name="text">
-      <string>Version 1.0.0.0</string>
+      <string>(x64) Version 1.0.0.0</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -160,8 +160,6 @@ made for windows</string>
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="assets/aboutIcon.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

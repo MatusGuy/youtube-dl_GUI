@@ -7,6 +7,4 @@ build/*
 dist/youtube-dl_GUI.exe
 update/*
 dist/EncodeLink.py
-dist/test/pydist.dll
-dist/test/settings.json
-dist/test/youtube-dl_GUI.exe
+dist/test/*

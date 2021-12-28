@@ -12,6 +12,9 @@ import youtubedl_gui_class as MainUi
 import downloader as dl
 import youtubedl_about_class as aboutWnd
 from dist import pydist as pd
+import py_mysplash as psh
+
+
 
 #from settingsGuis.themePrompt_class import Ui_ChangeTheme as ThemesGui
 
@@ -118,7 +121,7 @@ class Program(MainUi.Ui_MainWindow):
         
         version=pd.__PyDist__.GetAppVersion()
         version="0.0.0.0" if not version else version
-        self.aboutGui.Version.setText("Version "+version)
+        self.aboutGui.Version.setText("(x64) Version "+version)
 
         self.aboutGui.IconGif.setMovie(gif)
         gif.start()
@@ -368,7 +371,7 @@ class Program(MainUi.Ui_MainWindow):
                 else:
                     result = self.output[:rfind2+1]
                 wresult=result.replace('/','\\')
-                print (wresult)
+                #print (wresult)
                 if len(wresult): os.system("explorer "+wresult)
 
         msg.buttonClicked.connect(OpenDownloaded)
@@ -385,17 +388,11 @@ def window():
     hellowindow = Program()
     hellowindow.setupUi(window,app)
 
-    QtCore.QTimer.singleShot(250, HideSplash)
+    #QtCore.QTimer.singleShot(250, HideSplash)
+    psh.Splash_loadcomplete(2000)
 
     window.show()
     sys.exit(app.exec_())
-
-def HideSplash():
-    try:
-        import pyi_splash
-        pyi_splash.close()
-    except:
-        pass
 
 def prepSettings(configfile,newConfigFile):
     #print (f"IS EXECUTABLE: {pd.__PyDist__._isBundle}")
@@ -403,20 +400,23 @@ def prepSettings(configfile,newConfigFile):
     #print (f"Temp Path: {pd.__PyDist__._WorkDir}")
 
     newJsonData,newJsonFile = GetJSON(newConfigFile)
+    #print (configfile)
 
     if pd.__PyDist__._isBundle:
         if os.path.exists(configfile):
             currJsonData,currJsonFile = GetJSON(configfile)
 
+            #print (f"Old {currJsonData['version']} New {newJsonData['version']}")
             if currJsonData["version"] != newJsonData["version"]:
+                #print ("DIFF")
                 for key in newJsonData:
                     if key in currJsonData.keys():
                         newJsonData[key] = currJsonData[key]
-            
-            SetJSON(configfile, newJsonData)
+                SetJSON(configfile, newJsonData)
             currJsonFile.close()
-        
-        os.system(f"copy {pd.__PyDist__._WorkDir}\\settings.json {pd.__PyDist__._ExecDir} /Y ")
+        else:
+            #print ("Not Exists!!")
+            os.system(f"copy {pd.__PyDist__._WorkDir}\\settings.json {pd.__PyDist__._ExecDir} /Y >NUL")
     
     newJsonFile.close()
 
