@@ -14,10 +14,15 @@ class VersionChecker():
     interval = 0
 
     window = None
+    downloader = None
 
-    def __init__(self,window,interval=60000):
+    _debug=False
+
+    def __init__(self,window,downloader,interval=60000):
         self.window = window
+        self.downloader = downloader
         self.interval = interval
+        self._SetFileToCheck()
     
     def StartChecking(self):
         self.timer.timeout.connect(self.Check)
@@ -26,11 +31,43 @@ class VersionChecker():
     def StopChecking(self):
         self.timer.stop()
     
+    def _SetFileToCheck(self,exe=None, bak=None):
+        if (exe==None):
+            self.ExeApp=pd.__PyDist__.GetExecutable() if pd.__PyDist__.GetExecutable() else ""
+        else:
+           self.ExeApp=exe
+
+        if bak==None:
+            app=pd.__PyDist__.GetExecutable() if pd.__PyDist__.GetExecutable() != None else ".\\dist\\youtube-dl_GUI.bak"
+            self.BakApp= app[:-4]+".bak"
+        else:
+            self.BakApp= bak
+
+    def _GetFilesToCheck(self):
+        return self.BakApp, self.ExeApp
+    
     def Check(self):
-        print ("Do the check")
+        if self._debug: print("Time to check")
+        
+        #Get the file to compare
+        OldApp, NewApp= self._GetFilesToCheck()
+        if self._debug: print(f"Old APP:{OldApp}\nNew App:{NewApp}\n")
+
+        #Check if they exist
+        if not os.path.exists(OldApp):
+            if self._debug: print (f"Error: OldApp: {OldApp} Not Exists!!")
+            return
+        if not os.path.exists(NewApp):
+            if self._debug: print (f"Error: NewApp: {NewApp} Not Exists!!")
+            return
+        
+        newver =pd.__PyDist__.get_version_number(NewApp)
+        oldver =pd.__PyDist__.get_version_number(OldApp)
+        if self._debug: print(f"Old APP:{OldApp} v:{oldver}\nNew App:{NewApp} v:{ newver}\n")
+
 
     def Check1(self):
-        #print("version check")
+        print("version check")
 
         exeapp=pd.__PyDist__.GetExecutable()
         bakapp=exeapp[:-4]+".bak" if exeapp != None else "dist/youtube-dl_GUI.bak"
@@ -38,7 +75,7 @@ class VersionChecker():
         #print(bakapp)
         #print(os.path.exists(bakapp))
 
-        if os.path.exists(bakapp) and not self.ignoredNewVersion:
+        if os.path.exists(bakapp):
 
             versionMsg = QMessageBox()
             versionMsg.setIcon(QMessageBox.Icon.Information)
@@ -51,7 +88,7 @@ class VersionChecker():
             def OpenConfirmation(button):
                 #print(f"open confirmation\nsaid yes: {button.text() == 'Yes'}\nbutton text: {button.text()}")
                 if button.text() == "&Yes":
-                    if dl.IsDownloading():
+                    if self.downloader.IsDownloading():
                         confirmation = QMessageBox()
                         confirmation.setIcon(QMessageBox.Icon.Warning)
                         confirmation.setWindowTitle("youtube-dl GUI")
@@ -71,6 +108,9 @@ class VersionChecker():
                         confirmation.buttonClicked.connect(Buttons)
 
                         confirmation.exec_()
+                    else:
+                        self.window.close()
+                    
                 else:
                     self.timer.stop()
                     versionMsg.close()
