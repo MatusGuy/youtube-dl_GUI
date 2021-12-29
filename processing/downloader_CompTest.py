@@ -23,7 +23,7 @@ class Dl_CompTest(object):
         
 
     def main(self,app):
-        print ("Downloader Componente Test Begin")
+        print ("Downloader Component Test Begin")
         self.appwindow = QMainWindow()
 
         print ("Preparing Config")
@@ -43,7 +43,7 @@ class Dl_CompTest(object):
 
         print (f"Donwload done!")  
 
-        print ("Downloader Componente Test End")
+        print ("Downloader Component Test End")
         os.system("del .\\processing\\testdw.mp3")
         return (resp)
 
