@@ -3,7 +3,7 @@ sys.path.insert(1,'.')
 
 from PyQt5.QtWidgets import (QApplication,QMainWindow)
 
-from processing import downloader as dl
+from components import downloader as dl
 from dist import pydist as pd
 
 class Dl_CompTest(object):
@@ -51,4 +51,3 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     theApp= Dl_CompTest()
     sys.exit(theApp.main(app))
-

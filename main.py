@@ -8,13 +8,14 @@ from PyQt5 import QtGui,QtCore
 from PyQt5.QtGui import QColor,QIcon,QPalette,QMovie,QPixmap
 from PyQt5.QtCore import QRect, QTimer, Qt,pyqtSlot
 from PyQt5.QtWidgets import *
-import youtubedl_gui_class as MainUi
-from processing import downloader as dl
-import youtubedl_about_class as aboutWnd
+import interface.mainUi as MainUi
 from dist import pydist as pd
 import py_mysplash as psh
 
+from components import downloader as dl
+#from components import versionChecker as vc
 
+from interface import aboutWindow as aw
 
 #from settingsGuis.themePrompt_class import Ui_ChangeTheme as ThemesGui
 
@@ -34,10 +35,13 @@ def SetJSON(file,data,closeFile=True):
         json.dump(data,outfile,indent=4, default=str)
 
 class Program(MainUi.Ui_MainWindow):
-    window = None
-    app = None
+    window = QMainWindow
+    app = QApplication
 
-    downloader = dl.Downloader()
+    downloader = dl.Downloader
+    #versionChecker = vc.VersionChecker
+    aboutWindow = aw.AboutDialog
+
     showConsole = False
     
     aboutDialog=None
@@ -68,7 +72,7 @@ class Program(MainUi.Ui_MainWindow):
 
     ignoredNewVersion = False
 
-    def setupUi(self, MainWindow, app):
+    def setupUi(self, MainWindow:QMainWindow, app:QApplication):
 
         self.app = app
         self.app.setStyle("Fusion")
@@ -116,22 +120,13 @@ class Program(MainUi.Ui_MainWindow):
         #self.Downloader = dl.Downloader(".\\youtube-dl\\")
 
         self.downloader = dl.Downloader(pd.__PyDist__._WorkDir+".\\youtube-dl\\",self.ConsoleAddLine,self.Downloaded_Ended)
-
-        self.aboutGui = aboutWnd.Ui_About()
-        self.aboutDialog = QDialog(self.window,Qt.WindowType.WindowCloseButtonHint)
-        self.aboutGui.setupUi(self.aboutDialog)
-        gif = QMovie(pd.__PyDist__._WorkDir+"assets/ytdl.gif")
         
-        version=pd.__PyDist__.GetAppVersion()
-        version="0.0.0.0" if not version else version
-        self.aboutGui.Version.setText("(x64) Version "+version)
-
-        self.aboutGui.IconGif.setMovie(gif)
-        gif.start()
-        self.aboutDialog.setModal(True)
-        self.aboutGui.OKbt.pressed.connect(self.aboutDialog.close)
-        
-        self.AboutMenu.triggered.connect(self.aboutDialog.exec_)
+        self.aboutWindow = aw.AboutDialog(
+            version=pd.__PyDist__.GetAppVersion(),
+            aboutGif=pd.__PyDist__._WorkDir+"assets/ytdl.gif",
+            windowIcon=pd.__PyDist__._WorkDir+"assets/ytdl.png"
+        )
+        self.AboutMenu.triggered.connect(self.aboutWindow.Execute)
 
         self.LightOption.triggered.connect(self.ToLightTheme)
         self.DarkOption.triggered.connect(self.ToDarkTheme)
@@ -143,9 +138,8 @@ class Program(MainUi.Ui_MainWindow):
         self.TemplateInput.editingFinished.connect(self.OnTemplateEdit)
         self.RangeInput.editingFinished.connect(self.OnRangeEdit)
 
-        versionAlert = QtCore.QTimer(self.app)
-        versionAlert.timeout.connect(self.AlertVersion)
-        versionAlert.start(60000)
+        #self.versionChecker = vc.VersionChecker(self.AlertVersion,60000)
+        self.versionChecker.StartChecking()
 
         return resp
     
@@ -155,40 +149,47 @@ class Program(MainUi.Ui_MainWindow):
         exeapp=pd.__PyDist__.GetExecutable()
         bakapp=exeapp[:-4]+".bak" if exeapp != None else "dist/youtube-dl_GUI.bak"
 
-        print(bakapp)
-        print(os.path.exists(bakapp))
+        #print(bakapp)
+        #print(os.path.exists(bakapp))
 
-        if os.path.exists(bakapp) and not self.ignoredNewVersion:
+        if os.path.exists(bakapp) and pd.PyDist.version_compare():
+
             versionMsg = QMessageBox()
             versionMsg.setIcon(QMessageBox.Icon.Information)
             versionMsg.setWindowTitle("youtube-dl GUI")
-            versionMsg.setText("There's a new version of youtube-dl GUI available.\nRestart the application to apply it\n\nClose youtube-dl?")
-            versionMsg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Ignore)
+            versionMsg.setText("There's a new version of youtube-dl GUI available.\nRestart the application to apply it.\n\nClose the application?")
+            versionMsg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
             versionMsg.setWindowIcon(QtGui.QIcon(pd.__PyDist__._WorkDir+'assets/ytdl.png'))
+            versionMsg.setModal(True)
 
-            def OpenConfirmation(button):
+            def OpenConfirmation(button:QAbstractButton):
                 #print(f"open confirmation\nsaid yes: {button.text() == 'Yes'}\nbutton text: {button.text()}")
                 if button.text() == "&Yes":
-                    confirmation = QMessageBox()
-                    confirmation.setIcon(QMessageBox.Icon.Warning)
-                    confirmation.setWindowTitle("youtube-dl GUI")
-                    confirmation.setText("Are you sure you want to close the application?")
-                    confirmation.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-                    confirmation.setWindowIcon(QtGui.QIcon(pd.__PyDist__._WorkDir+'assets/ytdl.png'))
+                    if self.downloader.IsDownloading():
+                        confirmation = QMessageBox()
+                        confirmation.setIcon(QMessageBox.Icon.Warning)
+                        confirmation.setWindowTitle("youtube-dl GUI")
+                        confirmation.setText("Are you sure you want to close the application?\nYou're in the middle of a download!")
+                        confirmation.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+                        confirmation.setWindowIcon(QtGui.QIcon(pd.__PyDist__._WorkDir+'assets/ytdl.png'))
+                        confirmation.setModal(True)
 
-                    def Buttons(confirmButton):
-                        #print("buttons")
-                        if confirmButton.text() == "&Yes":
-                            self.window.close()
-                        else:
-                            confirmation.close()
-                            versionMsg.close()
+                        def Buttons(confirmButton:QAbstractButton):
+                            #print("buttons")
+                            if confirmButton.text() == "&Yes":
+                                self.window.close()
+                            else:
+                                confirmation.close()
+                                versionMsg.close()
 
-                    confirmation.buttonClicked.connect(Buttons)
+                        confirmation.buttonClicked.connect(Buttons)
 
-                    confirmation.exec_()
+                        confirmation.exec_()
+                    else:
+                        self.window.close()
+                    
                 else:
-                    self.ignoredNewVersion = True
+                    self.versionChecker.StopChecking()
                     versionMsg.close()
             
             versionMsg.buttonClicked.connect(OpenConfirmation)

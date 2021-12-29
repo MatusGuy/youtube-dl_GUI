@@ -1,13 +1,9 @@
 import os
 
-from PyQt5 import QtWidgets
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtWidgets import *
 
 from dist import pydist as pd
-
-from downloader import Downloader as dl
-from main import window
 
 class VersionChecker():
     timer = QtCore.QTimer()
@@ -16,12 +12,14 @@ class VersionChecker():
     window = None
     downloader = None
 
+    notifyCallback = None
+
     _debug=False
 
-    def __init__(self,window,downloader,interval=60000):
-        self.window = window
-        self.downloader = downloader
+    def __init__(self,notifyCallback,interval=60000):
         self.interval = interval
+
+        self.notifyCallback = notifyCallback
         self._SetFileToCheck()
     
     def StartChecking(self):
@@ -30,6 +28,9 @@ class VersionChecker():
     
     def StopChecking(self):
         self.timer.stop()
+
+    def GetAppVersion(self):
+        return pd.__PyDist__.GetAppVersion()
     
     def _SetFileToCheck(self,exe=None, bak=None):
         if (exe==None):
@@ -46,6 +47,15 @@ class VersionChecker():
     def _GetFilesToCheck(self):
         return self.BakApp, self.ExeApp
     
+    def ConvLst2Str(self,version:list,addzeros=False):
+        resp=""
+        cnt=0
+        for v in version:
+            resp+=f"{v}."
+            cnt+=1
+        if addzeros and cnt<=4: resp+="0."*(4-cnt)
+        return resp[:-1]
+    
     def Check(self):
         if self._debug: print("Time to check")
         
@@ -61,9 +71,23 @@ class VersionChecker():
             if self._debug: print (f"Error: NewApp: {NewApp} Not Exists!!")
             return
         
-        newver =pd.__PyDist__.get_version_number(NewApp)
-        oldver =pd.__PyDist__.get_version_number(OldApp)
-        if self._debug: print(f"Old APP:{OldApp} v:{oldver}\nNew App:{NewApp} v:{ newver}\n")
+        self.NewVer =pd.__PyDist__.get_version_number(NewApp)
+        self.OldVer =pd.__PyDist__.get_version_number(OldApp)
+        if self._debug: print(f"Old App:{OldApp} v:{self.OldVer}\nNew App:{NewApp} v:{self.NewVer}\n")
+
+        #Check for a bigger version
+        verCompare=pd.__PyDist__.version_compare(self.NewVer,self.OldVer)
+        if verCompare==0:
+            if self._debug: print (f"Same Version. No action needed.")
+            return
+        elif verCompare<0:
+            if self._debug: print (f"Error: OldVersion is newer than newer version!!!!")
+            return
+
+        if self._debug: print (f"New Version Detected. Notify now...")
+
+        #TODO: Notify 
+        if self.notifyCallback: self.notifyCallback(self.ConvLst2Str(self.NewVer),self.ConvLst2Str(self.OldVer))
 
 
     def Check1(self):

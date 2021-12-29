@@ -17,7 +17,7 @@
             "request": "launch",
             "program": "",
             "console": "integratedTerminal",
-            "args": [".\\processing\\downloader_CompTest.py"]
+            "args": [".\\components\\downloader_CompTest.py"]
         },
         {
             "name": "Python: processing - Version checker (Component Test)",
@@ -25,7 +25,15 @@
             "request": "launch",
             "program": "",
             "console": "integratedTerminal",
-            "args": [".\\processing\\versionChecker_CompTest.py"]
+            "args": [".\\components\\versionChecker_CompTest.py"]
+        },
+        {
+            "name": "Python: processing - About window (Preview)",
+            "type": "python",
+            "request": "launch",
+            "program": "",
+            "console": "integratedTerminal",
+            "args": [".\\interface\\aboutWindow_Preview.py"]
         },
         {
             "name": "Python: Current file",

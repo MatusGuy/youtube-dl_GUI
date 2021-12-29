@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'youtubedl_about.ui'
+# Form implementation generated from reading ui file 'about.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.6
 #
@@ -91,8 +91,7 @@ class Ui_About(object):
 "made for windows"))
         self.OKbt.setText(_translate("About", "OK"))
         self.Title.setText(_translate("About", "youtube-dl GUI"))
-        self.Version.setText(_translate("About", "Version 1.0.0.0"))
+        self.Version.setText(_translate("About", "(x64) Version 1.0.0.0"))
         self.Copyright.setText(_translate("About", "Copyright © 2021-2022 MatusGuy"))
         self.Description.setText(_translate("About", "This application downloads a local copy of a YouTube video of your choice. You can also download the video as audio-only for music or sound effects."))
         self.IconGif.setText(_translate("About", "ytdl.gif"))
-import aboutIcon_rc
