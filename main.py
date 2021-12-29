@@ -146,6 +146,8 @@ class Program(MainUi.Ui_MainWindow):
     def AlertVersion(self,NewVer="",OldVer=""):
         #print("version check")
 
+        if self.downloader.IsDownloading(): return
+
         versionMsg = QMessageBox()
         versionMsg.setIcon(QMessageBox.Icon.Information)
         versionMsg.setWindowTitle("youtube-dl GUI")
@@ -157,29 +159,7 @@ class Program(MainUi.Ui_MainWindow):
         def OpenConfirmation(button:QAbstractButton):
             #print(f"open confirmation\nsaid yes: {button.text() == 'Yes'}\nbutton text: {button.text()}")
             if button.text() == "&Yes":
-                if self.downloader.IsDownloading():
-                    confirmation = QMessageBox()
-                    confirmation.setIcon(QMessageBox.Icon.Warning)
-                    confirmation.setWindowTitle("youtube-dl GUI")
-                    confirmation.setText("Are you sure you want to close the application?\nYou're in the middle of a download!")
-                    confirmation.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-                    confirmation.setWindowIcon(QtGui.QIcon(pd.__PyDist__._WorkDir+'assets/ytdl.png'))
-                    confirmation.setModal(True)
-
-                    def Buttons(confirmButton:QAbstractButton):
-                        #print("buttons")
-                        if confirmButton.text() == "&Yes":
-                            self.window.close()
-                        else:
-                            confirmation.close()
-                            versionMsg.close()
-
-                    confirmation.buttonClicked.connect(Buttons)
-
-                    confirmation.exec_()
-                else:
-                    self.window.close()
-                
+                self.window.close()
             else:
                 self.versionChecker.StopChecking()
                 versionMsg.close()
