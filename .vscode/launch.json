@@ -12,7 +12,7 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "Python: processing - Downloader (Component Test)",
+            "name": "Python: components - Downloader (Component Test)",
             "type": "python",
             "request": "launch",
             "program": "",
@@ -20,7 +20,7 @@
             "args": [".\\components\\downloader_CompTest.py"]
         },
         {
-            "name": "Python: processing - Version checker (Component Test)",
+            "name": "Python: components - Version checker (Component Test)",
             "type": "python",
             "request": "launch",
             "program": "",
@@ -28,7 +28,15 @@
             "args": [".\\components\\versionChecker_CompTest.py"]
         },
         {
-            "name": "Python: processing - About window (Preview)",
+            "name": "Python: components - Preferences manager (Component Test)",
+            "type": "python",
+            "request": "launch",
+            "program": "",
+            "console": "integratedTerminal",
+            "args": [".\\components\\prefMng_CompTest.py"]
+        },
+        {
+            "name": "Python: interface - About window (Preview)",
             "type": "python",
             "request": "launch",
             "program": "",
