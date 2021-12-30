@@ -1,11 +1,11 @@
 import json,sys,os
 sys.path.insert(1,'.')
 
-
+from dist import pydist as pd
 
 class PreferencesManager(object):
 
-    data=None
+    settings=None
     default_data={  "version": "1.1.0",
                     "isDarkTheme": False,
                     "savedConfig": {
@@ -16,19 +16,20 @@ class PreferencesManager(object):
                         "destination": ".mp4"
                     }
                 }
+
     filename=None
-    defaultfilename=None
+    isPendingChanges=False
 
     ErrorNum=0
     ErrorMsg=""
 
+    def __init__(self,filename):
+        self.filename=filename
+        self.UpgradeSettings()
+
     def _setError(self,code,msg):
         self.ErrorNum=code
         self.ErrorMsg=msg
-
-    def __init__(self,filename, defaultfile=None):
-        self.filename=filename
-        self.defaultfilename=defaultfile
 
     def _MergeSettings(self,new,curr):
         data={}
@@ -43,17 +44,17 @@ class PreferencesManager(object):
                 data[nk]=new[nk]
         return data
         
-            
         
-
     def UpgradeSettings(self):
         defdata=self.default_data
         data=self.ReadJSON(self.filename,False)
-        if data==None: 
+        if data==None:
+            self.settings=self.default_data 
             self._setError(2,"No setting file found. No settings re-use needed.")
             return
 
-        if "version" in data and defdata["version"]==data["version"]: 
+        if "version" in data and defdata["version"]==data["version"]:
+            self.settings=data  
             self._setError(0,"No Setting upgrade needed.")
             return
 
@@ -61,7 +62,7 @@ class PreferencesManager(object):
         newdata["version"]=defdata["version"]
 
         self.WriteJSON(self.filename,newdata)
-        self.data=newdata
+        self.settings=newdata
         return newdata
 
 
@@ -70,21 +71,45 @@ class PreferencesManager(object):
         try:
             with open(self.filename) as outfile:
                 try:
-                    self.data=json.load(outfile)
+                    self.settings=json.load(outfile)
                     self._setError(0,"Load OK")
                 except ValueError as e:
                     raise Exception('Invalid json: {}'.format(e)) from None
                 outfile.close()
         except Exception as ex:
-            if useDefault: self.data=self.default_data
-            else: self.data=None
+            if useDefault: self.settings=self.default_data
+            else: self.settings=None
 
             self._setError(1,f"Fail to load setting! Default data ({ex})")
-        return self.data
+        return self.settings
 
     def WriteJSON(self,filename,data):
-        with open(filename, "w") as outfile:
-            json.dump(data,outfile,indent=4,default=str)
-            outfile.close()
+        try:
+            with open(filename, "w") as outfile:
+                json.dump(data,outfile,indent=4,default=str)
+                outfile.close()
+                self.isPendingChanges=False
+        except Exception as ex:
+            pass
+
+    def SetSetting(self,settingList:list,value,data={}):
+        resp=False
+        if len(data)==0: data=self.settings
+        for setting in settingList:
+            if setting in data:
+                if settingList[-1:][0]==setting:
+                    if data[setting]==value: 
+                        resp=False
+                    else:
+                        data[setting]=value
+                        resp=True
+                else:
+                    resp=self.SetSetting(settingList[1:],value,data=data[setting])
+            else:
+                resp=False
+        self.isPendingChanges=self.isPendingChanges or resp
+        return resp
+
+
         
     

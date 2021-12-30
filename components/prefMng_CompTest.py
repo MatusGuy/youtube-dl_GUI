@@ -35,6 +35,13 @@ def main():
     print ("\nMerge Test")
     print (prefs._MergeSettings(datanew,datacurr))
 
+    print ("\n Set Setting")
+    print (prefs.settings)
+    print (prefs.SetSetting(["isDarkTheme"],True))
+    print (prefs.SetSetting(['savedConfig','audioOnly'],True))
+    prefs.WriteJSON(prefs.filename,prefs.settings)
+    print (prefs.settings)
+
 
     print ("Component Test End")
 
