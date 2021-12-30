@@ -430,10 +430,6 @@ def prepSettings(configfile,newConfigFile):
 
     if pd.__PyDist__._isBundle:
 
-        exeapp=pd.__PyDist__.GetExecutable()
-        bakapp=exeapp[:-4]+".bak" if exeapp != None else "dist/youtube-dl_GUI.bak"
-        if os.path.exists(bakapp):  os.system(f"del {bakapp} /y>NUL")
-
         if os.path.exists(configfile):
             currJsonData,currJsonFile = GetJSON(configfile)
 
