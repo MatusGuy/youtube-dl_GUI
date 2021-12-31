@@ -1,12 +1,9 @@
-from json import decoder
-import sys,os,json
-from os import close, curdir, error, fdopen
+import sys,os
 import ctypes
 from pathlib import Path
-from typing import Optional, Set
-from PyQt5 import QtGui,QtCore
-from PyQt5.QtGui import QColor,QIcon,QPalette,QMovie,QPixmap
-from PyQt5.QtCore import QRect, QTimer, Qt,pyqtSlot
+from PyQt5 import QtGui
+from PyQt5.QtGui import QColor,QIcon,QPalette,QPixmap
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import *
 import interface.mainUi as MainUi
 from dist import pydist as pd
@@ -14,6 +11,7 @@ import py_mysplash as psh
 
 from components import downloader as dl
 from components import versionChecker as vc
+from components import prefMng as pm
 
 from interface import aboutWindow as aw
 
@@ -22,24 +20,14 @@ from interface import aboutWindow as aw
 currSjson = pd.__PyDist__._ExecDir+"settings.json"
 newSjson = pd.__PyDist__._WorkDir+"settings.json"
 
-def GetJSON(file,closeFile=True):
-        with open(file) as j:
-            try:
-                return json.load(j),j
-            except ValueError as e:
-                if closeFile: j.close()
-                raise Exception('Invalid json: {}'.format(e)) from None
-
-def SetJSON(file,data,closeFile=True):
-    with open(file, "w") as outfile:
-        json.dump(data,outfile,indent=4, default=str)
-
 class Program(MainUi.Ui_MainWindow):
     window = QMainWindow
     app = QApplication
 
     downloader = dl.Downloader
-    #versionChecker = vc.VersionChecker
+    versionChecker = vc.VersionChecker
+    prefMng = pm.PreferencesManager
+
     aboutWindow = aw.AboutDialog
 
     showConsole = False
@@ -86,22 +74,19 @@ class Program(MainUi.Ui_MainWindow):
 
         self.VideoOption.setChecked(True)
 
-        self.DownloadButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/miniArrow.png"))        
+        self.DownloadButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/miniArrow.png"))
 
-        currentSettings,file = GetJSON(currSjson)
-        self.isDarkTheme = currentSettings["isDarkTheme"]
+        self.prefMng = pm.PreferencesManager(currSjson)
+        
+        self.isDarkTheme = self.prefMng.settings["isDarkTheme"]
 
-        savedConfig = currentSettings["savedConfig"]
+        self.UrlTextBox.setText(self.prefMng.settings["savedConfig"]["url"])
 
-        self.UrlTextBox.setText(savedConfig["url"])
+        self.AudioOption.setChecked(self.prefMng.settings["savedConfig"]["audioOnly"])
+        self.TemplateInput.setText(self.prefMng.settings["savedConfig"]["template"])
+        self.RangeInput.setText(self.prefMng.settings["savedConfig"]["range"])
 
-        self.AudioOption.setChecked(savedConfig["audioOnly"])
-        self.TemplateInput.setText(savedConfig["template"])
-        self.RangeInput.setText(savedConfig["range"])
-
-        self.DestinationInput.setText(savedConfig["destination"])
-
-        file.close()
+        self.DestinationInput.setText(self.prefMng.settings["savedConfig"]["destination"])
 
         if self.isDarkTheme:
             self.ToDarkTheme()
@@ -131,12 +116,14 @@ class Program(MainUi.Ui_MainWindow):
         self.LightOption.triggered.connect(self.ToLightTheme)
         self.DarkOption.triggered.connect(self.ToDarkTheme)
 
-        self.UrlTextBox.editingFinished.connect(self.OnUrlEdit)
-        self.DestinationInput.editingFinished.connect(self.OnOutputEdit)
+        self.UrlTextBox.editingFinished.connect(lambda: self.prefMng.SetSetting(["savedConfig","url"],self.UrlTextBox.text()))
+        self.DestinationInput.editingFinished.connect(lambda: self.prefMng.SetSetting(["savedConfig","destination"],self.DestinationInput.text()))
 
-        self.AudioOption.toggled.connect(self.OnMediaTypeTriggered)
-        self.TemplateInput.editingFinished.connect(self.OnTemplateEdit)
-        self.RangeInput.editingFinished.connect(self.OnRangeEdit)
+        self.AudioOption.toggled.connect(lambda: self.prefMng.SetSetting(["savedConfig","audioOnly"],self.AudioOption.isChecked()))
+        self.TemplateInput.editingFinished.connect(lambda: self.prefMng.SetSetting(["savedConfig","template"],self.TemplateInput.text()))
+        self.RangeInput.editingFinished.connect(lambda: self.prefMng.SetSetting(["savedConfig","range"],self.RangeInput.text()))
+
+        app.aboutToQuit.connect(lambda: self.prefMng.WriteJSON(self.prefMng.filename,self.prefMng.settings))
 
         self.versionChecker = vc.VersionChecker(self.AlertVersion,60000)
         self.versionChecker.StartChecking()
@@ -153,7 +140,7 @@ class Program(MainUi.Ui_MainWindow):
         versionMsg.setWindowTitle("youtube-dl GUI")
         versionMsg.setText("There's a new version of youtube-dl GUI available.\nRestart the application to apply it.\n\nClose the application?")
         versionMsg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-        versionMsg.setWindowIcon(QtGui.QIcon(pd.__PyDist__._WorkDir+'assets/ytdl.png'))
+        versionMsg.setWindowIcon(QIcon(pd.__PyDist__._WorkDir+'assets/ytdl.png'))
         versionMsg.setModal(True)
 
         def OpenConfirmation(button:QAbstractButton):
@@ -173,10 +160,7 @@ class Program(MainUi.Ui_MainWindow):
         self.LightOption.setChecked(not dark)
         self.isDarkTheme = self.DarkOption.isChecked()
 
-        currentSettings,file = GetJSON(currSjson)
-        currentSettings["isDarkTheme"] = self.isDarkTheme
-        SetJSON(currSjson, currentSettings)
-        file.close()
+        self.prefMng.SetSetting(["isDarkTheme"],dark)
     
     def ToLightTheme(self):
         self.app.setPalette(QPalette())
@@ -248,36 +232,6 @@ class Program(MainUi.Ui_MainWindow):
             else:
                 self.error = txt.removeprefix("ERROR: ").capitalize()
             #print(self.error)
-    
-    def OnUrlEdit(self,closeFile=True):
-        currentSettings,file = GetJSON(currSjson)
-        currentSettings["savedConfig"]["url"] = self.UrlTextBox.text()
-        SetJSON(currSjson,currentSettings)
-        if closeFile: file.close()
-    
-    def OnOutputEdit(self,closeFile=True):
-        currentSettings,file = GetJSON(currSjson)
-        currentSettings["savedConfig"]["destination"] = self.DestinationInput.text()
-        SetJSON(currSjson,currentSettings)
-        if closeFile: file.close()
-    
-    def OnMediaTypeTriggered(self,closeFile=True):
-        currentSettings,file = GetJSON(currSjson)
-        currentSettings["savedConfig"]["audioOnly"] = self.AudioOption.isChecked()
-        SetJSON(currSjson,currentSettings)
-        if closeFile: file.close()
-    
-    def OnTemplateEdit(self,closeFile=True):
-        currentSettings,file = GetJSON(currSjson)
-        currentSettings["savedConfig"]["template"] = self.TemplateInput.text()
-        SetJSON(currSjson,currentSettings)
-        if closeFile: file.close()
-
-    def OnRangeEdit(self,closeFile=True):
-        currentSettings,file = GetJSON(currSjson)
-        currentSettings["savedConfig"]["range"] = self.RangeInput.text()
-        SetJSON(currSjson,currentSettings)
-        if closeFile: file.close()
     
     def ToggleConsole(self):
         X,Y,WW,WH=self.window.geometry().getRect()
@@ -420,36 +374,7 @@ def window():
     window.show()
     sys.exit(app.exec_())
 
-def prepSettings(configfile,newConfigFile):
-    #print (f"IS EXECUTABLE: {pd.__PyDist__._isBundle}")
-    #print (f"Exec Path: {pd.__PyDist__._ExecDir}")
-    #print (f"Temp Path: {pd.__PyDist__._WorkDir}")
-
-    newJsonData,newJsonFile = GetJSON(newConfigFile)
-    #print (configfile)
-
-    if pd.__PyDist__._isBundle:
-
-        if os.path.exists(configfile):
-            currJsonData,currJsonFile = GetJSON(configfile)
-
-            #print (f"Old {currJsonData['version']} New {newJsonData['version']}")
-            if currJsonData["version"] != newJsonData["version"]:
-                #print ("DIFF")
-                for key in newJsonData:
-                    if key in currJsonData.keys():
-                        newJsonData[key] = currJsonData[key]
-                SetJSON(configfile, newJsonData)
-            currJsonFile.close()
-        else:
-            #print ("Not Exists!!")
-            os.system(f"copy {pd.__PyDist__._WorkDir}\\settings.json {pd.__PyDist__._ExecDir} /Y >NUL")
-    
-    newJsonFile.close()
-
 if __name__ == '__main__':
     ctypes.windll.user32.ShowWindow( ctypes.windll.kernel32.GetConsoleWindow(), 0 )
-
-    if (pd.__PyDist__._isBundle): prepSettings(currSjson,newSjson)
 
     window()
