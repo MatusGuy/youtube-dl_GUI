@@ -73,8 +73,11 @@ class PreferencesManager(object):
                 try:
                     self.settings=json.load(outfile)
                     self._setError(0,"Load OK")
-                except ValueError as e:
-                    raise Exception('Invalid json: {}'.format(e)) from None
+                except Exception as ex:
+                    self._setError(1,f"Unable to load json. {ex}")
+                    print(ex)
+                    if useDefault: self.settings=self.default_data
+                    else: self.settings=None
                 outfile.close()
         except Exception as ex:
             if useDefault: self.settings=self.default_data

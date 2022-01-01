@@ -365,8 +365,8 @@ def window():
 
     window = QMainWindow()
 
-    hellowindow = Program()
-    hellowindow.setupUi(window,app)
+    program = Program()
+    program.setupUi(window,app)
 
     #QtCore.QTimer.singleShot(250, HideSplash)
     psh.Splash_loadcomplete(2000)
