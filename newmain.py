@@ -1,6 +1,6 @@
 import sys
 from PyQt5 import QtWidgets, QtGui
-from PyQt5.QtCore import QEvent
+from PyQt5.QtCore import QEvent, QObject
 from interface.newmainUi import Ui_MainWindow
 from PyQt5.QtWidgets import QApplication, QDockWidget, QMainWindow
 
@@ -21,9 +21,7 @@ class NewProgram(Ui_MainWindow,QMainWindow):
 
         self.Console.hide()
 
-
-        self.DownloadInfo.insertRow(0)
-        self.DownloadInfo.setVerticalHeaderLabels(["helloworld"])
+        self.DownloadInfo
 
         ####  Icons           ####
 
@@ -40,7 +38,7 @@ class NewProgram(Ui_MainWindow,QMainWindow):
 
         return resp
 
-    def eventFilter(self, obj, event):
+    def eventFilter(self, obj:QObject, event:QEvent):
         if obj is self.Console and event.type() == QEvent.Type.Close: self.ConsoleOption.setChecked(False)
         return super().eventFilter(obj, event)
 
