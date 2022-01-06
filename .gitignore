@@ -8,3 +8,4 @@ dist/youtube-dl_GUI.exe
 update/*
 dist/EncodeLink.py
 dist/test/*
+*.ini
