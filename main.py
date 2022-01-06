@@ -67,6 +67,12 @@ class Program(MainUi.Ui_MainWindow):
         self.AdditionalSwitches.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/plus.png")))
 
         #print(pd.__PyDist__._WorkDir)
+    
+    def SetupStatusBar(self):
+        self.sbProgressLabel = QLabel("")
+        self.StatusBar.addPermanentWidget(self.sbProgressLabel)
+
+        self.StatusBar.showMessage("Welcome!",7000)
 
     def setupUi(self, MainWindow:QMainWindow, app:QApplication):
 
@@ -78,6 +84,7 @@ class Program(MainUi.Ui_MainWindow):
         resp=super().setupUi(MainWindow)
 
         self.SetIcons()
+        self.SetupStatusBar()
 
         self.window.resize(0,390)
         self.ConsoleOutput.setHidden(not self.showConsole)
@@ -204,6 +211,7 @@ class Program(MainUi.Ui_MainWindow):
             result = cut2[0].replace(" ","0")
 
             self.DownloadProgress.setValue(int(float(result)))
+            #self.StatusDownloadProgress.setValue(int(float(result)))
 
             if not os.path.exists(self.DestinationInput.text()):
                 if "100%" in uppered:
