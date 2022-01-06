@@ -6,7 +6,7 @@ from dist import pydist as pd
 class PreferencesManager(object):
 
     settings=None
-    default_data={  "version": "1.1.0",
+    default_data={  "version": "1.2.0",
                     "isDarkTheme": False,
                     "savedConfig": {
                         "url": "https://www.youtube.com/watch?v=jNQXAC9IVRw",
@@ -14,7 +14,8 @@ class PreferencesManager(object):
                         "template": "%(title)s",
                         "range": "",
                         "destination": ".mp4"
-                    }
+                    },
+                    "additionalSwitches": ""
                 }
 
     filename=None

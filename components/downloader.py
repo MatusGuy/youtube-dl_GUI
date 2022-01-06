@@ -46,7 +46,7 @@ class Downloader(QtCore.QThread):
         return f'--output \"{name}{tmp}\"'
     
     def _GetCommand(self,params):
-        downloader = f"{self.downloaderPath}{self.downloaderApp}"
+        downloader = f'"{self.downloaderPath}{self.downloaderApp}"'
         options = ""
         tmp = ""
 
@@ -62,13 +62,13 @@ class Downloader(QtCore.QThread):
             template=params["TEMPLATE"]
         )
 
-        if len(params["RANGE"]):
-            options += f"--playlist-items {params['RANGE']} "
+        if len(params["RANGE"]): options += f"--playlist-items {params['RANGE']} "
+        if len(params["EXTRA"]): options += f"{params['EXTRA']} "
         
         #if params["PLAYLIST"]:
 
         command = f'{downloader} \"{params["URL"]}\" {options}{output}'
-        #print(command)
+        print(command)
         return command
 
     def Notify(self,text):

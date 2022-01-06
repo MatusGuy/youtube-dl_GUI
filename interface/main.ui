@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>661</height>
+    <height>654</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -1460,55 +1460,12 @@ download!</string>
      <addaction name="DarkOption"/>
     </widget>
     <addaction name="ThemeMenu"/>
+    <addaction name="separator"/>
+    <addaction name="AdditionalSwitches"/>
    </widget>
    <addaction name="Preferences"/>
    <addaction name="Help"/>
   </widget>
-  <action name="actionAbout">
-   <property name="text">
-    <string>About</string>
-   </property>
-  </action>
-  <action name="actionContacts">
-   <property name="text">
-    <string>Contact</string>
-   </property>
-  </action>
-  <action name="actionContact">
-   <property name="text">
-    <string>Contact</string>
-   </property>
-  </action>
-  <action name="actionContact_2">
-   <property name="text">
-    <string>Contact</string>
-   </property>
-  </action>
-  <action name="About">
-   <property name="text">
-    <string>About</string>
-   </property>
-  </action>
-  <action name="actionLinks">
-   <property name="text">
-    <string>Links</string>
-   </property>
-  </action>
-  <action name="actionTutorials">
-   <property name="text">
-    <string>Tutorials</string>
-   </property>
-  </action>
-  <action name="actionDownload_CMD_version">
-   <property name="text">
-    <string>Downloads</string>
-   </property>
-  </action>
-  <action name="actionDocumentation">
-   <property name="text">
-    <string>Documentation</string>
-   </property>
-  </action>
   <action name="AboutMenu">
    <property name="icon">
     <iconset>
@@ -1555,6 +1512,11 @@ download!</string>
    </property>
    <property name="text">
     <string>Dark</string>
+   </property>
+  </action>
+  <action name="AdditionalSwitches">
+   <property name="text">
+    <string>Additional switches</string>
    </property>
   </action>
  </widget>

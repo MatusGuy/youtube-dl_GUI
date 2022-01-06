@@ -12,7 +12,7 @@ class Dl_CompTest(object):
 
     def __init__(self):
         #super().__init__()
-        self.downloader = dl.Downloader(pd.__PyDist__._WorkDir+".\\youtube-dl\\",self.ConsoleAddLine,self.Downloaded_Ended)
+        self.downloader = dl.Downloader(".\\youtube-dl\\",self.ConsoleAddLine,self.Downloaded_Ended)
 
     def ConsoleAddLine(self,text):
         print (f"New Line:\t{text}")
@@ -30,9 +30,10 @@ class Dl_CompTest(object):
         Config={
             "URL":"https://www.youtube.com/watch?v=jNQXAC9IVRw",
             "AUDIO_ONLY":True,
-            "OUTPUT":".\\processing\\testdw.mp3",
+            "OUTPUT":"testdw.mp3",
             "TEMPLATE":"",
             "RANGE":"1-1",
+            "EXTRA":"--add-metadata",
         }
         print (Config)
         print (f"Start Downloading...")

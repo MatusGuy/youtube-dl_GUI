@@ -282,7 +282,7 @@ class Ui_MainWindow(object):
         self.MenuBar.addAction(self.Help.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.BeforeDownload.setCurrentIndex(1)
+        self.BeforeDownload.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         MainWindow.setTabOrder(self.DownloadInfo, self.DownloadButton)
         MainWindow.setTabOrder(self.DownloadButton, self.ConsoleText)

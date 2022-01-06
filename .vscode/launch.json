@@ -12,6 +12,13 @@
             "console": "integratedTerminal"
         },
         {
+            "name": "Python: youtube-dl GUI 2 prototype (Main program)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}\\newmain.py",
+            "console": "integratedTerminal"
+        },
+        {
             "name": "Python: components - Downloader (Component Test)",
             "type": "python",
             "request": "launch",

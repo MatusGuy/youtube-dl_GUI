@@ -1,11 +1,12 @@
 {
-    "version": "1.1.0",
+    "version": "1.2.0",
     "isDarkTheme": false,
     "savedConfig": {
         "url": "https://www.youtube.com/watch?v=jNQXAC9IVRw",
         "audioOnly": false,
         "template": "%(title)s",
         "range": "",
-        "destination": ".mp4"
-    }
+        "destination": ""
+    },
+    "additionalSwitches": ""
 }

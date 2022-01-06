@@ -14,6 +14,7 @@ from components import versionChecker as vc
 from components import prefMng as pm
 
 from interface import aboutWindow as aw
+from interface import addswitchesDialog as ad
 
 #from settingsGuis.themePrompt_class import Ui_ChangeTheme as ThemesGui
 
@@ -29,11 +30,9 @@ class Program(MainUi.Ui_MainWindow):
     prefMng = pm.PreferencesManager
 
     aboutWindow = aw.AboutDialog
+    addswitchesDialog = ad.AdditionalSwitchesDialog
 
     showConsole = False
-    
-    aboutDialog=None
-    aboutGui=None
 
     videos=0
 
@@ -60,6 +59,15 @@ class Program(MainUi.Ui_MainWindow):
 
     ignoredNewVersion = False
 
+    def SetIcons(self):
+        self.window.setWindowIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/ytdl.png")))
+
+        self.AboutMenu.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/about.png")))
+        self.ThemeMenu.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/theme.png")))
+        self.AdditionalSwitches.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/plus.png")))
+
+        #print(pd.__PyDist__._WorkDir)
+
     def setupUi(self, MainWindow:QMainWindow, app:QApplication):
 
         self.app = app
@@ -68,6 +76,8 @@ class Program(MainUi.Ui_MainWindow):
         self.window = MainWindow
 
         resp=super().setupUi(MainWindow)
+
+        self.SetIcons()
 
         self.window.resize(0,390)
         self.ConsoleOutput.setHidden(not self.showConsole)
@@ -93,18 +103,13 @@ class Program(MainUi.Ui_MainWindow):
         else:
             self.ToLightTheme()
 
-        self.window.setWindowIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/ytdl.png")))
-
-        self.AboutMenu.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/about.png")))
-        self.ThemeMenu.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/theme.png")))
-
         self.DestinationButton.pressed.connect(self.SetOutput)
         self.DownloadButton.pressed.connect(self.Download)
         self.ViewConsole.toggled.connect(self.ToggleConsole)
 
         #self.Downloader = dl.Downloader(".\\youtube-dl\\")
 
-        self.downloader = dl.Downloader(pd.__PyDist__._WorkDir+".\\youtube-dl\\",self.ConsoleAddLine,self.Downloaded_Ended)
+        self.downloader = dl.Downloader(pd.__PyDist__._WorkDir+"youtube-dl\\",self.ConsoleAddLine,self.Downloaded_Ended)
         
         self.aboutWindow = aw.AboutDialog(
             version=pd.__PyDist__.GetAppVersion(),
@@ -115,6 +120,9 @@ class Program(MainUi.Ui_MainWindow):
 
         self.LightOption.triggered.connect(self.ToLightTheme)
         self.DarkOption.triggered.connect(self.ToDarkTheme)
+
+        self.addswitchesDialog = ad.AdditionalSwitchesDialog(self.prefMng.settings["additionalSwitches"],pd.__PyDist__._WorkDir+"assets/ytdl.png")
+        self.AdditionalSwitches.triggered.connect(lambda: self.prefMng.SetSetting(["additionalSwitches"],self.addswitchesDialog.Execute()))
 
         self.UrlTextBox.editingFinished.connect(lambda: self.prefMng.SetSetting(["savedConfig","url"],self.UrlTextBox.text()))
         self.DestinationInput.editingFinished.connect(lambda: self.prefMng.SetSetting(["savedConfig","destination"],self.DestinationInput.text()))
@@ -173,14 +181,13 @@ class Program(MainUi.Ui_MainWindow):
         self.app.setPalette(self.darkTheme)
         self.window.setPalette(self.darkTheme)
         imgpath=pd.__PyDist__._WorkDir.replace("\\","/")
-        self.ViewConsole.setStyleSheet("QCheckBox::indicator:checked"
-                                       "{border-image : url("+imgpath+"assets/openedArrowDark.png);}"
-                                       "QCheckBox::indicator:unchecked"
-                                       "{border-image : url("+imgpath+"assets/closedArrowDark.png);}")
+        self.ViewConsole.setStyleSheet("QCheckBox::indicator:checked{border-image : url("+imgpath+"assets/openedArrowDark.png);}QCheckBox::indicator:unchecked{border-image : url("+imgpath+"assets/closedArrowDark.png);}")
         self.SaveTheme(True)
 
     def ConsoleAddLine(self,text):
         self.DownloadProgress.setEnabled(True)
+
+        txt=str
 
         if type(text)==bytes:
             txt=text.decode("ASCII")
@@ -223,7 +230,7 @@ class Program(MainUi.Ui_MainWindow):
             cut1 = prefixRemoval1.split("\\")
             currentFile = cut1[len(cut1)-1]
 
-            self.CurrentFile.setText("Current: "+currentFile)
+            self.CurrentFile.setText("Current: "+currentFile.removesuffix("(tmp)"))
             self.FilesLabel.setText(f"Files: {self.currentFilePos}/{self.listLength}")
         
         if "ERROR: " in uppered:
@@ -306,6 +313,7 @@ class Program(MainUi.Ui_MainWindow):
                 "OUTPUT":self.DestinationInput.text(),
                 "TEMPLATE":self.TemplateInput.text(),
                 "RANGE":self.RangeInput.text(),
+                "EXTRA":self.addswitchesDialog.TextEdit.toPlainText().replace("\n"," "),
             }
             ##print(str(Config))
             #self.ExecuteDownload(Config)

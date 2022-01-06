@@ -24,6 +24,7 @@ a = Analysis(['main.py'],
 
                             ('.\\assets\\theme.png'     ,'.\\assets'),
                             ('.\\assets\\about.png'     ,'.\\assets'),
+                            ('.\\assets\\plus.png'      ,'.\\assets')
                             ],
                      hiddenimports=[],
                      hookspath=['.\\dist\pydisthk.py'],
