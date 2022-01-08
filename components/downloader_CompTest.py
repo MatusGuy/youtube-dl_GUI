@@ -4,7 +4,6 @@ sys.path.insert(1,'.')
 from PyQt5.QtWidgets import (QApplication,QMainWindow)
 
 from components import downloader as dl
-from dist import pydist as pd
 
 class Dl_CompTest(object):
 

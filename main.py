@@ -8,12 +8,9 @@ import interface.mainUi as MainUi
 from dist import pydist as pd
 import py_mysplash as psh
 
-from components import downloader as dl
-from components import versionChecker as vc
-from components import prefMng as pm
+from components import downloader as dl, versionChecker as vc, prefMng as pm
 
-from interface import aboutWindow as aw
-from interface import addswitchesDialog as ad
+from interface import aboutWindow as aw, addswitchesDialog as ad, cmdhelpWindow as ch
 
 #from settingsGuis.themePrompt_class import Ui_ChangeTheme as ThemesGui
 
@@ -135,6 +132,10 @@ class Program(MainUi.Ui_MainWindow,QObject):
 
         self.addswitchesDialog = ad.AdditionalSwitchesDialog(self.prefMng.settings["additionalSwitches"],pd.__PyDist__._WorkDir+"assets/ytdl.png")
         self.AdditionalSwitches.triggered.connect(lambda: self.prefMng.SetSetting(["additionalSwitches"],self.addswitchesDialog.Execute()))
+
+        self.youtube_dlHelp.triggered.connect(lambda: ch.CmdHelpDialog().GetHelp(pd.__PyDist__._WorkDir+"youtube-dl\\youtube-dl.exe --help"))
+        self.ffmpegHelp.triggered.connect(lambda: ch.CmdHelpDialog("ffmpeg command line help").GetHelp(pd.__PyDist__._WorkDir+"youtube-dl\\ffmpeg.exe --help"))
+
 
         self.ConsoleDock.installEventFilter(self)
         self.ConsoleOption.triggered.connect(lambda: self.ConsoleDock.setHidden(not self.ConsoleOption.isChecked()))

@@ -1,4 +1,3 @@
-from posixpath import split
 import sys,os
 import subprocess as sp
 from PyQt5 import QtCore

@@ -43,12 +43,28 @@
             "args": [".\\components\\prefMng_CompTest.py"]
         },
         {
-            "name": "Python: interface - About window (Preview)",
+            "name": "Python: interface - About window (Component Test)",
             "type": "python",
             "request": "launch",
             "program": "",
             "console": "integratedTerminal",
-            "args": [".\\interface\\aboutWindow_Preview.py"]
+            "args": [".\\interface\\aboutWindow_CompTest.py"]
+        },
+        {
+            "name": "Python: interface - Additional switches dialog (Component Test)",
+            "type": "python",
+            "request": "launch",
+            "program": "",
+            "console": "integratedTerminal",
+            "args": [".\\interface\\addswitchesDialog_CompTest.py"]
+        },
+        {
+            "name": "Python: interface - Cmd help dialog (Component Test)",
+            "type": "python",
+            "request": "launch",
+            "program": "",
+            "console": "integratedTerminal",
+            "args": [".\\interface\\cmdhelpWindow_CompTest.py"]
         },
         {
             "name": "Python: Current file",
