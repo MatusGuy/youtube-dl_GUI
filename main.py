@@ -1,9 +1,8 @@
-import sys,os
-import ctypes
+import sys,os,webbrowser,ctypes
 from pathlib import Path
 from PyQt5 import QtGui
 from PyQt5.QtGui import QColor,QIcon,QPalette,QPixmap
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt,QObject,QEvent
 from PyQt5.QtWidgets import *
 import interface.mainUi as MainUi
 from dist import pydist as pd
@@ -21,7 +20,7 @@ from interface import addswitchesDialog as ad
 currSjson = pd.__PyDist__._ExecDir+"settings.json"
 newSjson = pd.__PyDist__._WorkDir+"settings.json"
 
-class Program(MainUi.Ui_MainWindow):
+class Program(MainUi.Ui_MainWindow,QObject):
     window = QMainWindow
     app = QApplication
 
@@ -62,17 +61,28 @@ class Program(MainUi.Ui_MainWindow):
     def SetIcons(self):
         self.window.setWindowIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/ytdl.png")))
 
-        self.AboutMenu.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/about.png")))
         self.ThemeMenu.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/theme.png")))
         self.AdditionalSwitches.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/plus.png")))
+
+        self.ConsoleOption.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/console.png")))
+
+        self.CommandHelpMenu.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/question.png")))
+        self.Support.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/support.png")))
+        self.About.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/about.png")))
+
+        self.DownloadButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/miniArrow.png"))
+
+        self.DestinationButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/folder.png"))
 
         #print(pd.__PyDist__._WorkDir)
     
     def SetupStatusBar(self):
-        self.sbProgressLabel = QLabel("")
-        self.StatusBar.addPermanentWidget(self.sbProgressLabel)
+        self.StatusBar.showMessage("Ready")
+        self.StatusBar.addPermanentWidget(QLabel("In preperation"))
 
-        self.StatusBar.showMessage("Welcome!",7000)
+    def eventFilter(self, obj:QObject, event:QEvent):
+        if obj is self.ConsoleDock and event.type() == QEvent.Type.Close: self.ConsoleOption.setChecked(False)
+        return super().eventFilter(obj, event)
 
     def setupUi(self, MainWindow:QMainWindow, app:QApplication):
 
@@ -87,11 +97,9 @@ class Program(MainUi.Ui_MainWindow):
         self.SetupStatusBar()
 
         self.window.resize(0,390)
-        self.ConsoleOutput.setHidden(not self.showConsole)
+        self.ConsoleDock.close()
 
         self.VideoOption.setChecked(True)
-
-        self.DownloadButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/miniArrow.png"))
 
         self.prefMng = pm.PreferencesManager(currSjson)
         
@@ -110,10 +118,6 @@ class Program(MainUi.Ui_MainWindow):
         else:
             self.ToLightTheme()
 
-        self.DestinationButton.pressed.connect(self.SetOutput)
-        self.DownloadButton.pressed.connect(self.Download)
-        self.ViewConsole.toggled.connect(self.ToggleConsole)
-
         #self.Downloader = dl.Downloader(".\\youtube-dl\\")
 
         self.downloader = dl.Downloader(pd.__PyDist__._WorkDir+"youtube-dl\\",self.ConsoleAddLine,self.Downloaded_Ended)
@@ -123,7 +127,8 @@ class Program(MainUi.Ui_MainWindow):
             aboutGif=pd.__PyDist__._WorkDir+"assets/ytdl.gif",
             windowIcon=pd.__PyDist__._WorkDir+"assets/ytdl.png"
         )
-        self.AboutMenu.triggered.connect(self.aboutWindow.Execute)
+        self.About.triggered.connect(self.aboutWindow.Execute)
+        self.Support.triggered.connect(lambda: webbrowser.open_new_tab("https://github.com/MatusGuy/youtube-dl_GUI/issues"))
 
         self.LightOption.triggered.connect(self.ToLightTheme)
         self.DarkOption.triggered.connect(self.ToDarkTheme)
@@ -131,12 +136,18 @@ class Program(MainUi.Ui_MainWindow):
         self.addswitchesDialog = ad.AdditionalSwitchesDialog(self.prefMng.settings["additionalSwitches"],pd.__PyDist__._WorkDir+"assets/ytdl.png")
         self.AdditionalSwitches.triggered.connect(lambda: self.prefMng.SetSetting(["additionalSwitches"],self.addswitchesDialog.Execute()))
 
+        self.ConsoleDock.installEventFilter(self)
+        self.ConsoleOption.triggered.connect(lambda: self.ConsoleDock.setHidden(not self.ConsoleOption.isChecked()))
+
         self.UrlTextBox.editingFinished.connect(lambda: self.prefMng.SetSetting(["savedConfig","url"],self.UrlTextBox.text()))
         self.DestinationInput.editingFinished.connect(lambda: self.prefMng.SetSetting(["savedConfig","destination"],self.DestinationInput.text()))
 
         self.AudioOption.toggled.connect(lambda: self.prefMng.SetSetting(["savedConfig","audioOnly"],self.AudioOption.isChecked()))
         self.TemplateInput.editingFinished.connect(lambda: self.prefMng.SetSetting(["savedConfig","template"],self.TemplateInput.text()))
         self.RangeInput.editingFinished.connect(lambda: self.prefMng.SetSetting(["savedConfig","range"],self.RangeInput.text()))
+
+        self.DestinationButton.pressed.connect(self.SetOutput)
+        self.DownloadButton.pressed.connect(self.Download)
 
         app.aboutToQuit.connect(lambda: self.prefMng.WriteJSON(self.prefMng.filename,self.prefMng.settings))
 
@@ -180,15 +191,11 @@ class Program(MainUi.Ui_MainWindow):
     def ToLightTheme(self):
         self.app.setPalette(QPalette())
         self.window.setPalette(QPalette())
-        imgpath=pd.__PyDist__._WorkDir.replace("\\","/")
-        self.ViewConsole.setStyleSheet("QCheckBox::indicator:checked{border-image : url("+imgpath+"assets/openedArrow.png);}QCheckBox::indicator:unchecked{border-image : url("+imgpath+"assets/closedArrow.png);}")
         self.SaveTheme(False)
     
     def ToDarkTheme(self):
         self.app.setPalette(self.darkTheme)
         self.window.setPalette(self.darkTheme)
-        imgpath=pd.__PyDist__._WorkDir.replace("\\","/")
-        self.ViewConsole.setStyleSheet("QCheckBox::indicator:checked{border-image : url("+imgpath+"assets/openedArrowDark.png);}QCheckBox::indicator:unchecked{border-image : url("+imgpath+"assets/closedArrowDark.png);}")
         self.SaveTheme(True)
 
     def ConsoleAddLine(self,text):

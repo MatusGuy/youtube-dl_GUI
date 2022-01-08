@@ -14,12 +14,14 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_AdditionalSwitches(object):
     def setupUi(self, AdditionalSwitches):
         AdditionalSwitches.setObjectName("AdditionalSwitches")
-        AdditionalSwitches.setWindowModality(QtCore.Qt.WindowModal)
+        AdditionalSwitches.setWindowModality(QtCore.Qt.ApplicationModal)
         AdditionalSwitches.resize(468, 294)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("../assets/ytdl.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         AdditionalSwitches.setWindowIcon(icon)
         AdditionalSwitches.setLocale(QtCore.QLocale(QtCore.QLocale.English, QtCore.QLocale.UnitedKingdom))
+        AdditionalSwitches.setSizeGripEnabled(True)
+        AdditionalSwitches.setModal(True)
         self.gridLayout_2 = QtWidgets.QGridLayout(AdditionalSwitches)
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.GroupBox = QtWidgets.QGroupBox(AdditionalSwitches)
@@ -46,10 +48,6 @@ class Ui_AdditionalSwitches(object):
         self.TextEdit.setObjectName("TextEdit")
         self.gridLayout.addWidget(self.TextEdit, 0, 0, 1, 1)
         self.gridLayout_2.addWidget(self.GroupBox, 0, 0, 1, 2)
-        self.buttonBox = QtWidgets.QDialogButtonBox(AdditionalSwitches)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
-        self.buttonBox.setObjectName("buttonBox")
-        self.gridLayout_2.addWidget(self.buttonBox, 1, 1, 1, 1)
 
         self.retranslateUi(AdditionalSwitches)
         QtCore.QMetaObject.connectSlotsByName(AdditionalSwitches)
@@ -57,4 +55,4 @@ class Ui_AdditionalSwitches(object):
     def retranslateUi(self, AdditionalSwitches):
         _translate = QtCore.QCoreApplication.translate
         AdditionalSwitches.setWindowTitle(_translate("AdditionalSwitches", "Additional switches"))
-        self.GroupBox.setTitle(_translate("AdditionalSwitches", "Edit"))
+        self.GroupBox.setTitle(_translate("AdditionalSwitches", "Additional youtube-dl command line switches"))
