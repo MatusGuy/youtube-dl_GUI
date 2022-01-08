@@ -24,7 +24,7 @@
        </size>
       </property>
       <property name="title">
-       <string>GroupBox</string>
+       <string>Output</string>
       </property>
       <layout class="QGridLayout" name="gridLayout_4">
        <item row="0" column="2">
@@ -78,7 +78,7 @@
        </size>
       </property>
       <property name="title">
-       <string>GroupBox</string>
+       <string>Configuration</string>
       </property>
       <layout class="QGridLayout" name="gridLayout_2">
        <property name="leftMargin">
@@ -238,7 +238,7 @@
        </size>
       </property>
       <property name="title">
-       <string>GroupBox</string>
+       <string>Input</string>
       </property>
       <layout class="QGridLayout" name="gridLayout_5">
        <property name="topMargin">
@@ -421,7 +421,7 @@ download!</string>
      <x>0</x>
      <y>0</y>
      <width>813</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="Preferences">

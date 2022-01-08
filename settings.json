@@ -6,7 +6,7 @@
         "audioOnly": false,
         "template": "%(title)s",
         "range": "",
-        "destination": ""
+        "destination": "C:/Users/Mateus/.mp4"
     },
     "additionalSwitches": ""
 }

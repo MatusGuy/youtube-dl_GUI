@@ -202,13 +202,11 @@ class Program(MainUi.Ui_MainWindow,QObject):
     def ConsoleAddLine(self,text):
         self.DownloadProgress.setEnabled(True)
 
-        txt=str
-
         if type(text)==bytes:
             txt=text.decode("ASCII")
         else:
             txt=text
-        self.ConsoleOutput.appendPlainText(txt)
+        self.ConsoleTextBox.appendPlainText(txt)
 
         uppered = txt.upper()
         #print(uppered)
@@ -223,7 +221,7 @@ class Program(MainUi.Ui_MainWindow,QObject):
 
             if not os.path.exists(self.DestinationInput.text()):
                 if "100%" in uppered:
-                    self.DownloadSpeedLabel.setText("Speed: ")
+                    self.SpeedLabel.setText("Speed: ")
                     self.ETALabel.setText("ETA: ")
                 else:
                     otherInfo = cut2[1].split(" ")
@@ -232,7 +230,7 @@ class Program(MainUi.Ui_MainWindow,QObject):
                     eta = otherInfo[5]
 
                     self.FileSizeLabel.setText("Total file size: "+fileSize)
-                    self.DownloadSpeedLabel.setText("Speed: "+dwSpeed)
+                    self.SpeedLabel.setText("Speed: "+dwSpeed)
                     self.ETALabel.setText("ETA: "+eta)
         
         if "[DOWNLOAD] DOWNLOADING VIDEO" in uppered and "OF" in uppered:
@@ -240,7 +238,7 @@ class Program(MainUi.Ui_MainWindow,QObject):
             self.currentFilePos = cut1[3]
             self.listLength = cut1[5]
         
-
+        """
         if "[DOWNLOAD] DESTINATION: " in uppered:
             prefixRemoval1 = txt.removeprefix("[download] Destination: ")
             cut1 = prefixRemoval1.split("\\")
@@ -248,6 +246,7 @@ class Program(MainUi.Ui_MainWindow,QObject):
 
             self.CurrentFile.setText("Current: "+currentFile.removesuffix("(tmp)"))
             self.FilesLabel.setText(f"Files: {self.currentFilePos}/{self.listLength}")
+        """
         
         if "ERROR: " in uppered:
             if "YOUTUBE-DL.EXE: ":
@@ -255,40 +254,23 @@ class Program(MainUi.Ui_MainWindow,QObject):
             else:
                 self.error = txt.removeprefix("ERROR: ").capitalize()
             #print(self.error)
-    
-    def ToggleConsole(self):
-        X,Y,WW,WH=self.window.geometry().getRect()
-        #print(f"MAIN WINDOW :({X},{Y}..{WW},{WH})")
-        
-        if self.showConsole:
-            CX,CY,CW,CH =self.ConsoleOutput.geometry().getRect()
-            self.console_height=CH 
-            #print(f"CONSOLE:({CX},{CY}..{CW},{CH})")
-        
-        self.showConsole = not self.showConsole
-        if self.showConsole:
-            self.window.resize(WW,WH+self.console_height)
-        else:
-            self.window.resize(WW,WH-self.console_height)
-        
-        self.ConsoleOutput.setHidden(not self.showConsole)
 
     def DisableDownloadGui(self,disable):
         self.FileSizeLabel.setEnabled(not disable)
-        self.DownloadSpeedLabel.setEnabled(not disable)
+        self.SpeedLabel.setEnabled(not disable)
         self.ETALabel.setEnabled(not disable)
         self.DownloadProgress.setEnabled(not disable)
         #self.DownloadButton.setEnabled(disable)
-        self.CurrentFile.setEnabled(not disable)
-        self.FilesLabel.setEnabled(not disable)
+        #self.CurrentFile.setEnabled(not disable)
+        #self.FilesLabel.setEnabled(not disable)
 
         if disable:
             self.DownloadProgress.setValue(0)
             self.FileSizeLabel.setText("Total file size: ")
-            self.DownloadSpeedLabel.setText("Speed: ")
+            self.SpeedLabel.setText("Speed: ")
             self.ETALabel.setText("ETA: ")
-            self.FilesLabel.setText("Files: ")
-            self.CurrentFile.setText("Current: ")
+            #self.FilesLabel.setText("Files: ")
+            #self.CurrentFile.setText("Current: ")
     
     def SetOutput(self):
         self.FilePrompt = QFileDialog()
@@ -333,7 +315,7 @@ class Program(MainUi.Ui_MainWindow,QObject):
             }
             ##print(str(Config))
             #self.ExecuteDownload(Config)
-            self.ConsoleOutput.setPlainText("")
+            self.ConsoleTextBox.setPlainText("")
             self.currentFilePos = 1
             self.listLength = 1
             self.downloader.StartDownload(Config)

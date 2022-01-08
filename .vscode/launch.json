@@ -22,49 +22,49 @@
             "name": "Python: components - Downloader (Component Test)",
             "type": "python",
             "request": "launch",
-            "program": "",
+            "program": "${workspaceFolder}\\components\\downloader_CompTest.py",
             "console": "integratedTerminal",
-            "args": [".\\components\\downloader_CompTest.py"]
+            "args": [""]
         },
         {
             "name": "Python: components - Version checker (Component Test)",
             "type": "python",
             "request": "launch",
-            "program": "",
+            "program": "${workspaceFolder}\\components\\versionChecker_CompTest.py",
             "console": "integratedTerminal",
-            "args": [".\\components\\versionChecker_CompTest.py"]
+            "args": [""]
         },
         {
             "name": "Python: components - Preferences manager (Component Test)",
             "type": "python",
             "request": "launch",
-            "program": "",
+            "program": "${workspaceFolder}\\components\\prefMng_CompTest.py",
             "console": "integratedTerminal",
-            "args": [".\\components\\prefMng_CompTest.py"]
+            "args": [""]
         },
         {
             "name": "Python: interface - About window (Component Test)",
             "type": "python",
             "request": "launch",
-            "program": "",
+            "program": "${workspaceFolder}\\interface\\aboutWindow_CompTest.py",
             "console": "integratedTerminal",
-            "args": [".\\interface\\aboutWindow_CompTest.py"]
+            "args": [""]
         },
         {
             "name": "Python: interface - Additional switches dialog (Component Test)",
             "type": "python",
             "request": "launch",
-            "program": "",
+            "program": "${workspaceFolder}\\interface\\addswitches_CompTest.py",
             "console": "integratedTerminal",
-            "args": [".\\interface\\addswitchesDialog_CompTest.py"]
+            "args": [""]
         },
         {
             "name": "Python: interface - Cmd help dialog (Component Test)",
             "type": "python",
             "request": "launch",
-            "program": "",
+            "program": "${workspaceFolder}\\interface\\cmdhelpWindow_CompTest.py",
             "console": "integratedTerminal",
-            "args": [".\\interface\\cmdhelpWindow_CompTest.py"]
+            "args": [""]
         },
         {
             "name": "Python: Current file",

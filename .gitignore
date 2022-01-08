@@ -9,3 +9,4 @@ update/*
 dist/EncodeLink.py
 dist/test/*
 *.ini
+.env/*
