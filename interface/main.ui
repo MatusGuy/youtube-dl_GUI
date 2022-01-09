@@ -11,7 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>youtube-dl GUI</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../assets/ytdl.png</normaloff>../assets/ytdl.png</iconset>
   </property>
   <widget class="QWidget" name="MainWidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -428,7 +432,13 @@ download!</string>
     <property name="title">
      <string>Preferences</string>
     </property>
-    <widget class="QMenu" name="ThemeMenu">
+    <addaction name="AdditionalSwitches"/>
+   </widget>
+   <widget class="QMenu" name="ViewMenu">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <widget class="QMenu" name="Theme">
      <property name="title">
       <string>Theme</string>
      </property>
@@ -439,15 +449,9 @@ download!</string>
      <addaction name="LightOption"/>
      <addaction name="DarkOption"/>
     </widget>
-    <addaction name="ThemeMenu"/>
-    <addaction name="separator"/>
-    <addaction name="AdditionalSwitches"/>
-   </widget>
-   <widget class="QMenu" name="ViewMenu">
-    <property name="title">
-     <string>View</string>
-    </property>
     <addaction name="ConsoleOption"/>
+    <addaction name="separator"/>
+    <addaction name="Theme"/>
    </widget>
    <widget class="QMenu" name="Help">
     <property name="title">
@@ -518,25 +522,6 @@ font: 9pt &quot;Consolas&quot;;</string>
     </layout>
    </widget>
   </widget>
-  <action name="LightOption">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="checked">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Light</string>
-   </property>
-  </action>
-  <action name="DarkOption">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Dark</string>
-   </property>
-  </action>
   <action name="About">
    <property name="icon">
     <iconset>
@@ -564,10 +549,13 @@ font: 9pt &quot;Consolas&quot;;</string>
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>../assets/consoleIcon.png</normaloff>../assets/consoleIcon.png</iconset>
+     <normaloff>../assets/console.png</normaloff>../assets/console.png</iconset>
    </property>
    <property name="text">
-    <string>Console Output</string>
+    <string>Console output</string>
+   </property>
+   <property name="toolTip">
+    <string>Console output</string>
    </property>
   </action>
   <action name="youtube_dlHelp">
@@ -587,6 +575,25 @@ font: 9pt &quot;Consolas&quot;;</string>
    </property>
    <property name="text">
     <string>Support</string>
+   </property>
+  </action>
+  <action name="LightOption">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Light</string>
+   </property>
+  </action>
+  <action name="DarkOption">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Dark</string>
    </property>
   </action>
  </widget>
