@@ -76,10 +76,7 @@ class VersionChecker():
 
         #Check for a bigger version
         verCompare=pd.__PyDist__.version_compare(self.NewVer,self.OldVer)
-        if verCompare==0:
-            if self._debug: print (f"Same Version. No action needed.")
-            return
-        elif verCompare<0:
+        if verCompare>0:
             if self._debug: print (f"Error: OldVersion is newer than newer version!!!!")
             return
 
