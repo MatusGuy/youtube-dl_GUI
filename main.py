@@ -1,4 +1,5 @@
-import sys,os,webbrowser,ctypes
+import sys,os,ctypes
+from webbrowser import open_new_tab as OpenURL
 from pathlib import Path
 from PyQt5 import QtGui
 from PyQt5.QtGui import QColor,QIcon,QPalette,QPixmap
@@ -58,7 +59,7 @@ class Program(MainUi.Ui_MainWindow,QObject):
     def SetIcons(self):
         self.window.setWindowIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/ytdl.png")))
 
-        self.ThemeMenu.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/theme.png")))
+        self.Theme.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/theme.png")))
         self.AdditionalSwitches.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/plus.png")))
 
         self.ConsoleOption.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/console.png")))
@@ -87,7 +88,6 @@ class Program(MainUi.Ui_MainWindow,QObject):
         return super().eventFilter(obj, event)
 
     def setupUi(self, MainWindow:QMainWindow, app:QApplication):
-
         self.app = app
         self.app.setStyle("Fusion")
 
@@ -98,7 +98,6 @@ class Program(MainUi.Ui_MainWindow,QObject):
         self.SetIcons()
         self.SetupStatusBar()
 
-        self.window.resize(0,390)
         self.ConsoleDock.close()
 
         self.VideoOption.setChecked(True)
@@ -114,6 +113,8 @@ class Program(MainUi.Ui_MainWindow,QObject):
         self.RangeInput.setText(self.prefMng.settings["savedConfig"]["range"])
 
         self.DestinationInput.setText(self.prefMng.settings["savedConfig"]["destination"])
+        if not self.prefMng.settings["savedConfig"]["destination"]:
+            self.DestinationInput.setText(str(Path.home())+"\\.mp4")
 
         if self.isDarkTheme:
             self.ToDarkTheme()
@@ -130,7 +131,7 @@ class Program(MainUi.Ui_MainWindow,QObject):
             windowIcon=pd.__PyDist__._WorkDir+"assets/ytdl.png"
         )
         self.About.triggered.connect(self.aboutWindow.Execute)
-        self.Support.triggered.connect(lambda: webbrowser.open_new_tab("https://github.com/MatusGuy/youtube-dl_GUI/issues"))
+        self.Support.triggered.connect(lambda: OpenURL("https://github.com/MatusGuy/youtube-dl_GUI/issues"))
 
         self.LightOption.triggered.connect(self.ToLightTheme)
         self.DarkOption.triggered.connect(self.ToDarkTheme)
@@ -141,12 +142,18 @@ class Program(MainUi.Ui_MainWindow,QObject):
         self.youtube_dlHelp.triggered.connect(lambda: ch.CmdHelpDialog().GetHelp(pd.__PyDist__._WorkDir+"youtube-dl\\youtube-dl.exe --help"))
         self.ffmpegHelp.triggered.connect(lambda: ch.CmdHelpDialog("ffmpeg command line help").GetHelp(pd.__PyDist__._WorkDir+"youtube-dl\\ffmpeg.exe --help"))
 
-
         self.ConsoleDock.installEventFilter(self)
         self.ConsoleOption.triggered.connect(lambda: self.ConsoleDock.setHidden(not self.ConsoleOption.isChecked()))
 
-        self.UrlTextBox.editingFinished.connect(lambda: self.prefMng.SetSetting(["savedConfig","url"],self.UrlTextBox.text()))
-        self.DestinationInput.editingFinished.connect(lambda: self.prefMng.SetSetting(["savedConfig","destination"],self.DestinationInput.text()))
+        def InputCallback(setting:str,value,textbox:QLineEdit,smessage:str):
+            self.prefMng.SetSetting(["savedConfig",setting],value)
+            if not textbox.text() and textbox:
+                self.StatusBar.showMessage(smessage)
+            else:
+                self.StatusBar.clearMessage()
+
+        self.UrlTextBox.editingFinished.connect(lambda: InputCallback("url",self.UrlTextBox.text(),self.UrlTextBox,"Please specify the YouTube video URL."))
+        self.DestinationInput.editingFinished.connect(lambda: InputCallback("destination",self.DestinationInput.text(),self.DestinationInput,"Please specify the output."))
 
         self.AudioOption.toggled.connect(lambda: self.prefMng.SetSetting(["savedConfig","audioOnly"],self.AudioOption.isChecked()))
         self.TemplateInput.editingFinished.connect(lambda: self.prefMng.SetSetting(["savedConfig","template"],self.TemplateInput.text()))
@@ -162,7 +169,7 @@ class Program(MainUi.Ui_MainWindow,QObject):
 
         return resp
     
-    def AlertVersion(self,NewVer="",OldVer=""):
+    def AlertVersion(self):
         #print("version check")
 
         if self.downloader.IsDownloading(): return
@@ -204,7 +211,7 @@ class Program(MainUi.Ui_MainWindow,QObject):
         self.window.setPalette(self.darkTheme)
         self.SaveTheme(True)
 
-    def ConsoleAddLine(self,text):
+    def ConsoleAddLine(self,text:str or bytes):
         self.DownloadProgress.setEnabled(True)
 
         if type(text)==bytes:
@@ -215,6 +222,11 @@ class Program(MainUi.Ui_MainWindow,QObject):
 
         uppered = txt.upper()
         #print(uppered)
+
+        if "[" in uppered:
+            removeprefix1 = txt.removeprefix("[")
+            result = removeprefix1.split("] ")[0]
+            self.StatusBar.showMessage("Current process: "+result)
 
         if "%" in uppered and "[DOWNLOAD] " in uppered:
             cut1 = txt.split("] ")[1]
@@ -301,7 +313,10 @@ class Program(MainUi.Ui_MainWindow,QObject):
         if self.downloader.IsDownloading():
             #print ("Cancel!!!??!?")
             self.downloader.CancelDownload()
+            self.StatusBar.showMessage("Canceled download")
         else:
+            self.StatusBar.showMessage("Starting download")
+
             self.DisableDownloadGui(False)
 
             self.DownloadButton.setText("Cancel\ndownload")
@@ -330,6 +345,8 @@ class Program(MainUi.Ui_MainWindow,QObject):
         self.DownloadProgress.setEnabled(False)
         self.DownloadButton.setEnabled(True)
 
+        self.StatusBar.showMessage("Download ended",200000)
+
         self.ConsoleAddLine("Download process ended")
 
         self.DownloadButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/miniArrow.png"))
@@ -353,14 +370,15 @@ class Program(MainUi.Ui_MainWindow,QObject):
             msg.setIcon(QMessageBox.Information)
             msg.setStandardButtons(QMessageBox.StandardButton.Open | QMessageBox.StandardButton.Ok)
         
-        def OpenDownloaded(button):
+        def OpenDownloaded(button:QAbstractButton):
             if button.text() == "Open":
-                rfind1 = self.output.rfind('\\')
-                rfind2 = self.output.rfind('/')
+                output = self.DestinationInput.text()
+                rfind1 = output.rfind('\\')
+                rfind2 = output.rfind('/')
                 if rfind1 > rfind2:
-                    result = self.output[:rfind1+1]
+                    result = output[:rfind1+1]
                 else:
-                    result = self.output[:rfind2+1]
+                    result = output[:rfind2+1]
                 wresult=result.replace('/','\\')
                 #print (wresult)
                 if len(wresult): os.system("explorer "+wresult)
