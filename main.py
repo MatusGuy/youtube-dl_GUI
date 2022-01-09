@@ -74,9 +74,14 @@ class Program(MainUi.Ui_MainWindow,QObject):
         #print(pd.__PyDist__._WorkDir)
     
     def SetupStatusBar(self):
-        self.StatusBar.showMessage("Ready")
-        self.StatusBar.addPermanentWidget(QLabel("In preperation"))
+        self.StatusBar.showMessage("Prepare to download.",30000)
 
+        self.sbDwCurrLabel = QLabel("") #("Current file: My nice music 03 album.mp3")
+        self.StatusBar.addPermanentWidget(self.sbDwCurrLabel)
+
+        self.sbDwFilesLabel = QLabel("") #("\tItems: 1 / 10")
+        self.StatusBar.addPermanentWidget(self.sbDwFilesLabel)
+            
     def eventFilter(self, obj:QObject, event:QEvent):
         if obj is self.ConsoleDock and event.type() == QEvent.Type.Close: self.ConsoleOption.setChecked(False)
         return super().eventFilter(obj, event)
@@ -238,15 +243,15 @@ class Program(MainUi.Ui_MainWindow,QObject):
             self.currentFilePos = cut1[3]
             self.listLength = cut1[5]
         
-        """
+        
         if "[DOWNLOAD] DESTINATION: " in uppered:
             prefixRemoval1 = txt.removeprefix("[download] Destination: ")
             cut1 = prefixRemoval1.split("\\")
             currentFile = cut1[len(cut1)-1]
 
-            self.CurrentFile.setText("Current: "+currentFile.removesuffix("(tmp)"))
-            self.FilesLabel.setText(f"Files: {self.currentFilePos}/{self.listLength}")
-        """
+            self.sbDwCurrLabel.setText("Downloading: "+currentFile.removesuffix("(tmp)"))
+            self.sbDwFilesLabel.setText(f"\tItems: {self.currentFilePos} / {self.listLength}")
+        
         
         if "ERROR: " in uppered:
             if "YOUTUBE-DL.EXE: ":
@@ -261,16 +266,16 @@ class Program(MainUi.Ui_MainWindow,QObject):
         self.ETALabel.setEnabled(not disable)
         self.DownloadProgress.setEnabled(not disable)
         #self.DownloadButton.setEnabled(disable)
-        #self.CurrentFile.setEnabled(not disable)
-        #self.FilesLabel.setEnabled(not disable)
+        self.sbDwFilesLabel.setEnabled(not disable)
+        self.sbDwCurrLabel.setEnabled(not disable)
 
         if disable:
             self.DownloadProgress.setValue(0)
             self.FileSizeLabel.setText("Total file size: ")
             self.SpeedLabel.setText("Speed: ")
             self.ETALabel.setText("ETA: ")
-            #self.FilesLabel.setText("Files: ")
-            #self.CurrentFile.setText("Current: ")
+            self.sbDwCurrLabel.setText("")
+            self.sbDwFilesLabel.setText("\t")
     
     def SetOutput(self):
         self.FilePrompt = QFileDialog()
