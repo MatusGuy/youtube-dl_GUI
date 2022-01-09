@@ -150,7 +150,7 @@ class Program(MainUi.Ui_MainWindow,QObject):
         self.DestinationButton.pressed.connect(self.SetOutput)
         self.DownloadButton.pressed.connect(self.Download)
 
-        app.aboutToQuit.connect(lambda: self.prefMng.WriteJSON(self.prefMng.filename,self.prefMng.settings))
+        if pd.__PyDist__._isBundle: app.aboutToQuit.connect(lambda: self.prefMng.WriteJSON(self.prefMng.filename,self.prefMng.settings))
 
         self.versionChecker = vc.VersionChecker(self.AlertVersion,60000)
         self.versionChecker.StartChecking()
