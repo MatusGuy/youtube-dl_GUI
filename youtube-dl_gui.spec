@@ -9,12 +9,7 @@ a = Analysis(['main.py'],
                                ('youtube-dl\\ffmpeg.exe','youtube-dl'),
                                ('.\\dist\\pydist.dll','.\\dist')
                                ],
-                     datas=[('.\\assets\\closedArrow.png'     ,'.\\assets'),
-                            ('.\\assets\\closedArrowDark.png' ,'.\\assets'),
-                            ('.\\assets\\openedArrow.png'     ,'.\\assets'),
-                            ('.\\assets\\openedArrowDark.png' ,'.\\assets'),
-
-                            ('.\\assets\\miniArrow.png'     ,'.\\assets'),
+                     datas=[('.\\assets\\miniArrow.png'     ,'.\\assets'),
                             ('.\\assets\\miniCross.png'     ,'.\\assets'),
 
                             ('.\\assets\\ytdl.png'     ,'.\\assets'),
@@ -24,7 +19,11 @@ a = Analysis(['main.py'],
 
                             ('.\\assets\\theme.png'     ,'.\\assets'),
                             ('.\\assets\\about.png'     ,'.\\assets'),
-                            ('.\\assets\\plus.png'      ,'.\\assets')
+                            ('.\\assets\\plus.png'      ,'.\\assets'),
+                            ('.\\assets\\folder.png'     ,'.\\assets'),
+                            ('.\\assets\\support.png'     ,'.\\assets'),
+                            ('.\\assets\\console.png'     ,'.\\assets'),
+                            ('.\\assets\\question.png'     ,'.\\assets'),
                             ],
                      hiddenimports=[],
                      hookspath=['.\\dist\pydisthk.py'],
