@@ -32,7 +32,11 @@
       </property>
       <layout class="QGridLayout" name="gridLayout_4">
        <item row="0" column="2">
-        <widget class="QLineEdit" name="DestinationInput"/>
+        <widget class="QLineEdit" name="DestinationInput">
+         <property name="toolTip">
+          <string>The path to your final file</string>
+         </property>
+        </widget>
        </item>
        <item row="0" column="0">
         <widget class="QLabel" name="DestinationLabel">
@@ -60,6 +64,9 @@
            <width>24</width>
            <height>25</height>
           </size>
+         </property>
+         <property name="toolTip">
+          <string>Select the file's destination</string>
          </property>
          <property name="text">
           <string>...</string>
@@ -133,6 +140,9 @@
               <height>16777215</height>
              </size>
             </property>
+            <property name="toolTip">
+             <string>Download video and audio</string>
+            </property>
             <property name="text">
              <string>Video + Audio</string>
             </property>
@@ -145,6 +155,9 @@
               <width>16777215</width>
               <height>16777215</height>
              </size>
+            </property>
+            <property name="toolTip">
+             <string>Download audio only, ideal for music or sound effects</string>
             </property>
             <property name="text">
              <string>Audio-only</string>
@@ -222,10 +235,17 @@
               <height>16777215</height>
              </size>
             </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the range for download. &lt;/p&gt;&lt;p&gt;- &lt;span style=&quot; font-weight:600;&quot;&gt;'' &lt;/span&gt;Leaving it empty downloads all items.&lt;/p&gt;&lt;p&gt;- &lt;span style=&quot; font-weight:600;&quot;&gt;m-n &lt;/span&gt;Download from specified range.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;- 1,2,..n &lt;/span&gt;Download selected items.&lt;/p&gt;&lt;p&gt;- &lt;span style=&quot; font-weight:600;&quot;&gt;x,m-n,y,z&lt;/span&gt; Download specific items and from range.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
            </widget>
           </item>
           <item row="0" column="1" colspan="3">
-           <widget class="QLineEdit" name="TemplateInput"/>
+           <widget class="QLineEdit" name="TemplateInput">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Append information to the end of your chosen output.&lt;/p&gt;&lt;p&gt;- &lt;span style=&quot; font-weight:600;&quot;&gt;%(title)s&lt;/span&gt; - video title&lt;/p&gt;&lt;p&gt;- &lt;span style=&quot; font-weight:600;&quot;&gt;%(alt_title)s&lt;/span&gt; - alternative video title&lt;/p&gt;&lt;p&gt;- &lt;span style=&quot; font-weight:600;&quot;&gt;%(id)s&lt;/span&gt; - video id&lt;/p&gt;&lt;p&gt;- &lt;span style=&quot; font-weight:600;&quot;&gt;%(creator)s&lt;/span&gt; - video creator&lt;/p&gt;&lt;p&gt;- &lt;span style=&quot; font-weight:600;&quot;&gt;%(playlist_title)s&lt;/span&gt; - playlist title&lt;/p&gt;&lt;p&gt;- &lt;span style=&quot; font-weight:600;&quot;&gt;%(playlist_index)s&lt;/span&gt; - video position in the playlist&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Need the full list? Look for youtube-dl's README.md file at GitHub.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -256,7 +276,11 @@
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QLineEdit" name="UrlTextBox"/>
+        <widget class="QLineEdit" name="UrlTextBox">
+         <property name="toolTip">
+          <string>Input URL for your youtube video, playlist, or channel</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -479,6 +503,12 @@ download!</string>
   </widget>
   <widget class="QStatusBar" name="StatusBar"/>
   <widget class="QDockWidget" name="ConsoleDock">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>1</verstretch>
+    </sizepolicy>
+   </property>
    <property name="floating">
     <bool>false</bool>
    </property>
@@ -507,6 +537,9 @@ download!</string>
      </property>
      <item row="0" column="0">
       <widget class="QPlainTextEdit" name="ConsoleTextBox">
+       <property name="cursor" stdset="0">
+        <cursorShape>IBeamCursor</cursorShape>
+       </property>
        <property name="styleSheet">
         <string notr="true">background-color: rgb(12, 12, 12);
 color: rgb(204, 204, 204);
@@ -516,6 +549,9 @@ font: 9pt &quot;Consolas&quot;;</string>
        </property>
        <property name="frameShape">
         <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
