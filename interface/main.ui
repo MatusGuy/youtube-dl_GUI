@@ -566,6 +566,9 @@ font: 9pt &quot;Consolas&quot;;</string>
    <property name="text">
     <string>About</string>
    </property>
+   <property name="shortcut">
+    <string>F1</string>
+   </property>
   </action>
   <action name="AdditionalSwitches">
    <property name="icon">
@@ -593,15 +596,24 @@ font: 9pt &quot;Consolas&quot;;</string>
    <property name="toolTip">
     <string>Console output</string>
    </property>
+   <property name="shortcut">
+    <string>F12</string>
+   </property>
   </action>
   <action name="youtube_dlHelp">
    <property name="text">
     <string>youtube-dl</string>
    </property>
+   <property name="shortcut">
+    <string>Shift+F1</string>
+   </property>
   </action>
   <action name="ffmpegHelp">
    <property name="text">
     <string>ffmpeg</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+Shift+F1</string>
    </property>
   </action>
   <action name="Support">
@@ -611,6 +623,9 @@ font: 9pt &quot;Consolas&quot;;</string>
    </property>
    <property name="text">
     <string>Support</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+F1</string>
    </property>
   </action>
   <action name="LightOption">
