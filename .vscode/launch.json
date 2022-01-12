@@ -43,6 +43,14 @@
             "args": [""]
         },
         {
+            "name": "Python: interface - Main window (Component Test)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}\\interface\\mainWindow_CompTest.py",
+            "console": "integratedTerminal",
+            "args": [""]
+        },
+        {
             "name": "Python: interface - About window (Component Test)",
             "type": "python",
             "request": "launch",
