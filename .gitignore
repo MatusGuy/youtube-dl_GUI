@@ -10,3 +10,4 @@ dist/EncodeLink.py
 dist/test/*
 *.ini
 .env/*
+assets/unused/otherIcons/*
