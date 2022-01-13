@@ -1,19 +1,21 @@
 import sys,os
-
 sys.path.insert(1,'.')
+
+from webbrowser import open_new_tab as OpenURL
 
 from interface.mainUi import Ui_MainWindow as ui
 
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractButton
 from PyQt5.QtGui import QIcon, QPixmap, QPalette, QColor
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import QObject, Qt
 
 from dist import pydist as pd
 
 from interface.aboutWindow import AboutDialog as aw
 from interface.addswitchesDialog import AdditionalSwitchesDialog as ad
+from interface.cmdhelpWindow import CmdHelpDialog as ch
 
-class MainWindow(ui):
+class MainWindow(ui,QObject):
     window = QMainWindow
     app = QApplication
 
@@ -41,7 +43,7 @@ class MainWindow(ui):
         self.app.setStyle("Fusion")
 
         super().setupUi(window)
-        self.SetupIcons()
+        self.InitIcons()
 
         self.aboutDialog = aw()
         self.addSwitchesDialog = ad(windowicon=pd.__PyDist__._WorkDir+"assets/ytdl.png")
@@ -51,8 +53,11 @@ class MainWindow(ui):
 
         self.About.triggered.connect(self.aboutDialog.Execute)
         self.AdditionalSwitches.triggered.connect(self.addSwitchesDialog.Execute)
+
+        self.youtube_dlHelp.triggered.connect(lambda: ch().GetHelp(pd.__PyDist__._WorkDir+"youtube-dl\\youtube-dl.exe --help"))
+        self.ffmpegHelp.triggered.connect(lambda: ch("ffmpeg command line help").GetHelp(pd.__PyDist__._WorkDir+"youtube-dl\\ffmpeg.exe --help"))
     
-    def SetupIcons(self):
+    def InitIcons(self):
         self.window.setWindowIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/ytdl.png")))
 
         self.Theme.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/kcoloredit.png")))
@@ -60,8 +65,8 @@ class MainWindow(ui):
 
         self.ConsoleOption.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/terminal.png")))
 
-        #self.CommandHelpMenu.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/question.png")))
-        self.Support.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/flag.png")))
+        self.CommandHelpMenu.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/help_index.png")))
+        self.Support.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/susehelpcenter.png")))
         self.About.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/info.png")))
 
         self.DownloadButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/forward.png"))
@@ -70,6 +75,68 @@ class MainWindow(ui):
 
         #print(pd.__PyDist__._WorkDir)
     
+    def Set(self,values:dict[str]):
+        self.SetURL(values["URL"])
+        self.SetOutput(values["OUTPUT"])
+        self.SetAudioOnly(values["AUDIO_ONLY"])
+        self.SetTemplate(values["TEMPLATE"])
+        self.SetRange(values["RANGE"])
+    def Get(self) -> dict[str]:
+        resp = {}
+        resp["URL"] = self.GetURL()
+        resp["OUTPUT"] = self.GetOutput()
+        resp["AUDIO_ONLY"] = self.GetAudioOnly()
+        resp["TEMPLATE"] = self.GetTemplate()
+        resp["RANGE"] = self.GetRange()
+        return resp
+
+    def SetURL(self,url:str):
+        self.UrlTextBox.setText(url)
+    def GetURL(self) -> str:
+        return self.UrlTextBox.text()
+    
+    def SetOutput(self,output:str):
+        self.DestinationInput.setText(output)
+    def GetOutput(self) -> str:
+        return self.DestinationInput.text()
+
+    def SetTemplate(self,template:str):
+        self.TemplateInput.setText(template)
+    def GetTemplate(self) -> str:
+        return self.TemplateInput.text()
+    
+    def SetRange(self,range:str):
+        self.RangeInput.setText(range)
+    def GetRange(self) -> str:
+        return self.RangeInput.text()
+    
+    def SetAudioOnly(self,audioOnly:bool):
+        self.AudioOption.setChecked(audioOnly)
+    def GetAudioOnly(self) -> bool:
+        return self.AudioOption.isChecked()
+    
+    def SetConsole(self,text:str):
+        self.ConsoleTextBox.setPlainText(text)
+    def AppendConsole(self,text:str):
+        self.ConsoleTextBox.appendPlainText(text)
+    def ClearConsole(self):
+        self.ConsoleTextBox.clear()
+    def GetConsole(self) -> str:
+        return self.ConsoleTextBox.toPlainText()
+
+    def SetProgress(self,value:int):
+        self.DownloadProgress.setValue(value)
+    def GetProgress(self) -> int:
+        return self.DownloadProgress.value()
+
+    def ActivateDownloadIcon(self):
+        self.DownloadButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/stop.png"))
+    def ActivateCancelIcon(self):
+        self.DownloadButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/forward.png"))
+
+    def SetDownloadCallback(self,callback):
+        self.DownloadButton.pressed.connect(callback)
+
     def SaveTheme(self,dark,prefMng=None):
         self.DarkOption.setChecked(dark)
         self.LightOption.setChecked(not dark)

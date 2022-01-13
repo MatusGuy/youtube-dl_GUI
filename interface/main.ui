@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>813</width>
-    <height>512</height>
+    <height>500</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,9 +18,20 @@
     <normaloff>../assets/ytdl.png</normaloff>../assets/ytdl.png</iconset>
   </property>
   <widget class="QWidget" name="MainWidget">
+   <property name="styleSheet">
+    <string notr="true">QToolButton:hover,.QPushButton:hover{
+	 background-color: rgb(0, 120, 215)
+}</string>
+   </property>
    <layout class="QGridLayout" name="gridLayout">
     <item row="2" column="0">
      <widget class="QGroupBox" name="OutputGroup">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="maximumSize">
        <size>
         <width>16777215</width>
@@ -73,7 +84,7 @@
          </property>
          <property name="icon">
           <iconset>
-           <normaloff>../assets/folder.png</normaloff>../assets/folder.png</iconset>
+           <normaloff>../assets/folder_yellow.png</normaloff>../assets/folder_yellow.png</iconset>
          </property>
         </widget>
        </item>
@@ -336,6 +347,10 @@
           <string>Start
 download!</string>
          </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>../assets/forward.png</normaloff>../assets/forward.png</iconset>
+         </property>
         </widget>
        </item>
        <item row="0" column="1">
@@ -471,7 +486,7 @@ download!</string>
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>../assets/theme.png</normaloff>../assets/theme.png</iconset>
+       <normaloff>../assets/kcoloredit.png</normaloff>../assets/kcoloredit.png</iconset>
      </property>
      <addaction name="LightOption"/>
      <addaction name="DarkOption"/>
@@ -490,7 +505,7 @@ download!</string>
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>../assets/question.png</normaloff>../assets/question.png</iconset>
+       <normaloff>../assets/help_index.png</normaloff>../assets/help_index.png</iconset>
      </property>
      <addaction name="youtube_dlHelp"/>
      <addaction name="ffmpegHelp"/>
@@ -564,7 +579,7 @@ font: 9pt &quot;Consolas&quot;;</string>
   <action name="About">
    <property name="icon">
     <iconset>
-     <normaloff>../assets/about.png</normaloff>../assets/about.png</iconset>
+     <normaloff>../assets/info.png</normaloff>../assets/info.png</iconset>
    </property>
    <property name="text">
     <string>About</string>
@@ -576,7 +591,7 @@ font: 9pt &quot;Consolas&quot;;</string>
   <action name="AdditionalSwitches">
    <property name="icon">
     <iconset>
-     <normaloff>../assets/plus.png</normaloff>../assets/plus.png</iconset>
+     <normaloff>../assets/edit_add.png</normaloff>../assets/edit_add.png</iconset>
    </property>
    <property name="text">
     <string>Additional switches</string>
@@ -591,7 +606,7 @@ font: 9pt &quot;Consolas&quot;;</string>
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>../assets/console.png</normaloff>../assets/console.png</iconset>
+     <normaloff>../assets/terminal.png</normaloff>../assets/terminal.png</iconset>
    </property>
    <property name="text">
     <string>Console output</string>
@@ -622,7 +637,7 @@ font: 9pt &quot;Consolas&quot;;</string>
   <action name="Support">
    <property name="icon">
     <iconset>
-     <normaloff>../assets/support.png</normaloff>../assets/support.png</iconset>
+     <normaloff>../assets/flag.png</normaloff>../assets/flag.png</iconset>
    </property>
    <property name="text">
     <string>Support</string>
