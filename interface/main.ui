@@ -637,7 +637,7 @@ font: 9pt &quot;Consolas&quot;;</string>
   <action name="Support">
    <property name="icon">
     <iconset>
-     <normaloff>../assets/flag.png</normaloff>../assets/flag.png</iconset>
+     <normaloff>../assets/susehelpcenter.png</normaloff>../assets/susehelpcenter.png</iconset>
    </property>
    <property name="text">
     <string>Support</string>
