@@ -7,7 +7,7 @@ from interface.mainUi import Ui_MainWindow as ui
 
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractButton
 from PyQt5.QtGui import QIcon, QPixmap, QPalette, QColor
-from PyQt5.QtCore import QObject, Qt
+from PyQt5.QtCore import QObject, Qt, QEvent
 
 from dist import pydist as pd
 
@@ -37,25 +37,54 @@ class MainWindow(ui,QObject):
     aboutDialog = aw
     addSwitchesDialog = ad
 
+    isDarkTheme = False
+
+    def eventFilter(self, a0: QObject, a1: QEvent) -> bool:
+        print(str(a1))
+        if a0 == self.ConsoleDock and a1 == QEvent.Type.Close: self.ConsoleOption.setChecked(False)
+        return super().eventFilter(a0, a1)
+
     def __init__(self,window:QMainWindow,app:QApplication):
         self.window = window
         self.app = app
         self.app.setStyle("Fusion")
 
         super().setupUi(window)
+        super().__init__()
+
         self.InitIcons()
 
         self.aboutDialog = aw()
         self.addSwitchesDialog = ad(windowicon=pd.__PyDist__._WorkDir+"assets/ytdl.png")
 
+        self.CloseConsole()
+        self.ConsoleDock.installEventFilter(self)
+        self.ConsoleOption.triggered.connect(lambda: self.SetConsoleOpen(self.ConsoleOption.isChecked()))
+
         self.LightOption.triggered.connect(self.ToLightTheme)
         self.DarkOption.triggered.connect(self.ToDarkTheme)
 
-        self.About.triggered.connect(self.aboutDialog.Execute)
-        self.AdditionalSwitches.triggered.connect(self.addSwitchesDialog.Execute)
+        self.About.triggered.connect(self.OpenAboutDialog)
+        self.AdditionalSwitches.triggered.connect(self.OpenAdditionalSwitchesDialog)
 
-        self.youtube_dlHelp.triggered.connect(lambda: ch().GetHelp(pd.__PyDist__._WorkDir+"youtube-dl\\youtube-dl.exe --help"))
-        self.ffmpegHelp.triggered.connect(lambda: ch("ffmpeg command line help").GetHelp(pd.__PyDist__._WorkDir+"youtube-dl\\ffmpeg.exe --help"))
+        self.youtube_dlHelp.triggered.connect(self.YtdlGetHelp)
+        self.ffmpegHelp.triggered.connect(self.FfmpegGetHelp)
+    
+    def OpenConsole(self): self.ConsoleDock.show()
+    def CloseConsole(self): self.ConsoleDock.close()
+    def SetConsoleOpen(self,open:bool):
+        if open: self.OpenConsole()
+        else: self.CloseConsole()
+    def SetConsole(self,text:str): self.ConsoleTextBox.setPlainText(text)
+    def AppendConsole(self,text:str): self.ConsoleTextBox.appendPlainText(text)
+    def ClearConsole(self): self.ConsoleTextBox.clear()
+    def GetConsole(self) -> str: return self.ConsoleTextBox.toPlainText()
+    
+    def OpenAboutDialog(self): self.aboutDialog.Execute()
+    def OpenAdditionalSwitchesDialog(self) -> str: return self.addSwitchesDialog.Execute()
+    
+    def YtdlGetHelp(self): ch().GetHelp(pd.__PyDist__._WorkDir+"youtube-dl\\youtube-dl.exe --help")
+    def FfmpegGetHelp(self): ch("ffmpeg command line help").GetHelp(pd.__PyDist__._WorkDir+"youtube-dl\\ffmpeg.exe --help")
     
     def InitIcons(self):
         self.window.setWindowIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/ytdl.png")))
@@ -90,52 +119,42 @@ class MainWindow(ui,QObject):
         resp["RANGE"] = self.GetRange()
         return resp
 
-    def SetURL(self,url:str):
-        self.UrlTextBox.setText(url)
-    def GetURL(self) -> str:
-        return self.UrlTextBox.text()
+    def SetURL(self,url:str): self.UrlTextBox.setText(url)
+    def GetURL(self) -> str: return self.UrlTextBox.text()
     
-    def SetOutput(self,output:str):
-        self.DestinationInput.setText(output)
-    def GetOutput(self) -> str:
-        return self.DestinationInput.text()
+    def SetOutput(self,output:str): self.DestinationInput.setText(output)
+    def GetOutput(self) -> str: return self.DestinationInput.text()
 
-    def SetTemplate(self,template:str):
-        self.TemplateInput.setText(template)
-    def GetTemplate(self) -> str:
-        return self.TemplateInput.text()
+    def SetTemplate(self,template:str): self.TemplateInput.setText(template)
+    def GetTemplate(self) -> str: return self.TemplateInput.text()
     
-    def SetRange(self,range:str):
-        self.RangeInput.setText(range)
-    def GetRange(self) -> str:
-        return self.RangeInput.text()
+    def SetRange(self,range:str): self.RangeInput.setText(range)
+    def GetRange(self) -> str: return self.RangeInput.text()
     
-    def SetAudioOnly(self,audioOnly:bool):
-        self.AudioOption.setChecked(audioOnly)
-    def GetAudioOnly(self) -> bool:
-        return self.AudioOption.isChecked()
+    def SetAudioOnly(self,audioOnly:bool): self.AudioOption.setChecked(audioOnly)
+    def GetAudioOnly(self) -> bool: return self.AudioOption.isChecked()
+
+    def SetProgress(self,value:int): self.DownloadProgress.setValue(value)
+    def GetProgress(self) -> int: return self.DownloadProgress.value()
+
+    def SetDownloadText(self,text:str): self.DownloadButton.setText(text)
     
-    def SetConsole(self,text:str):
-        self.ConsoleTextBox.setPlainText(text)
-    def AppendConsole(self,text:str):
-        self.ConsoleTextBox.appendPlainText(text)
-    def ClearConsole(self):
-        self.ConsoleTextBox.clear()
-    def GetConsole(self) -> str:
-        return self.ConsoleTextBox.toPlainText()
+    def SetDownloadInfo(self,eta:str,speed:str,size:str,progress:int=-1):
+        self.ETALabel.setText("ETA: "+eta)
+        self.SpeedLabel.setText("Speed: "+speed)
+        self.FileSizeLabel.setText("File size: "+size)
+        if not progress == -1: self.SetProgress(progress)
+    def GetDownloadInfo(self) -> dict:
+        resp = {}
+        resp["ETA"] = self.ETALabel.text().removeprefix("ETA: ")
+        resp["SPEED"] = self.ETALabel.text().removeprefix("Speed: ")
+        resp["SIZE"] = self.ETALabel.text().removeprefix("File size: ")
+        return resp
 
-    def SetProgress(self,value:int):
-        self.DownloadProgress.setValue(value)
-    def GetProgress(self) -> int:
-        return self.DownloadProgress.value()
+    def DownloadIcon(self): self.DownloadButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/forward.png"))
+    def CancelIcon(self): self.DownloadButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/stop.png"))
 
-    def ActivateDownloadIcon(self):
-        self.DownloadButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/stop.png"))
-    def ActivateCancelIcon(self):
-        self.DownloadButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/forward.png"))
-
-    def SetDownloadCallback(self,callback):
-        self.DownloadButton.pressed.connect(callback)
+    def SetDownloadCallback(self,callback): self.DownloadButton.pressed.connect(callback)
 
     def SaveTheme(self,dark,prefMng=None):
         self.DarkOption.setChecked(dark)
@@ -172,19 +191,16 @@ class MainWindow(ui,QObject):
             msg.setIcon(QMessageBox.Information)
             msg.setStandardButtons(QMessageBox.StandardButton.Open | QMessageBox.StandardButton.Ok)
         
-        def OpenDownloaded(button:QAbstractButton):
-            if button.text() == "Open":
-                output = self.DestinationInput.text()
-                rfind1 = output.rfind('\\')
-                rfind2 = output.rfind('/')
-                if rfind1 > rfind2:
-                    result = output[:rfind1+1]
-                else:
-                    result = output[:rfind2+1]
-                wresult=result.replace('/','\\')
-                #print (wresult)
-                if len(wresult): os.system("explorer "+wresult)
+        result = msg.exec_()
 
-        msg.buttonClicked.connect(OpenDownloaded)
-        
-        msg.exec_()
+        if result == QMessageBox.StandardButton.Open:
+            output = self.DestinationInput.text()
+            rfind1 = output.rfind('\\')
+            rfind2 = output.rfind('/')
+            if rfind1 > rfind2:
+                result = output[:rfind1+1]
+            else:
+                result = output[:rfind2+1]
+            wresult=result.replace('/','\\')
+            #print (wresult)
+            if len(wresult): os.system("explorer "+wresult)

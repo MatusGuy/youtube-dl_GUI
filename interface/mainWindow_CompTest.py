@@ -8,7 +8,7 @@ class MW_CompTest(object):
     ui = mw
 
     def main(self,window:QMainWindow,app:QApplication):
-        print("About window component test: start")
+        print("Main window component test: start")
         
         self.ui = mw(window,app)
 
@@ -17,18 +17,21 @@ class MW_CompTest(object):
         window.show()
         app.exec_()
 
-
-
-        print("About window component test: complete")
+        print("Main window component test: complete")
     
     def DownloadCallback(self):
-        self.ui.ActivateCancelIcon()
+        self.ui.CancelIcon()
+
+        self.ui.AppendConsole("Start downloading...")
+
+        self.ui.AppendConsole("Download ended.")
         self.ui.DownloadEndDialog(0)
-        self.ui.ActivateDownloadIcon
+
+        self.ui.ClearConsole()
+        self.ui.DownloadIcon()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    app.setStyle("Fusion")
 
     window = QMainWindow()
     
