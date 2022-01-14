@@ -13,7 +13,7 @@ class CH_CompTest(QtCore.QObject):
         super().__init__()
 
     def main(self):
-        print("About window component test: start")
+        print("Cmd help window component test: start")
         
         self.dialog = CmdHelpDialog()
         
@@ -23,7 +23,7 @@ class CH_CompTest(QtCore.QObject):
         self.dialog.GetHelp(cmd)
     
     def eventFilter(self, obj:QtCore.QObject, event:QtCore.QEvent):
-        if obj is self.dialog and event.type() == QtCore.QEvent.Type.Close: print(f"About window component test: complete")
+        if obj is self.dialog and event.type() == QtCore.QEvent.Type.Close: print(f"Cmd help window component test: complete")
         return super().eventFilter(obj, event)
 
 if __name__ == '__main__':
