@@ -56,23 +56,16 @@ class Program(MainUi.Ui_MainWindow,QObject):
 
     ignoredNewVersion = False
 
-    def SetIcons(self):
+    def InitIcons(self):
         self.window.setWindowIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/ytdl.png")))
-
-        self.Theme.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/theme.png")))
-        self.AdditionalSwitches.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/plus.png")))
-
-        self.ConsoleOption.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/console.png")))
-
-        self.CommandHelpMenu.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/question.png")))
-        self.Support.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/support.png")))
-        self.About.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/about.png")))
-
-        self.DownloadButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/miniArrow.png"))
-
-        self.DestinationButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/folder.png"))
-
-        #print(pd.__PyDist__._WorkDir)
+        self.Theme.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/kcoloredit.png")))
+        self.AdditionalSwitches.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/edit_add.png")))
+        self.ConsoleOption.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/terminal.png")))
+        self.CommandHelpMenu.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/help_index.png")))
+        self.Support.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/susehelpcenter.png")))
+        self.About.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/info.png")))
+        self.DownloadButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/forward.png"))
+        self.DestinationButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/folder_yellow.png"))
     
     def SetupStatusBar(self):
         self.StatusBar.showMessage("Prepare to download.",30000)
@@ -95,7 +88,7 @@ class Program(MainUi.Ui_MainWindow,QObject):
 
         resp=super().setupUi(MainWindow)
 
-        self.SetIcons()
+        self.InitIcons()
         self.SetupStatusBar()
 
         self.ConsoleDock.close()
