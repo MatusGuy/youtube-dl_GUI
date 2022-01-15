@@ -5,7 +5,7 @@ from webbrowser import open_new_tab as OpenURL
 
 from interface.mainUi import Ui_MainWindow as ui
 
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractButton
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QLabel
 from PyQt5.QtGui import QIcon, QPixmap, QPalette, QColor
 from PyQt5.QtCore import QObject, Qt, QEvent
 
@@ -39,20 +39,21 @@ class MainWindow(ui,QObject):
 
     isDarkTheme = False
 
-    def eventFilter(self, a0: QObject, a1: QEvent) -> bool:
-        print(str(a1))
-        if a0 == self.ConsoleDock and a1 == QEvent.Type.Close: self.ConsoleOption.setChecked(False)
+    def eventFilter(self, a0:QObject, a1:QEvent) -> bool:
+        if a0 is self.ConsoleDock and a1.type() == QEvent.Type.Close:
+            self.ConsoleOption.setChecked(False)
         return super().eventFilter(a0, a1)
 
     def __init__(self,window:QMainWindow,app:QApplication):
         self.window = window
         self.app = app
-        self.app.setStyle("Fusion")
+        self.app.setStyle("Windows")
 
         super().setupUi(window)
         super().__init__()
 
         self.InitIcons()
+        self.InitStatusBar()
 
         self.aboutDialog = aw()
         self.addSwitchesDialog = ad(windowicon=pd.__PyDist__._WorkDir+"assets/ytdl.png")
@@ -88,36 +89,21 @@ class MainWindow(ui,QObject):
     
     def InitIcons(self):
         self.window.setWindowIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/ytdl.png")))
-
         self.Theme.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/kcoloredit.png")))
         self.AdditionalSwitches.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/edit_add.png")))
-
         self.ConsoleOption.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/terminal.png")))
-
         self.CommandHelpMenu.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/help_index.png")))
         self.Support.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/susehelpcenter.png")))
         self.About.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/info.png")))
-
         self.DownloadButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/forward.png"))
-
         self.DestinationButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/folder_yellow.png"))
-
-        #print(pd.__PyDist__._WorkDir)
     
-    def Set(self,values:dict[str]):
-        self.SetURL(values["URL"])
-        self.SetOutput(values["OUTPUT"])
-        self.SetAudioOnly(values["AUDIO_ONLY"])
-        self.SetTemplate(values["TEMPLATE"])
-        self.SetRange(values["RANGE"])
-    def Get(self) -> dict[str]:
-        resp = {}
-        resp["URL"] = self.GetURL()
-        resp["OUTPUT"] = self.GetOutput()
-        resp["AUDIO_ONLY"] = self.GetAudioOnly()
-        resp["TEMPLATE"] = self.GetTemplate()
-        resp["RANGE"] = self.GetRange()
-        return resp
+    def InitStatusBar(self):
+        self.StatusBar.showMessage("Prepare to download.")
+        self.sbDwCurrLabel = QLabel("") #("Current file: My nice music 03 album.mp3")
+        self.StatusBar.addPermanentWidget(self.sbDwCurrLabel)
+        self.sbDwFilesLabel = QLabel("") #("\tItems: 1 / 10")
+        self.StatusBar.addPermanentWidget(self.sbDwFilesLabel)
 
     def SetURL(self,url:str): self.UrlTextBox.setText(url)
     def GetURL(self) -> str: return self.UrlTextBox.text()
@@ -139,22 +125,29 @@ class MainWindow(ui,QObject):
 
     def SetDownloadText(self,text:str): self.DownloadButton.setText(text)
     
-    def SetDownloadInfo(self,eta:str,speed:str,size:str,progress:int=-1):
+    def SetDownloadInfo(self,eta:str,speed:str,size:str,progress:int=-1,current:str="",files:str=""):
         self.ETALabel.setText("ETA: "+eta)
         self.SpeedLabel.setText("Speed: "+speed)
         self.FileSizeLabel.setText("File size: "+size)
         if not progress == -1: self.SetProgress(progress)
+        self.sbDwCurrLabel.setText("Current file: "+current if current  else "")
+        self.sbDwFilesLabel.setText("\tItems: "+files if files else "")
     def GetDownloadInfo(self) -> dict:
         resp = {}
         resp["ETA"] = self.ETALabel.text().removeprefix("ETA: ")
-        resp["SPEED"] = self.ETALabel.text().removeprefix("Speed: ")
-        resp["SIZE"] = self.ETALabel.text().removeprefix("File size: ")
+        resp["SPEED"] = self.SpeedLabel.text().removeprefix("Speed: ")
+        resp["SIZE"] = self.FileSizeLabel.text().removeprefix("File size: ")
+        resp["CURR"] = self.sbDwCurrLabel.text().removeprefix("Current file: ")
+        resp["ITEMS"] = self.sbDwFilesLabel.text().removeprefix("\tItems: ")
         return resp
 
     def DownloadIcon(self): self.DownloadButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/forward.png"))
     def CancelIcon(self): self.DownloadButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/stop.png"))
 
     def SetDownloadCallback(self,callback): self.DownloadButton.pressed.connect(callback)
+
+    def ShowStatusMessage(self,text:str): self.StatusBar.showMessage(text)
+    def ClearStatusMessage(self): self.StatusBar.clearMessage()
 
     def SaveTheme(self,dark,prefMng=None):
         self.DarkOption.setChecked(dark)
