@@ -5,8 +5,6 @@ from mainWindow import MainWindow as mw
 from dist import pydist as pd
 
 class MW_CompTest(object):
-    ui = mw
-
     def main(self,window:QMainWindow,app:QApplication):
         print("Main window component test: start")
         
@@ -15,19 +13,32 @@ class MW_CompTest(object):
         self.ui.SetDownloadCallback(self.DownloadCallback)
 
         window.show()
+
+        self.ui.SetURL("http://test.site.me")
+        self.ui.SetAudioOnly(False)
+        self.ui.SetOutput("C:\\")
+
+        self.ui.SetProgress(50)
+        self.ui.SetDownloadInfo("12m00s","2 Mbps","100Mb",current="c:\long path for a file name where it will be placed\you know.mp3")
+
         app.exec_()
 
         print("Main window component test: complete")
     
     def DownloadCallback(self):
+        print ("DownloadCallBack")
         self.ui.CancelIcon()
+        self.ui.SetDownloadText("Cancel\ndownload!")
 
         self.ui.AppendConsole("Start downloading...")
+        self.ui.ShowStatusMessage("Operating: test")
 
         self.ui.AppendConsole("Download ended.")
         self.ui.DownloadEndDialog(0)
 
+        self.ui.ClearStatusMessage()
         self.ui.ClearConsole()
+        self.ui.SetDownloadText("Start\ndownload!")
         self.ui.DownloadIcon()
 
 if __name__ == "__main__":
