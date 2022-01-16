@@ -259,7 +259,7 @@ class Program(MainUi.Ui_MainWindow,QObject):
         
         
         if "ERROR: " in uppered:
-            if "YOUTUBE-DL.EXE: ":
+            if "YOUTUBE-DL.EXE: " in uppered:
                 self.error = txt.removeprefix("youtube-dl.EXE: error: ").capitalize()
             else:
                 self.error = txt.removeprefix("ERROR: ").capitalize()
