@@ -14,6 +14,7 @@ from dist import pydist as pd
 from interface.aboutWindow import AboutDialog as aw
 from interface.addswitchesDialog import AdditionalSwitchesDialog as ad
 from interface.cmdhelpWindow import CmdHelpDialog as ch
+from components.prefMng import PreferencesManager as pm
 
 class MainWindow(ui,QObject):
     window = QMainWindow
@@ -37,6 +38,8 @@ class MainWindow(ui,QObject):
     aboutDialog = aw
     addSwitchesDialog = ad
 
+    prefMng = None
+
     isDarkTheme = False
 
     def eventFilter(self, a0:QObject, a1:QEvent) -> bool:
@@ -44,10 +47,11 @@ class MainWindow(ui,QObject):
             self.ConsoleOption.setChecked(False)
         return super().eventFilter(a0, a1)
 
-    def __init__(self,window:QMainWindow,app:QApplication):
+    def __init__(self,window:QMainWindow,app:QApplication,version:str="0.0.0.0",prefMng:pm=None):
         self.window = window
         self.app = app
         self.app.setStyle("Fusion")
+        self.prefMng = prefMng
 
         super().setupUi(window)
         super().__init__()
@@ -55,7 +59,7 @@ class MainWindow(ui,QObject):
         self.InitIcons()
         self.InitStatusBar()
 
-        self.aboutDialog = aw()
+        self.aboutDialog = aw(version)
         self.addSwitchesDialog = ad(windowicon=pd.__PyDist__._WorkDir+"assets/ytdl.png")
 
         self.CloseConsole()
@@ -84,7 +88,10 @@ class MainWindow(ui,QObject):
     
     def OpenAboutDialog(self): self.aboutDialog.Execute()
     def OpenGitHubIssues(self): OpenURL("https://github.com/MatusGuy/youtube-dl_GUI/issues")
-    def OpenAdditionalSwitchesDialog(self) -> str: return self.addSwitchesDialog.Execute()
+    def OpenAdditionalSwitchesDialog(self) -> str:
+        resp=self.addSwitchesDialog.Execute()
+        self.ChangeSetting(["additionalSwitches"], resp)
+        return resp
     
     def YtdlGetHelp(self): ch().GetHelp(pd.__PyDist__._WorkDir+"youtube-dl\\youtube-dl.exe --help")
     def FfmpegGetHelp(self): ch("ffmpeg command line help").GetHelp(pd.__PyDist__._WorkDir+"youtube-dl\\ffmpeg.exe --help")
@@ -107,19 +114,19 @@ class MainWindow(ui,QObject):
         self.sbDwFilesLabel = QLabel("") #("\tItems: 1 / 10")
         self.StatusBar.addPermanentWidget(self.sbDwFilesLabel)
 
-    def SetURL(self,url:str): self.UrlTextBox.setText(url)
+    def SetURL(self,url:str): self.UrlTextBox.setText(url), self.ChangeSetting(["savedConfig","url"],self.GetURL())
     def GetURL(self) -> str: return self.UrlTextBox.text()
     
-    def SetOutput(self,output:str): self.DestinationInput.setText(output)
+    def SetOutput(self,output:str): self.DestinationInput.setText(output), self.ChangeSetting(["savedConfig","destination"],self.GetOutput())
     def GetOutput(self) -> str: return self.DestinationInput.text()
 
-    def SetTemplate(self,template:str): self.TemplateInput.setText(template)
+    def SetTemplate(self,template:str): self.TemplateInput.setText(template), self.ChangeSetting(["savedConfig","template"],self.GetTemplate())
     def GetTemplate(self) -> str: return self.TemplateInput.text()
     
-    def SetRange(self,range:str): self.RangeInput.setText(range)
+    def SetRange(self,range:str): self.RangeInput.setText(range), self.ChangeSetting(["savedConfig","range"],self.GetRange())
     def GetRange(self) -> str: return self.RangeInput.text()
     
-    def SetAudioOnly(self,audioOnly:bool): self.AudioOption.setChecked(audioOnly)
+    def SetAudioOnly(self,audioOnly:bool): self.AudioOption.setChecked(audioOnly), self.ChangeSetting(["savedConfig","audioOnly"],self.GetAudioOnly())
     def GetAudioOnly(self) -> bool: return self.AudioOption.isChecked()
 
     def SetProgress(self,value:int): self.DownloadProgress.setValue(value)
@@ -163,7 +170,7 @@ class MainWindow(ui,QObject):
         self.LightOption.setChecked(not dark)
         self.isDarkTheme = self.DarkOption.isChecked()
 
-        if prefMng: prefMng.SetSetting(["isDarkTheme"],dark)
+        self.ChangeSetting(["isDarkTheme"],dark)
     
     def ToLightTheme(self):
         self.app.setPalette(QPalette())
@@ -213,3 +220,7 @@ class MainWindow(ui,QObject):
             wresult=result.replace('/','\\')
             #print (wresult)
             if len(wresult): os.system("explorer "+wresult)
+        
+    def ChangeSetting(self,setting:list,value):
+        if self.prefMng:
+            self.prefMng.SetSetting(setting,value)

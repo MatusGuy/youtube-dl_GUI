@@ -1,14 +1,16 @@
 import sys
+sys.path.insert(1,".")
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from mainWindow import MainWindow as mw
+from components.prefMng import PreferencesManager as pm
 from dist import pydist as pd
 
 class MW_CompTest(object):
     def main(self,window:QMainWindow,app:QApplication):
         print("Main window component test: start")
         
-        self.ui = mw(window,app)
+        self.ui = mw(window,app,prefMng=pm("sad.json"))
 
         self.ui.SetDownloadCallback(self.DownloadCallback)
 
