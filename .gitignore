@@ -11,3 +11,4 @@ dist/test/*
 *.ini
 .env/*
 assets/unused/otherIcons/*
+lang/*
