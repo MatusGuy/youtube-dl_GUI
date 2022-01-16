@@ -11,14 +11,21 @@ class Dl_CompTest(object):
 
     def __init__(self):
         #super().__init__()
-        self.downloader = dl.Downloader(".\\youtube-dl\\",self.ConsoleAddLine,self.Downloaded_Ended)
+        self.downloader = dl.Downloader(".\\youtube-dl\\",self.ConsoleAddLine,self.Downloaded_Ended, self.Download_Progress)
 
     def ConsoleAddLine(self,text):
-        print (f"New Line:\t{text}")
+        print (f"Logger New Line:\t{text}")
 
     def Downloaded_Ended(self,error):
         print (f"Ended. Error code:\t{error}")
         self.appwindow.close()
+
+    def Download_Progress(self,updatecode,info):
+        #print (f"Progress Update Code:\t0b{updatecode:05b} - {info}")
+        #print (f"Progress Update Code:\t0b{updatecode:05b}")
+        if updatecode&self.downloader.DW_PROCESS:
+            print (info["CURR"]["PROCESS"],end='  -> ')
+        #...
         
 
     def main(self,app):

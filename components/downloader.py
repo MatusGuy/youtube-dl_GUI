@@ -1,19 +1,42 @@
 import sys,os
 import subprocess as sp
-from PyQt5 import QtCore
+from PyQt5.QtCore import pyqtSignal, QThread
 from pathlib import Path
 
 
-class Downloader(QtCore.QThread):
+class Downloader(QThread):
     downloaderPath = ""
     downloaderApp = "youtube-dl.exe"
     progress = 0
     progressbar = None
+
     console_callback=None
+    progress_callback=None
     process_ended_callback=None
 
-    data_ready=QtCore.pyqtSignal(object)
-    data_complete=QtCore.pyqtSignal(object)
+    data_ready=pyqtSignal(object)
+    data_complete=pyqtSignal(object)
+
+    download_info={
+                    "IS_DOWNLOADING":False,
+                    "TOTAL_FILES":0,
+                    "CURR":{
+                        "FILE_NAME":"",
+                        "FILE_NUM":0,
+                        "PROGRESS":0,
+                        "ETA":"",
+                        "FILE_SIZE":"",
+                        "SPEED":"",
+                        "PROCESS":""
+                    },
+                    "ERROR":""
+                }
+
+    DW_PROCESS  =1<<0 # 1     2^0 = 1
+    DW_TOTALS   =1<<1 # 2     2^1 = 2
+    DW_PROGRESS =1<<2 # 4     2^2 = 2*2
+    DW_FILENAME =1<<3 # 8     2^3 = 2*2*2
+    DW_ERROR    =1<<4 # 16    2^4 = 2*2*2*2
 
     exitcode=-1
 
@@ -21,13 +44,14 @@ class Downloader(QtCore.QThread):
     
     _isworking=False
 
-    def __init__(self,ytdlPath="./",console_callback=None,process_ended_callback=None):
+    def __init__(self,ytdlPath="./",console_callback=None,process_ended_callback=None,progress_callback=None):
         self.downloaderPath = ytdlPath
         self.console_callback=console_callback
         self.process_ended_callback=process_ended_callback
+        self.progress_callback=progress_callback
         self.stdout = None
         self.stderr = None
-        QtCore.QThread.__init__(self)
+        QThread.__init__(self)
         self.data_ready.connect(self.Notify)
         self.data_complete.connect(self.EndWork)
     
@@ -70,7 +94,61 @@ class Downloader(QtCore.QThread):
         print(command)
         return command
 
+    def ProcessInfo(self,text):
+        resp=0b00000
+        txt=text
+        uppered = txt.upper()
+
+        # Get the current process 
+        if "[" in uppered:
+            removeprefix1 = txt.removeprefix("[")
+            self.download_info["CURR"]["PROCESS"]=removeprefix1.split("] ")[0].capitalize()
+            resp|=0b00001
+
+        # Get Current download file and Total Files
+        if "[DOWNLOAD] DOWNLOADING VIDEO" in uppered and "OF" in uppered:
+            cut1 = txt.split(" ")
+            self.download_info["CURR"]["FILE_NUM"] = cut1[3]
+            self.download_info["TOTAL_FILES"]=cut1[5]
+            resp|=0b00010
+
+        # Get The download progress
+        if "[DOWNLOAD] " in uppered and "%" in uppered and "AT" in uppered:
+            cut1 = txt.split("] ")[1]
+            cut2 = cut1.split("% ")
+            result = cut2[0].replace(" ","0")
+            self.download_info["CURR"]["PROGRESS"]=int(float(result))
+
+            otherInfo = cut2[1].split(" ")
+            self.download_info["CURR"]["FILE_SIZE"] = otherInfo[1]
+            self.download_info["CURR"]["SPEED"] = otherInfo[3]
+            self.download_info["CURR"]["ETA"]  = otherInfo[5]
+            resp|=0b00100
+
+        # Get Current Download File Name
+        if "[DOWNLOAD] DESTINATION: " in uppered:
+            prefixRemoval1 = txt.removeprefix("[download] Destination: ")
+            cut1 = prefixRemoval1.split("\\")
+            self.download_info["CURR"]["FILE_NAME"]  = cut1[len(cut1)-1].removesuffix("(tmp)")
+            resp|=0b01000
+
+        # Get Possible Errors 
+        if "ERROR: " in uppered:
+            if "YOUTUBE-DL.EXE: " in uppered:
+                self.download_info["CURR"]["ERROR"] = txt.removeprefix("youtube-dl.EXE: error: ").capitalize()
+            else:
+                self.download_info["CURR"]["ERROR"] = txt.removeprefix("ERROR: ").capitalize()
+            resp|=0b10000
+
+        return resp
+
     def Notify(self,text):
+        if type(text)==bytes: text=text.decode("ASCII")
+
+        updatecode=self.ProcessInfo(text)
+        if updatecode and self.progress_callback:
+            self.progress_callback(updatecode,self.download_info)
+
         if self.console_callback:
             self.console_callback(text)
 
