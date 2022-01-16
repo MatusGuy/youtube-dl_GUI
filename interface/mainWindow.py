@@ -47,7 +47,7 @@ class MainWindow(ui,QObject):
     def __init__(self,window:QMainWindow,app:QApplication):
         self.window = window
         self.app = app
-        self.app.setStyle("Windows")
+        self.app.setStyle("Fusion")
 
         super().setupUi(window)
         super().__init__()
@@ -66,6 +66,7 @@ class MainWindow(ui,QObject):
         self.DarkOption.triggered.connect(self.ToDarkTheme)
 
         self.About.triggered.connect(self.OpenAboutDialog)
+        self.Support.triggered.connect(self.OpenGitHubIssues)
         self.AdditionalSwitches.triggered.connect(self.OpenAdditionalSwitchesDialog)
 
         self.youtube_dlHelp.triggered.connect(self.YtdlGetHelp)
@@ -82,6 +83,7 @@ class MainWindow(ui,QObject):
     def GetConsole(self) -> str: return self.ConsoleTextBox.toPlainText()
     
     def OpenAboutDialog(self): self.aboutDialog.Execute()
+    def OpenGitHubIssues(self): OpenURL("https://github.com/MatusGuy/youtube-dl_GUI/issues")
     def OpenAdditionalSwitchesDialog(self) -> str: return self.addSwitchesDialog.Execute()
     
     def YtdlGetHelp(self): ch().GetHelp(pd.__PyDist__._WorkDir+"youtube-dl\\youtube-dl.exe --help")
@@ -146,6 +148,13 @@ class MainWindow(ui,QObject):
 
     def SetDownloadCallback(self,callback): self.DownloadButton.pressed.connect(callback)
 
+    def DownloadButtonState(self):
+        self.SetDownloadText("Start\ndownload!")
+        self.DownloadIcon()
+    def CancelButtonState(self):
+        self.SetDownloadText("Cancel\ndownload!")
+        self.CancelIcon()
+
     def ShowStatusMessage(self,text:str): self.StatusBar.showMessage(text)
     def ClearStatusMessage(self): self.StatusBar.clearMessage()
 
@@ -175,7 +184,14 @@ class MainWindow(ui,QObject):
         if errorcode!=0 and error != "":
             msg.setIcon(QMessageBox.Critical)
             msg.setText("Finished downloading unsuccessfully!")
-            msg.setInformativeText(str(error))
+            msg.setStyleSheet('''
+                QTextEdit{
+                    font: 12px "Consolas";
+                    selection-background-color: rgb(3,96,209);
+                    selection-color: rgb(217,217,217)
+                }
+            ''')
+            msg.setDetailedText(str(error))
         elif errorcode!=0:
             msg.setIcon(QMessageBox.Information)
             msg.setText("Canceled by user!")

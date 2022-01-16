@@ -34,7 +34,7 @@ class MW_CompTest(object):
         self.ui.ShowStatusMessage("Operating: test")
 
         self.ui.AppendConsole("Download ended.")
-        self.ui.DownloadEndDialog(0)
+        self.ui.DownloadEndDialog(1,"errormessage goes here")
 
         self.ui.ClearStatusMessage()
         self.ui.ClearConsole()
