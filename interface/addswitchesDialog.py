@@ -15,10 +15,8 @@ class AdditionalSwitchesDialog(uis):
     resp = str
 
     def __init__(self,savedswitches="",windowicon=""):
-        super().__init__()
-
         self.dialog = QDialog(flags = Qt.WindowType.WindowCloseButtonHint)
-        self.setupUi(self.dialog)
+        super().setupUi(self.dialog)
         
         self.dialog.setWindowIcon(QIcon(windowicon))
         self.TextEdit.setPlainText(savedswitches)
@@ -31,4 +29,9 @@ class AdditionalSwitchesDialog(uis):
     
     def Execute(self) -> str:
         self.dialog.exec_()
+        return self.Get()
+    
+    def Set(self,value:str):
+        self.TextEdit.setPlainText(value)
+    def Get(self) -> str:
         return self.TextEdit.toPlainText()

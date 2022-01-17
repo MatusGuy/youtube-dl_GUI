@@ -23,6 +23,9 @@ class MW_CompTest(object):
         self.ui.SetProgress(50)
         self.ui.SetDownloadInfo("12m00s","2 Mbps","100Mb",current="c:\long path for a file name where it will be placed\you know.mp3")
 
+        self.ui.ClearStatusMessage()
+        self.ui.ShowStatusMessage("message")
+
         app.exec_()
 
         print("Main window component test: complete")

@@ -17,12 +17,13 @@ class Downloader(QThread):
     data_ready=pyqtSignal(object)
     data_complete=pyqtSignal(object)
 
-    download_info={
+    download_info_default={
                     "IS_DOWNLOADING":False,
-                    "TOTAL_FILES":0,
+                    "TOTAL_FILES":1,
+                    "FILE_NAMES":[],
                     "CURR":{
                         "FILE_NAME":"",
-                        "FILE_NUM":0,
+                        "FILE_NUM":1,
                         "PROGRESS":0,
                         "ETA":"",
                         "FILE_SIZE":"",
@@ -31,6 +32,8 @@ class Downloader(QThread):
                     },
                     "ERROR":""
                 }
+
+    download_info={}
 
     DW_PROCESS  =1<<0 # 1     2^0 = 1
     DW_TOTALS   =1<<1 # 2     2^1 = 2
@@ -54,6 +57,16 @@ class Downloader(QThread):
         QThread.__init__(self)
         self.data_ready.connect(self.Notify)
         self.data_complete.connect(self.EndWork)
+        self.Reset()
+
+    def Reset(self):
+        self.download_info=self._copy(self.download_info_default)
+
+    def _copy(self,org):
+        if type(org)==dict: dest={key:self._copy(org[key]) for key in org}
+        elif type(org)==list: dest=[self._copy(value) for value in org]
+        else: dest=org
+        return dest
     
 
     def _CutToExtension(self,pathText):
@@ -94,7 +107,7 @@ class Downloader(QThread):
         print(command)
         return command
 
-    def ProcessInfo(self,text):
+    def ProcessInfo(self,text:str|bytes):
         resp=0b00000
         txt=text
         uppered = txt.upper()
@@ -130,6 +143,7 @@ class Downloader(QThread):
             prefixRemoval1 = txt.removeprefix("[download] Destination: ")
             cut1 = prefixRemoval1.split("\\")
             self.download_info["CURR"]["FILE_NAME"]  = cut1[len(cut1)-1].removesuffix("(tmp)")
+            self.download_info["FILE_NAMES"].append(self.download_info["CURR"]["FILE_NAME"])
             resp|=0b01000
 
         # Get Possible Errors 
@@ -167,14 +181,12 @@ class Downloader(QThread):
         self.command = self._GetCommand(params)
         ##print(self.command)
 
+        self.Reset()
         self.isdownloading=True
         self.start()
-        
-
     
     def run(self):
         self._isworking=True
-        self.data_ready.emit("Start Download ...")
         self.process = sp.Popen(self.command, shell=True, stdout=sp.PIPE, stderr=sp.STDOUT)
         # Poll process for new output until finished
         line=b''
@@ -202,9 +214,4 @@ class Downloader(QThread):
         if not self._isworking:
             return
         self._isworking=False
-        self.data_ready.emit("Cancel download!!!")
         self.process.terminate()
-
-
-    
-    

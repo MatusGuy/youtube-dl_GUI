@@ -2,10 +2,11 @@ import sys,os
 sys.path.insert(1,'.')
 
 from webbrowser import open_new_tab as OpenURL
+from pathlib import Path
 
 from interface.mainUi import Ui_MainWindow as ui
 
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QLabel
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QLabel, QFileDialog
 from PyQt5.QtGui import QIcon, QPixmap, QPalette, QColor
 from PyQt5.QtCore import QObject, Qt, QEvent
 
@@ -56,11 +57,13 @@ class MainWindow(ui,QObject):
         super().setupUi(window)
         super().__init__()
 
-        self.InitIcons()
-        self.InitStatusBar()
-
         self.aboutDialog = aw(version)
         self.addSwitchesDialog = ad(windowicon=pd.__PyDist__._WorkDir+"assets/ytdl.png")
+        self.LoadSettings()
+
+        self.InitIcons()
+        self.InitStatusBar()
+        self.DisableDownloadGui(True)
 
         self.CloseConsole()
         self.ConsoleDock.installEventFilter(self)
@@ -69,12 +72,34 @@ class MainWindow(ui,QObject):
         self.LightOption.triggered.connect(self.ToLightTheme)
         self.DarkOption.triggered.connect(self.ToDarkTheme)
 
+        self.DestinationButton.pressed.connect(lambda: self.SetOutput(self.DestinationSelectPrompt()))
+
         self.About.triggered.connect(self.OpenAboutDialog)
         self.Support.triggered.connect(self.OpenGitHubIssues)
         self.AdditionalSwitches.triggered.connect(self.OpenAdditionalSwitchesDialog)
 
         self.youtube_dlHelp.triggered.connect(self.YtdlGetHelp)
         self.ffmpegHelp.triggered.connect(self.FfmpegGetHelp)
+
+        self.app.aboutToQuit.connect(self.OnAppQuit)
+    
+    def LoadSettings(self):
+        settings = self.prefMng.settings
+        self.SetURL(settings["savedConfig"]["url"])
+        self.SetAudioOnly(settings["savedConfig"]["audioOnly"])
+        self.SetTemplate(settings["savedConfig"]["template"])
+        self.SetRange(settings["savedConfig"]["range"])
+
+        if settings["savedConfig"]["destination"] == "<DEFAULT>":
+            self.SetOutput(str(Path.home())+"\\")
+        self.SetOutput(settings["savedConfig"]["destination"])
+
+        if settings["isDarkTheme"]:
+            self.ToDarkTheme()
+        else:
+            self.ToLightTheme()
+        
+        self.SetAdditionalSwitches(settings["additionalSwitches"])
     
     def OpenConsole(self): self.ConsoleDock.show()
     def CloseConsole(self): self.ConsoleDock.close()
@@ -92,6 +117,8 @@ class MainWindow(ui,QObject):
         resp=self.addSwitchesDialog.Execute()
         self.ChangeSetting(["additionalSwitches"], resp)
         return resp
+    def GetAdditionalSwitches(self) -> str: return self.addSwitchesDialog.Get()
+    def SetAdditionalSwitches(self,value:str): self.addSwitchesDialog.Set(value)
     
     def YtdlGetHelp(self): ch().GetHelp(pd.__PyDist__._WorkDir+"youtube-dl\\youtube-dl.exe --help")
     def FfmpegGetHelp(self): ch("ffmpeg command line help").GetHelp(pd.__PyDist__._WorkDir+"youtube-dl\\ffmpeg.exe --help")
@@ -149,6 +176,23 @@ class MainWindow(ui,QObject):
         resp["CURR"] = self.sbDwCurrLabel.text().removeprefix("Current file: ")
         resp["ITEMS"] = self.sbDwFilesLabel.text().removeprefix("\tItems: ")
         return resp
+    
+    def DisableDownloadGui(self,disable:bool):
+        self.FileSizeLabel.setEnabled(not disable)
+        self.SpeedLabel.setEnabled(not disable)
+        self.ETALabel.setEnabled(not disable)
+        self.DownloadProgress.setEnabled(not disable)
+        #self.DownloadButton.setEnabled(disable)
+        self.sbDwFilesLabel.setEnabled(not disable)
+        self.sbDwCurrLabel.setEnabled(not disable)
+
+        if disable:
+            self.DownloadProgress.setValue(0)
+            self.FileSizeLabel.setText("Total file size: ")
+            self.SpeedLabel.setText("Speed: ")
+            self.ETALabel.setText("ETA: ")
+            self.sbDwCurrLabel.setText("")
+            self.sbDwFilesLabel.setText("\t")
 
     def DownloadIcon(self): self.DownloadButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/forward.png"))
     def CancelIcon(self): self.DownloadButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/stop.png"))
@@ -158,11 +202,17 @@ class MainWindow(ui,QObject):
     def DownloadButtonState(self):
         self.SetDownloadText("Start\ndownload!")
         self.DownloadIcon()
+        self.DownloadButton.setToolTip("Finally, download!")
     def CancelButtonState(self):
         self.SetDownloadText("Cancel\ndownload!")
         self.CancelIcon()
+        self.DownloadButton.setToolTip("Cancel download!")
 
-    def ShowStatusMessage(self,text:str): self.StatusBar.showMessage(text)
+    def ShowStatusMessage(self,text:str,duration:int=-1):
+        if not duration == -1:
+            self.StatusBar.showMessage(text,duration)
+        else:
+            self.StatusBar.showMessage(text)
     def ClearStatusMessage(self): self.StatusBar.clearMessage()
 
     def SaveTheme(self,dark,prefMng=None):
@@ -220,7 +270,35 @@ class MainWindow(ui,QObject):
             wresult=result.replace('/','\\')
             #print (wresult)
             if len(wresult): os.system("explorer "+wresult)
+    
+    def DestinationSelectPrompt(self) -> str:
+        filenameFilter = ""
+        if not self.GetAudioOnly():
+            filenameFilter = "Video (*.mp4 *.3gp *.aac *.flv *.m4a *.webm)"
+        else:
+            filenameFilter = "Audio (*.mp3 *.wav *.ogg *.aac *.flac *.m4a *.opus)"
+        
+        defaultpath=str(Path.home()) if not self.GetOutput() else self.GetOutput()
+
+        filename = QFileDialog.getSaveFileName(
+            parent=self.DestinationButton,
+            caption="Select output file...",
+            directory=defaultpath,
+            filter=filenameFilter
+        )
+
+        return str(filename[0])
         
     def ChangeSetting(self,setting:list,value):
         if self.prefMng:
             self.prefMng.SetSetting(setting,value)
+        
+    def OnAppQuit(self):
+        self.ChangeSetting(["savedConfig","url"],self.GetURL())
+        self.ChangeSetting(["savedConfig","audioOnly"],self.GetAudioOnly())
+        self.ChangeSetting(["savedConfig","template"],self.GetTemplate())
+        self.ChangeSetting(["savedConfig","range"],self.GetRange())
+        self.ChangeSetting(["savedConfig","destination"],self.GetOutput())
+        self.ChangeSetting(["isDarkTheme"],self.DarkOption.isChecked())
+        self.ChangeSetting(["additionalSwitches"],self.GetAdditionalSwitches())
+        self.prefMng.WriteJSON(self.prefMng.filename,self.prefMng.settings)
