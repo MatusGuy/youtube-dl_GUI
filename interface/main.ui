@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>813</width>
+    <width>963</width>
     <height>500</height>
    </rect>
   </property>
@@ -466,7 +466,7 @@ download!</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>813</width>
+     <width>963</width>
      <height>21</height>
     </rect>
    </property>
@@ -492,6 +492,7 @@ download!</string>
      <addaction name="DarkOption"/>
     </widget>
     <addaction name="ConsoleOption"/>
+    <addaction name="DownloadedItems"/>
     <addaction name="separator"/>
     <addaction name="Theme"/>
    </widget>
@@ -523,7 +524,7 @@ download!</string>
   <widget class="QDockWidget" name="ConsoleDock">
    <property name="sizePolicy">
     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-     <horstretch>0</horstretch>
+     <horstretch>1</horstretch>
      <verstretch>1</verstretch>
     </sizepolicy>
    </property>
@@ -571,6 +572,70 @@ font: 9pt &quot;Consolas&quot;;</string>
        <property name="readOnly">
         <bool>true</bool>
        </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="DwItems">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>1</horstretch>
+     <verstretch>1</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>310</width>
+     <height>95</height>
+    </size>
+   </property>
+   <property name="features">
+    <set>QDockWidget::AllDockWidgetFeatures</set>
+   </property>
+   <property name="windowTitle">
+    <string>Downloaded items</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="DwItemsListWidget">
+    <layout class="QGridLayout" name="gridLayout_10">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item row="0" column="0">
+      <widget class="QTableWidget" name="DwItemsList">
+       <property name="frameShape">
+        <enum>QFrame::Box</enum>
+       </property>
+       <property name="showGrid">
+        <bool>true</bool>
+       </property>
+       <column>
+        <property name="text">
+         <string>Video</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Size</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Total time</string>
+        </property>
+       </column>
       </widget>
      </item>
     </layout>
@@ -673,7 +738,28 @@ font: 9pt &quot;Consolas&quot;;</string>
     <string>Dark</string>
    </property>
   </action>
+  <action name="DownloadedItems">
+   <property name="icon">
+    <iconset>
+     <normaloff>../assets/view_text.png</normaloff>../assets/view_text.png</iconset>
+   </property>
+   <property name="text">
+    <string>Downloaded items</string>
+   </property>
+  </action>
  </widget>
+ <tabstops>
+  <tabstop>UrlTextBox</tabstop>
+  <tabstop>VideoOption</tabstop>
+  <tabstop>AudioOption</tabstop>
+  <tabstop>TemplateInput</tabstop>
+  <tabstop>RangeInput</tabstop>
+  <tabstop>DestinationButton</tabstop>
+  <tabstop>DestinationInput</tabstop>
+  <tabstop>DownloadButton</tabstop>
+  <tabstop>ConsoleTextBox</tabstop>
+  <tabstop>DwItemsList</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
