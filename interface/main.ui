@@ -750,9 +750,6 @@ font: 9pt &quot;Consolas&quot;;</string>
    </property>
   </action>
   <action name="DownloadedItems">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
    <property name="icon">
     <iconset>
      <normaloff>../assets/view_text.png</normaloff>../assets/view_text.png</iconset>
