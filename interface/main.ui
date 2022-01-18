@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>963</width>
+    <width>986</width>
     <height>500</height>
    </rect>
   </property>
@@ -466,7 +466,7 @@ download!</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>963</width>
+     <width>986</width>
      <height>21</height>
     </rect>
    </property>
@@ -586,9 +586,12 @@ font: 9pt &quot;Consolas&quot;;</string>
    </property>
    <property name="minimumSize">
     <size>
-     <width>310</width>
+     <width>350</width>
      <height>95</height>
     </size>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
    </property>
    <property name="features">
     <set>QDockWidget::AllDockWidgetFeatures</set>
@@ -618,9 +621,12 @@ font: 9pt &quot;Consolas&quot;;</string>
        <property name="frameShape">
         <enum>QFrame::Box</enum>
        </property>
-       <property name="showGrid">
-        <bool>true</bool>
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
        </property>
+       <attribute name="horizontalHeaderDefaultSectionSize">
+        <number>120</number>
+       </attribute>
        <column>
         <property name="text">
          <string>Video</string>
@@ -634,6 +640,11 @@ font: 9pt &quot;Consolas&quot;;</string>
        <column>
         <property name="text">
          <string>Total time</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Destination</string>
         </property>
        </column>
       </widget>
