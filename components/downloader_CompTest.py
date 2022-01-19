@@ -25,6 +25,7 @@ class Dl_CompTest(object):
         #print (f"Progress Update Code:\t0b{updatecode:05b}")
         if updatecode&self.downloader.DW_PROCESS:
             print (info["CURR"]["PROCESS"],end=' -> ')
+            print ("downloaded: "+str(info["DOWNLOADED_FILES"]))
         #...
         
 

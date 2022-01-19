@@ -6,7 +6,7 @@ from pathlib import Path
 
 from interface.mainUi import Ui_MainWindow as ui
 
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QLabel, QFileDialog
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QLabel, QFileDialog, QTableWidgetItem
 from PyQt5.QtGui import QIcon, QPixmap, QPalette, QColor
 from PyQt5.QtCore import QObject, Qt, QEvent
 
@@ -56,8 +56,7 @@ class MainWindow(ui,QObject):
 
         super().setupUi(window)
         super().__init__()
-        self.DownloadedItems.setParent(None)
-        self.DownloadedItems.deleteLater()
+        #self.DownloadedItems.setEnabled(False)
 
         self.aboutDialog = aw(version)
         self.addSwitchesDialog = ad(windowicon=pd.__PyDist__._WorkDir+"assets/ytdl.png")
@@ -72,8 +71,8 @@ class MainWindow(ui,QObject):
         self.ConsoleOption.triggered.connect(lambda: self.SetConsoleOpen(self.ConsoleOption.isChecked()))
 
         self.CloseDwItems()
-        #self.DwItems.installEventFilter(self)
-        #self.DownloadedItems.toggled.connect(lambda: self.SetDwItemsOpen(self.DownloadedItems.isChecked()))
+        self.DwItems.installEventFilter(self)
+        self.DownloadedItems.toggled.connect(lambda: self.SetDwItemsOpen(self.DownloadedItems.isChecked()))
 
         self.LightOption.triggered.connect(self.ToLightTheme)
         self.DarkOption.triggered.connect(self.ToDarkTheme)
@@ -122,8 +121,17 @@ class MainWindow(ui,QObject):
     def SetDwItemsOpen(self,open:bool):
         if open: self.OpenDwItems()
         else: self.CloseDwItems()
-    def AddDwItem(self,pos:int): self.DwItemsList.insertRow(pos)
-    
+    def AddDwItemsRow(self,pos:int): self.DwItemsList.insertRow(pos)
+    def ListToDwList(self,dwList:list):
+        self.DwItemsList.clear()
+        for item in dwList:
+            index = dwList.index(item)
+            self.AddDwItemsRow(index)
+            self.DwItemsList.setItem(index,0,QTableWidgetItem(item["FILENAME"]))
+            self.DwItemsList.setItem(index,1,QTableWidgetItem(item["SIZE"]))
+            self.DwItemsList.setItem(index,2,QTableWidgetItem(item["TOTAL_TIME"]))
+            self.DwItemsList.setItem(index,3,QTableWidgetItem(item["DESTINATION"]))
+
     def OpenAboutDialog(self): self.aboutDialog.Execute()
     def OpenGitHubIssues(self): OpenURL("https://github.com/MatusGuy/youtube-dl_GUI/issues")
     def OpenAdditionalSwitchesDialog(self) -> str:

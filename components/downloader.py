@@ -20,7 +20,7 @@ class Downloader(QThread):
     download_info_default={
                     "IS_DOWNLOADING":False,
                     "TOTAL_FILES":1,
-                    "FILE_NAMES":[],
+                    "DOWNLOADED_FILES":[],
                     "CURR":{
                         "FILE_NAME":"",
                         "FILE_NUM":1,
@@ -134,16 +134,29 @@ class Downloader(QThread):
 
             otherInfo = cut2[1].split(" ")
             self.download_info["CURR"]["FILE_SIZE"] = otherInfo[1]
+            try: self.download_info["DOWNLOADED_FILES"][-1]["SIZE"] = otherInfo[1]
+            except: pass
             self.download_info["CURR"]["SPEED"] = otherInfo[3]
             self.download_info["CURR"]["ETA"]  = otherInfo[5]
             resp|=0b00100
 
+        # Get total time
+        if "[DOWNLOAD] " in uppered and "IN" in uppered:
+            cut1 = txt.split("in ")
+            try: self.download_info["DOWNLOADED_FILES"][-1]["TOTAL_TIME"] = cut1[-1].removesuffix("                 ") # don't ask me
+            except: pass
+
         # Get Current Download File Name
         if "[DOWNLOAD] DESTINATION: " in uppered:
-            prefixRemoval1 = txt.removeprefix("[download] Destination: ")
-            cut1 = prefixRemoval1.split("\\")
+            path = txt.removeprefix("[download] Destination: ")
+            cut1 = path.split("\\")
             self.download_info["CURR"]["FILE_NAME"]  = cut1[len(cut1)-1].removesuffix("(tmp)")
-            self.download_info["FILE_NAMES"].append(self.download_info["CURR"]["FILE_NAME"])
+            self.download_info["DOWNLOADED_FILES"].append({
+                "FILENAME": self.download_info["CURR"]["FILE_NAME"],
+                "SIZE": "",
+                "TOTAL_TIME": "",
+                "DESTINATION": path.removesuffix("(tmp)")
+            })
             resp|=0b01000
 
         # Get Possible Errors 

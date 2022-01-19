@@ -26,6 +26,13 @@ class MW_CompTest(object):
         self.ui.ClearStatusMessage()
         self.ui.ShowStatusMessage("message")
 
+        self.ui.ListToDwList([{
+                "FILENAME": "filename",
+                "SIZE": "size",
+                "TOTAL_TIME": "time",
+                "DESTINATION": "dest"
+            }])
+
         app.exec_()
 
         print("Main window component test: complete")
