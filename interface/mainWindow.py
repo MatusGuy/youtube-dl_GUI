@@ -56,6 +56,8 @@ class MainWindow(ui,QObject):
 
         super().setupUi(window)
         super().__init__()
+        self.DownloadedItems.setParent(None)
+        self.DownloadedItems.deleteLater()
 
         self.aboutDialog = aw(version)
         self.addSwitchesDialog = ad(windowicon=pd.__PyDist__._WorkDir+"assets/ytdl.png")
@@ -70,8 +72,8 @@ class MainWindow(ui,QObject):
         self.ConsoleOption.triggered.connect(lambda: self.SetConsoleOpen(self.ConsoleOption.isChecked()))
 
         self.CloseDwItems()
-        self.DwItems.installEventFilter(self)
-        self.DownloadedItems.toggled.connect(lambda: self.SetDwItemsOpen(self.DownloadedItems.isChecked()))
+        #self.DwItems.installEventFilter(self)
+        #self.DownloadedItems.toggled.connect(lambda: self.SetDwItemsOpen(self.DownloadedItems.isChecked()))
 
         self.LightOption.triggered.connect(self.ToLightTheme)
         self.DarkOption.triggered.connect(self.ToDarkTheme)
