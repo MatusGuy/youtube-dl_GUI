@@ -1,23 +1,14 @@
-from copy import error
-import sys,os,ctypes
+import sys,ctypes
 from webbrowser import open_new_tab as OpenURL
-from pathlib import Path
-from PyQt5 import QtGui
-from PyQt5.QtGui import QColor,QIcon,QPalette,QPixmap
-from PyQt5.QtCore import Qt,QObject,QEvent
-from PyQt5.QtWidgets import *
-import interface.mainUi as MainUi
+from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import QObject
+from PyQt5.QtWidgets import QApplication,QMainWindow,QAbstractButton,QMessageBox
 from dist import pydist as pd
 import py_mysplash as psh
 
 from components import downloader as dl, versionChecker as vc, prefMng as pm
 
-from interface import (
-    aboutWindow as aw,
-    addswitchesDialog as ad,
-    cmdhelpWindow as ch,
-    mainWindow as mw
-)
+from interface import mainWindow as mw
 
 #from settingsGuis.themePrompt_class import Ui_ChangeTheme as ThemesGui
 
@@ -32,31 +23,11 @@ class Program(mw.MainWindow,QObject):
     versionChecker = vc.VersionChecker
     prefMng = pm.PreferencesManager
 
-    aboutWindow = aw.AboutDialog
-    addswitchesDialog = ad.AdditionalSwitchesDialog
-
     showConsole = False
 
     videos=0
 
     console_height=89
-
-    darkTheme = palette = QPalette()
-    palette.setColor(QPalette.Window, QColor(53, 53, 53))
-    palette.setColor(QPalette.WindowText, Qt.white)
-    palette.setColor(QPalette.Base, QColor(25, 25, 25))
-    palette.setColor(QPalette.AlternateBase, QColor(53, 53, 53))
-    palette.setColor(QPalette.ToolTipBase, Qt.black)
-    palette.setColor(QPalette.ToolTipText, Qt.white)
-    palette.setColor(QPalette.Text, Qt.white)
-    palette.setColor(QPalette.Button, QColor(53, 53, 53))
-    palette.setColor(QPalette.ButtonText, Qt.white)
-    palette.setColor(QPalette.BrightText, Qt.red)
-    palette.setColor(QPalette.Link, QColor(42, 130, 218))
-    palette.setColor(QPalette.Highlight, QColor(42, 130, 218))
-    palette.setColor(QPalette.HighlightedText, Qt.black)
-
-    isDarkTheme = False
 
     error = ""
 
@@ -137,6 +108,7 @@ class Program(mw.MainWindow,QObject):
             self.downloader.StartDownload(Config)
 
     def DistributeDWInfo(self,updatecode,info:dict):
+        print(info)
         self.ShowStatusMessage("Processing: "+info["CURR"]["PROCESS"])
         self.SetDownloadInfo(
             eta=info["CURR"]["ETA"],
@@ -146,12 +118,11 @@ class Program(mw.MainWindow,QObject):
             current=info["CURR"]["FILE_NAME"],
             files=f'{info["CURR"]["FILE_NUM"]}/{info["TOTAL_FILES"]}'
         )
-        self.error = info["ERROR"]
 
     def Downloaded_Ended(self,errorcode):
         self.ShowStatusMessage("Download ended",200000)
         self.AppendConsole("Download process ended")
-        self.DownloadEndDialog(errorcode,self.error)
+        self.DownloadEndDialog(errorcode,self.downloader.download_info["ERROR"])
         self.DownloadButtonState()
 
 def window():

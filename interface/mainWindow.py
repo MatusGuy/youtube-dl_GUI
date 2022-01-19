@@ -44,8 +44,8 @@ class MainWindow(ui,QObject):
     isDarkTheme = False
 
     def eventFilter(self, a0:QObject, a1:QEvent) -> bool:
-        if a0 is self.ConsoleDock and a1.type() == QEvent.Type.Close:
-            self.ConsoleOption.setChecked(False)
+        if a0 is self.ConsoleDock and a1.type() == QEvent.Type.Close: self.ConsoleOption.setChecked(False)
+        if a0 is self.DwItems and a1.type() == QEvent.Type.Close: self.DownloadedItems.setChecked(False)
         return super().eventFilter(a0, a1)
 
     def __init__(self,window:QMainWindow,app:QApplication,version:str="0.0.0.0",prefMng:pm=None):
@@ -68,6 +68,10 @@ class MainWindow(ui,QObject):
         self.CloseConsole()
         self.ConsoleDock.installEventFilter(self)
         self.ConsoleOption.triggered.connect(lambda: self.SetConsoleOpen(self.ConsoleOption.isChecked()))
+
+        self.CloseDwItems()
+        self.DwItems.installEventFilter(self)
+        self.DownloadedItems.toggled.connect(lambda: self.SetDwItemsOpen(self.DownloadedItems.isChecked()))
 
         self.LightOption.triggered.connect(self.ToLightTheme)
         self.DarkOption.triggered.connect(self.ToDarkTheme)
@@ -110,6 +114,13 @@ class MainWindow(ui,QObject):
     def AppendConsole(self,text:str): self.ConsoleTextBox.appendPlainText(text)
     def ClearConsole(self): self.ConsoleTextBox.clear()
     def GetConsole(self) -> str: return self.ConsoleTextBox.toPlainText()
+
+    def OpenDwItems(self): self.DwItems.show()
+    def CloseDwItems(self): self.DwItems.close()
+    def SetDwItemsOpen(self,open:bool):
+        if open: self.OpenDwItems()
+        else: self.CloseDwItems()
+    def AddDwItem(self,pos:int): self.DwItemsList.insertRow(pos)
     
     def OpenAboutDialog(self): self.aboutDialog.Execute()
     def OpenGitHubIssues(self): OpenURL("https://github.com/MatusGuy/youtube-dl_GUI/issues")
@@ -128,6 +139,7 @@ class MainWindow(ui,QObject):
         self.Theme.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/kcoloredit.png")))
         self.AdditionalSwitches.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/edit_add.png")))
         self.ConsoleOption.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/terminal.png")))
+        self.DownloadedItems.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/view_text.png"))
         self.CommandHelpMenu.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/help_index.png")))
         self.Support.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/susehelpcenter.png")))
         self.About.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/info.png")))
@@ -238,7 +250,7 @@ class MainWindow(ui,QObject):
         msg.setWindowTitle("youtube-dl GUI")
         msg.setStandardButtons(QMessageBox.StandardButton.Ok)
 
-        if errorcode!=0 and error != "":
+        if errorcode==1 and error:
             msg.setIcon(QMessageBox.Critical)
             msg.setText("Finished downloading unsuccessfully!")
             msg.setStyleSheet('''
@@ -249,7 +261,7 @@ class MainWindow(ui,QObject):
                 }
             ''')
             msg.setDetailedText(str(error))
-        elif errorcode!=0:
+        elif errorcode==1:
             msg.setIcon(QMessageBox.Information)
             msg.setText("Canceled by user!")
         else:

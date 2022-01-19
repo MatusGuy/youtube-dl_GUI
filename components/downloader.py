@@ -148,10 +148,8 @@ class Downloader(QThread):
 
         # Get Possible Errors 
         if "ERROR: " in uppered:
-            if "YOUTUBE-DL.EXE: " in uppered:
-                self.download_info["CURR"]["ERROR"] = txt.removeprefix("youtube-dl.EXE: error: ").capitalize()
-            else:
-                self.download_info["CURR"]["ERROR"] = txt.removeprefix("ERROR: ").capitalize()
+            if "YOUTUBE-DL.EXE: " in uppered: self.download_info["ERROR"] = txt.removeprefix("youtube-dl.EXE: error: ").capitalize()
+            else: self.download_info["ERROR"] = txt.removeprefix("ERROR: ").capitalize()
             resp|=0b10000
 
         return resp

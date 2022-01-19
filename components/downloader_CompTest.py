@@ -24,7 +24,7 @@ class Dl_CompTest(object):
         #print (f"Progress Update Code:\t0b{updatecode:05b} - {info}")
         #print (f"Progress Update Code:\t0b{updatecode:05b}")
         if updatecode&self.downloader.DW_PROCESS:
-            print (info["CURR"]["PROCESS"],end='  -> ')
+            print (info["CURR"]["PROCESS"],end=' -> ')
         #...
         
 
@@ -51,7 +51,7 @@ class Dl_CompTest(object):
         print (f"Donwload done!")  
 
         print ("Downloader Component Test End")
-        os.system("del .\\processing\\testdw.mp3")
+        #os.system("del .\\testdw.mp3")
         return (resp)
 
 if __name__ == "__main__":
