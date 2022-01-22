@@ -1,5 +1,4 @@
 import sys,ctypes
-from webbrowser import open_new_tab as OpenURL
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QObject
 from PyQt5.QtWidgets import QApplication,QMainWindow,QAbstractButton,QMessageBox
@@ -107,8 +106,8 @@ class Program(mw.MainWindow,QObject):
             }
             self.downloader.StartDownload(Config)
 
-    def DistributeDWInfo(self,updatecode,info:dict):
-        print(info)
+    def DistributeDWInfo(self,updatecode,info:dict,dwList:dict):
+        print('\n'.join('{}: {}'.format(*k) for k in enumerate(dwList)))
         self.ShowStatusMessage("Processing: "+info["CURR"]["PROCESS"])
         self.SetDownloadInfo(
             eta=info["CURR"]["ETA"],
@@ -118,6 +117,7 @@ class Program(mw.MainWindow,QObject):
             current=info["CURR"]["FILE_NAME"],
             files=f'{info["CURR"]["FILE_NUM"]}/{info["TOTAL_FILES"]}'
         )
+        self.ListToDwList(dwList)
 
     def Downloaded_Ended(self,errorcode):
         self.ShowStatusMessage("Download ended",200000)

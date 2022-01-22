@@ -6,7 +6,7 @@ from pathlib import Path
 
 from interface.mainUi import Ui_MainWindow as ui
 
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QLabel, QFileDialog, QTableWidgetItem
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QLabel, QFileDialog, QTableWidgetItem, QDockWidget
 from PyQt5.QtGui import QIcon, QPixmap, QPalette, QColor
 from PyQt5.QtCore import QObject, Qt, QEvent
 
@@ -21,20 +21,35 @@ class MainWindow(ui,QObject):
     window = QMainWindow
     app = QApplication
 
-    darkTheme = palette = QPalette()
-    palette.setColor(QPalette.Window, QColor(53, 53, 53))
-    palette.setColor(QPalette.WindowText, Qt.white)
-    palette.setColor(QPalette.Base, QColor(25, 25, 25))
-    palette.setColor(QPalette.AlternateBase, QColor(53, 53, 53))
-    palette.setColor(QPalette.ToolTipBase, Qt.black)
-    palette.setColor(QPalette.ToolTipText, Qt.white)
-    palette.setColor(QPalette.Text, Qt.white)
-    palette.setColor(QPalette.Button, QColor(53, 53, 53))
-    palette.setColor(QPalette.ButtonText, Qt.white)
-    palette.setColor(QPalette.BrightText, Qt.red)
-    palette.setColor(QPalette.Link, QColor(42, 130, 218))
-    palette.setColor(QPalette.Highlight, QColor(42, 130, 218))
-    palette.setColor(QPalette.HighlightedText, Qt.black)
+    lightTheme = QPalette()
+    lightTheme.setColor(QPalette.ColorRole.Window, QColor(239, 239, 239, 255))
+    lightTheme.setColor(QPalette.ColorRole.WindowText, QColor(0, 0, 0, 255))
+    lightTheme.setColor(QPalette.ColorRole.Base, QColor(255, 255, 255, 255))
+    lightTheme.setColor(QPalette.ColorRole.AlternateBase, QColor(247, 247, 247, 255))
+    lightTheme.setColor(QPalette.ColorRole.ToolTipBase, QColor(255, 255, 220, 255))
+    lightTheme.setColor(QPalette.ColorRole.ToolTipText, QColor(0, 0, 0, 255))
+    lightTheme.setColor(QPalette.ColorRole.Text, QColor(0, 0, 0, 255))
+    lightTheme.setColor(QPalette.ColorRole.Button, QColor(239, 239, 239, 255))
+    lightTheme.setColor(QPalette.ColorRole.ButtonText, QColor(0, 0, 0, 255))
+    lightTheme.setColor(QPalette.ColorRole.BrightText, QColor(255, 255, 255, 255))
+    lightTheme.setColor(QPalette.ColorRole.Link, QColor(0, 0, 255, 255))
+    lightTheme.setColor(QPalette.ColorRole.Highlight, QColor(48, 140, 198, 255))
+    lightTheme.setColor(QPalette.ColorRole.HighlightedText, QColor(255, 255, 255, 255))
+
+    darkTheme = QPalette()
+    darkTheme.setColor(QPalette.ColorRole.Window, QColor(53, 53, 53))
+    darkTheme.setColor(QPalette.ColorRole.WindowText, Qt.GlobalColor.white)
+    darkTheme.setColor(QPalette.ColorRole.Base, QColor(25, 25, 25))
+    darkTheme.setColor(QPalette.ColorRole.AlternateBase, QColor(53, 53, 53))
+    darkTheme.setColor(QPalette.ColorRole.ToolTipBase, Qt.GlobalColor.black)
+    darkTheme.setColor(QPalette.ColorRole.ToolTipText, Qt.GlobalColor.white)
+    darkTheme.setColor(QPalette.ColorRole.Text, Qt.GlobalColor.white)
+    darkTheme.setColor(QPalette.ColorRole.Button, QColor(53, 53, 53))
+    darkTheme.setColor(QPalette.ColorRole.ButtonText, Qt.GlobalColor.white)
+    darkTheme.setColor(QPalette.ColorRole.BrightText, Qt.GlobalColor.red)
+    darkTheme.setColor(QPalette.ColorRole.Link, QColor(42, 130, 218))
+    darkTheme.setColor(QPalette.ColorRole.Highlight, QColor(42, 130, 218))
+    darkTheme.setColor(QPalette.ColorRole.HighlightedText, Qt.GlobalColor.black)
 
     aboutDialog = aw
     addSwitchesDialog = ad
@@ -56,7 +71,8 @@ class MainWindow(ui,QObject):
 
         super().setupUi(window)
         super().__init__()
-        #self.DownloadedItems.setEnabled(False)
+
+        #self.MainWidget.setStyleSheet("")
 
         self.aboutDialog = aw(version)
         self.addSwitchesDialog = ad(windowicon=pd.__PyDist__._WorkDir+"assets/ytdl.png")
@@ -95,9 +111,9 @@ class MainWindow(ui,QObject):
         self.SetTemplate(settings["savedConfig"]["template"])
         self.SetRange(settings["savedConfig"]["range"])
 
-        if settings["savedConfig"]["destination"] == "<DEFAULT>":
-            self.SetOutput(str(Path.home())+"\\")
         self.SetOutput(settings["savedConfig"]["destination"])
+        if settings["savedConfig"]["destination"] == "<DEFAULT>":
+            self.SetOutput(str(Path.home())+"\\.mp4")
 
         if settings["isDarkTheme"]:
             self.ToDarkTheme()
@@ -123,7 +139,7 @@ class MainWindow(ui,QObject):
         else: self.CloseDwItems()
     def AddDwItemsRow(self,pos:int): self.DwItemsList.insertRow(pos)
     def ListToDwList(self,dwList:list):
-        self.DwItemsList.clear()
+        self.DwItemsList.setRowCount(0)
         for item in dwList:
             index = dwList.index(item)
             self.AddDwItemsRow(index)
@@ -237,7 +253,7 @@ class MainWindow(ui,QObject):
             self.StatusBar.showMessage(text)
     def ClearStatusMessage(self): self.StatusBar.clearMessage()
 
-    def SaveTheme(self,dark,prefMng=None):
+    def SaveTheme(self,dark):
         self.DarkOption.setChecked(dark)
         self.LightOption.setChecked(not dark)
         self.isDarkTheme = self.DarkOption.isChecked()
@@ -245,13 +261,15 @@ class MainWindow(ui,QObject):
         self.ChangeSetting(["isDarkTheme"],dark)
     
     def ToLightTheme(self):
-        self.app.setPalette(QPalette())
-        self.window.setPalette(QPalette())
+        self.app.setPalette(self.lightTheme)
+        self.window.setPalette(self.lightTheme)
+        self.app.setStyle("Fusion") 
         self.SaveTheme(False)
     
     def ToDarkTheme(self):
         self.app.setPalette(self.darkTheme)
         self.window.setPalette(self.darkTheme)
+        self.app.setStyle("Fusion")
         self.SaveTheme(True)
     
     def DownloadEndDialog(self,errorcode:int,error:str=""):
@@ -312,7 +330,7 @@ class MainWindow(ui,QObject):
         return str(filename[0])
         
     def ChangeSetting(self,setting:list,value):
-        if self.prefMng:
+        if self.prefMng and pd.__PyDist__._isBundle:
             self.prefMng.SetSetting(setting,value)
         
     def OnAppQuit(self):
@@ -321,6 +339,17 @@ class MainWindow(ui,QObject):
         self.ChangeSetting(["savedConfig","template"],self.GetTemplate())
         self.ChangeSetting(["savedConfig","range"],self.GetRange())
         self.ChangeSetting(["savedConfig","destination"],self.GetOutput())
+
         self.ChangeSetting(["isDarkTheme"],self.DarkOption.isChecked())
         self.ChangeSetting(["additionalSwitches"],self.GetAdditionalSwitches())
+
+        self.ChangeSetting([""])
+
         self.prefMng.WriteJSON(self.prefMng.filename,self.prefMng.settings)
+    
+    def ChangeAppStyleSheet(self,sheet:str):
+        self.app.setStyleSheet('''
+            QToolButton::pressed,.QPushButton::pressed{
+                background-color: rgb(49, 144, 204)
+            }        
+        '''+sheet)

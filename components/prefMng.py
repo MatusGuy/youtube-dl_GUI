@@ -13,9 +13,13 @@ class PreferencesManager(object):
                         "audioOnly": False,
                         "template": "%(title)s",
                         "range": "",
-                        "destination": ".mp4"
+                        "destination": "<DEFAULT>"
                     },
-                    "additionalSwitches": ""
+                    "additionalSwitches": "",
+                    "dockWidgetAreas": {
+                        "console": -1,
+                        "dwList": -1
+                    }
                 }
 
     filename=None

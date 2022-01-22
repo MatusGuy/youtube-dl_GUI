@@ -20,7 +20,6 @@ class Downloader(QThread):
     download_info_default={
                     "IS_DOWNLOADING":False,
                     "TOTAL_FILES":1,
-                    "DOWNLOADED_FILES":[],
                     "CURR":{
                         "FILE_NAME":"",
                         "FILE_NUM":1,
@@ -34,6 +33,8 @@ class Downloader(QThread):
                 }
 
     download_info={}
+
+    downloaded_files=[]
 
     DW_PROCESS  =1<<0 # 1     2^0 = 1
     DW_TOTALS   =1<<1 # 2     2^1 = 2
@@ -109,49 +110,49 @@ class Downloader(QThread):
 
     def ProcessInfo(self,text:str|bytes):
         resp=0b00000
-        txt=text
-        uppered = txt.upper()
+        text.removesuffix("                 ")
+        uppered = text.upper()
 
         # Get the current process 
         if "[" in uppered:
-            removeprefix1 = txt.removeprefix("[")
+            removeprefix1 = text.removeprefix("[")
             self.download_info["CURR"]["PROCESS"]=removeprefix1.split("] ")[0].capitalize()
             resp|=0b00001
 
         # Get Current download file and Total Files
         if "[DOWNLOAD] DOWNLOADING VIDEO" in uppered and "OF" in uppered:
-            cut1 = txt.split(" ")
+            cut1 = text.split(" ")
             self.download_info["CURR"]["FILE_NUM"] = cut1[3]
             self.download_info["TOTAL_FILES"]=cut1[5]
             resp|=0b00010
 
         # Get The download progress
         if "[DOWNLOAD] " in uppered and "%" in uppered and "AT" in uppered:
-            cut1 = txt.split("] ")[1]
+            cut1 = text.split("] ")[1]
             cut2 = cut1.split("% ")
             result = cut2[0].replace(" ","0")
             self.download_info["CURR"]["PROGRESS"]=int(float(result))
 
             otherInfo = cut2[1].split(" ")
             self.download_info["CURR"]["FILE_SIZE"] = otherInfo[1]
-            try: self.download_info["DOWNLOADED_FILES"][-1]["SIZE"] = otherInfo[1]
+            try: self.downloaded_files[-1]["SIZE"] = otherInfo[1]
             except: pass
             self.download_info["CURR"]["SPEED"] = otherInfo[3]
             self.download_info["CURR"]["ETA"]  = otherInfo[5]
             resp|=0b00100
 
         # Get total time
-        if "[DOWNLOAD] " in uppered and "IN" in uppered:
-            cut1 = txt.split("in ")
-            try: self.download_info["DOWNLOADED_FILES"][-1]["TOTAL_TIME"] = cut1[-1].removesuffix("                 ") # don't ask me
+        if "[DOWNLOAD] " in uppered and not "DESTINATION: " in uppered and "IN " in uppered:
+            cut1 = text.split("in ")
+            try: self.downloaded_files[-1]["TOTAL_TIME"] = cut1[-1]
             except: pass
 
         # Get Current Download File Name
         if "[DOWNLOAD] DESTINATION: " in uppered:
-            path = txt.removeprefix("[download] Destination: ")
+            path = text.removeprefix("[download] Destination: ")
             cut1 = path.split("\\")
             self.download_info["CURR"]["FILE_NAME"]  = cut1[len(cut1)-1].removesuffix("(tmp)")
-            self.download_info["DOWNLOADED_FILES"].append({
+            self.downloaded_files.append({
                 "FILENAME": self.download_info["CURR"]["FILE_NAME"],
                 "SIZE": "",
                 "TOTAL_TIME": "",
@@ -161,8 +162,8 @@ class Downloader(QThread):
 
         # Get Possible Errors 
         if "ERROR: " in uppered:
-            if "YOUTUBE-DL.EXE: " in uppered: self.download_info["ERROR"] = txt.removeprefix("youtube-dl.EXE: error: ").capitalize()
-            else: self.download_info["ERROR"] = txt.removeprefix("ERROR: ").capitalize()
+            if "YOUTUBE-DL.EXE: " in uppered: self.download_info["ERROR"] = text.removeprefix("youtube-dl.EXE: error: ").capitalize()
+            else: self.download_info["ERROR"] = text.removeprefix("ERROR: ").capitalize()
             resp|=0b10000
 
         return resp
@@ -172,7 +173,7 @@ class Downloader(QThread):
 
         updatecode=self.ProcessInfo(text)
         if updatecode and self.progress_callback:
-            self.progress_callback(updatecode,self.download_info)
+            self.progress_callback(updatecode,self.download_info,self.downloaded_files)
 
         if self.console_callback:
             self.console_callback(text)
