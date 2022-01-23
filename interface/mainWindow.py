@@ -84,11 +84,11 @@ class MainWindow(ui,QObject):
 
         self.CloseConsole()
         self.ConsoleDock.installEventFilter(self)
-        self.ConsoleOption.triggered.connect(lambda: self.SetConsoleOpen(self.ConsoleOption.isChecked()))
+        self.ConsoleOption.toggled.connect(lambda: self.SetConsoleOpen(self.ConsoleOption.isChecked()))
 
         self.CloseDwItems()
         self.DwItems.installEventFilter(self)
-        self.DownloadedItems.toggled.connect(lambda: self.SetDwItemsOpen(self.DownloadedItems.isChecked()))
+        self.DownloadedItems.triggered.connect(lambda: self.SetDwItemsOpen(self.DownloadedItems.isChecked()))
 
         self.LightOption.triggered.connect(self.ToLightTheme)
         self.DarkOption.triggered.connect(self.ToDarkTheme)
@@ -119,7 +119,7 @@ class MainWindow(ui,QObject):
             self.ToDarkTheme()
         else:
             self.ToLightTheme()
-        
+
         self.window.removeDockWidget(self.ConsoleDock)
         self.window.addDockWidget(Qt.DockWidgetArea(settings["dockWidgetAreas"]["console"]),self.ConsoleDock)
         self.window.removeDockWidget(self.DwItems)
@@ -148,7 +148,11 @@ class MainWindow(ui,QObject):
         for item in dwList:
             index = dwList.index(item)
             self.AddDwItemsRow(index)
-            self.DwItemsList.setItem(index,0,QTableWidgetItem(item["FILENAME"]))
+
+            videoItem = QTableWidgetItem(item["FILENAME"])
+            self.DwItemsList.setItem(index,0,videoItem)
+            #TODO: add context menu with play button on cells appearing to be on the video column of the list
+
             self.DwItemsList.setItem(index,1,QTableWidgetItem(item["SIZE"]))
             self.DwItemsList.setItem(index,2,QTableWidgetItem(item["TOTAL_TIME"]))
             self.DwItemsList.setItem(index,3,QTableWidgetItem(item["DESTINATION"]))
@@ -270,13 +274,13 @@ class MainWindow(ui,QObject):
     def ToLightTheme(self):
         self.app.setPalette(self.lightTheme)
         self.window.setPalette(self.lightTheme)
-        self.app.setStyle("Fusion") 
+        self.RefreshStyle()
         self.SaveTheme(False)
     
     def ToDarkTheme(self):
         self.app.setPalette(self.darkTheme)
         self.window.setPalette(self.darkTheme)
-        self.app.setStyle("Fusion")
+        self.RefreshStyle()
         self.SaveTheme(True)
     
     def DownloadEndDialog(self,errorcode:int,error:str=""):
@@ -361,3 +365,6 @@ class MainWindow(ui,QObject):
                 background-color: rgb(49, 144, 204)
             }        
         '''+sheet)
+
+    def RefreshStyle(self):
+        self.app.setStyle('Fusion')
