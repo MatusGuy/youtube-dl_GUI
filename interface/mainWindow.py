@@ -120,6 +120,11 @@ class MainWindow(ui,QObject):
         else:
             self.ToLightTheme()
         
+        self.window.removeDockWidget(self.ConsoleDock)
+        self.window.addDockWidget(Qt.DockWidgetArea(settings["dockWidgetAreas"]["console"]),self.ConsoleDock)
+        self.window.removeDockWidget(self.DwItems)
+        self.window.addDockWidget(Qt.DockWidgetArea(settings["dockWidgetAreas"]["dwList"]),self.DwItems)
+        
         self.SetAdditionalSwitches(settings["additionalSwitches"])
     
     def OpenConsole(self): self.ConsoleDock.show()
@@ -345,7 +350,8 @@ class MainWindow(ui,QObject):
         self.ChangeSetting(["isDarkTheme"],self.DarkOption.isChecked())
         self.ChangeSetting(["additionalSwitches"],self.GetAdditionalSwitches())
 
-        self.ChangeSetting([""])
+        self.ChangeSetting(["dockWidgetAreas","console"],self.window.dockWidgetArea(self.ConsoleDock))
+        self.ChangeSetting(["dockWidgetAreas","dwList"],self.window.dockWidgetArea(self.DwItems))
 
         self.prefMng.WriteJSON(self.prefMng.filename,self.prefMng.settings)
     

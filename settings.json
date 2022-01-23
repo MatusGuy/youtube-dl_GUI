@@ -10,8 +10,7 @@
     },
     "additionalSwitches": "",
     "dockWidgetAreas": {
-        // -1 = default
-        "console": -1,
-        "dwList": -1
+        "console": 8,
+        "dwList": 2
     }
 }
