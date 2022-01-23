@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>986</width>
-    <height>500</height>
+    <height>512</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -448,8 +448,8 @@ download!</string>
     </item>
     <item row="4" column="0">
      <spacer name="vSpacer1">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
+      <property name="sizeType">
+       <enum>QSizePolicy::MinimumExpanding</enum>
       </property>
       <property name="sizeHint" stdset="0">
        <size>
@@ -467,7 +467,7 @@ download!</string>
      <x>0</x>
      <y>0</y>
      <width>986</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="Preferences">
@@ -523,7 +523,7 @@ download!</string>
   <widget class="QStatusBar" name="StatusBar"/>
   <widget class="QDockWidget" name="ConsoleDock">
    <property name="sizePolicy">
-    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
      <horstretch>1</horstretch>
      <verstretch>1</verstretch>
     </sizepolicy>
@@ -587,7 +587,7 @@ font: 9pt &quot;Consolas&quot;;</string>
    <property name="minimumSize">
     <size>
      <width>350</width>
-     <height>95</height>
+     <height>115</height>
     </size>
    </property>
    <property name="layoutDirection">
@@ -619,7 +619,7 @@ font: 9pt &quot;Consolas&quot;;</string>
      <item row="0" column="0">
       <widget class="QTableWidget" name="DwItemsList">
        <property name="frameShape">
-        <enum>QFrame::Box</enum>
+        <enum>QFrame::NoFrame</enum>
        </property>
        <property name="editTriggers">
         <set>QAbstractItemView::NoEditTriggers</set>
@@ -750,6 +750,9 @@ font: 9pt &quot;Consolas&quot;;</string>
    </property>
   </action>
   <action name="DownloadedItems">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset>
      <normaloff>../assets/view_text.png</normaloff>../assets/view_text.png</iconset>
