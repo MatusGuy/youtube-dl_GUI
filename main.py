@@ -107,7 +107,6 @@ class Program(mw.MainWindow,QObject):
             self.downloader.StartDownload(Config)
 
     def DistributeDWInfo(self,updatecode,info:dict,dwList:dict):
-        print('\n'.join('{}: {}'.format(*k) for k in enumerate(dwList)))
         self.ShowStatusMessage("Processing: "+info["CURR"]["PROCESS"])
         self.SetDownloadInfo(
             eta=info["CURR"]["ETA"],
