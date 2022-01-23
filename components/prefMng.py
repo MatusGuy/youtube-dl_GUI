@@ -17,8 +17,8 @@ class PreferencesManager(object):
                     },
                     "additionalSwitches": "",
                     "dockWidgetAreas": {
-                        "console": -1,
-                        "dwList": -1
+                        "console": 8,
+                        "dwList": 2
                     }
                 }
 
