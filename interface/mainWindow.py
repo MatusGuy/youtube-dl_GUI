@@ -6,9 +6,9 @@ from pathlib import Path
 
 from interface.mainUi import Ui_MainWindow as ui
 
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QLabel, QFileDialog, QTableWidgetItem, QDockWidget
-from PyQt5.QtGui import QIcon, QPixmap, QPalette, QColor
-from PyQt5.QtCore import QObject, Qt, QEvent
+from PyQt5.QtWidgets import QAction, QFrame, QHBoxLayout, QMainWindow, QApplication, QMenu, QMessageBox, QLabel, QFileDialog, QTableWidgetItem, QDockWidget, QWidget
+from PyQt5.QtGui import QCursor, QFont, QIcon, QPixmap, QPalette, QColor
+from PyQt5.QtCore import QObject, QSize, Qt, QEvent
 
 from dist import pydist as pd
 
@@ -84,6 +84,36 @@ class MainWindow(ui,QObject):
 
         self.CloseConsole()
         self.ConsoleDock.installEventFilter(self)
+        self.ConsoleDock.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+
+        self._consoleDockWidget = QFrame(parent=self.ConsoleDock)
+        self._consoleWidgetLayout = QHBoxLayout()
+        self._consoleDockWidget.setStyleSheet('''background-color: rgb(145, 145, 145)''')
+        self._consoleDockWidget.setFrameShape(QFrame.Shape.NoFrame)
+        #self._consoleDockWidget.setMaximumSize(524287,11)
+
+        self._consoleDockTitle = QLabel(text="Console output",parent=self.ConsoleDock)
+        self._consoleDockTitle.setFont(QFont("Segoe UI",9))
+        #self._consoleDockTitle.setMaximumSize(QSize(524287,25))
+        self._consoleWidgetLayout.addWidget(self._consoleDockTitle)
+        self._consoleDockWidget.setLayout(self._consoleWidgetLayout)
+
+        self._consoleContextMenu = QMenu(parent=self._consoleDockTitle)
+
+        self._consoleCloseAction = QAction(
+            text="Close",
+            icon=QIcon(pd.__PyDist__._WorkDir+"assets/button_cancel.png"),
+            parent=self._consoleDockTitle
+        )
+        self._consoleCloseAction.triggered.connect(self.CloseConsole)
+
+        self._consoleContextMenu.addAction(self._consoleCloseAction)
+
+        self.ConsoleDock.setTitleBarWidget(self._consoleDockWidget)
+        self.ConsoleDock.setStyleSheet('''#ConsoleDock { border: 2px solid grey }''')
+        self._consoleDockTitle.addAction(self._consoleCloseAction)
+        self.ConsoleDock.customContextMenuRequested.connect(lambda: self._consoleContextMenu.exec_(QCursor().pos()))
+
         self.ConsoleOption.toggled.connect(lambda: self.SetConsoleOpen(self.ConsoleOption.isChecked()))
 
         self.CloseDwItems()
@@ -273,13 +303,14 @@ class MainWindow(ui,QObject):
     
     def ToLightTheme(self):
         self.app.setPalette(self.lightTheme)
-        self.window.setPalette(self.lightTheme)
+        #self.window.setPalette(self.lightTheme)
         self.RefreshStyle()
         self.SaveTheme(False)
     
     def ToDarkTheme(self):
+        #darkTheme.setColor(QPalette.ColorRole.WindowText, Qt.GlobalColor.white)
         self.app.setPalette(self.darkTheme)
-        self.window.setPalette(self.darkTheme)
+        #self.window.setPalette(self.ConsoleDock)
         self.RefreshStyle()
         self.SaveTheme(True)
     

@@ -12,3 +12,4 @@ dist/test/*
 .env/*
 assets/unused/otherIcons/*
 lang/*
+dist/youtube-dl_GUI.bak

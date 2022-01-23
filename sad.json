@@ -1,0 +1,16 @@
+{
+    "version": "1.2.0",
+    "isDarkTheme": false,
+    "savedConfig": {
+        "url": "https://www.youtube.com/watch?v=jNQXAC9IVRw",
+        "audioOnly": false,
+        "template": "%(title)s",
+        "range": "",
+        "destination": "<DEFAULT>"
+    },
+    "additionalSwitches": "",
+    "dockWidgetAreas": {
+        "console": 8,
+        "dwList": 2
+    }
+}
