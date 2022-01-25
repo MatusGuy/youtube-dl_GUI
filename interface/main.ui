@@ -10,6 +10,9 @@
     <height>512</height>
    </rect>
   </property>
+  <property name="contextMenuPolicy">
+   <enum>Qt::PreventContextMenu</enum>
+  </property>
   <property name="windowTitle">
    <string>youtube-dl GUI</string>
   </property>
