@@ -482,7 +482,7 @@ download!</string>
     </rect>
    </property>
    <property name="contextMenuPolicy">
-    <enum>Qt::NoContextMenu</enum>
+    <enum>Qt::PreventContextMenu</enum>
    </property>
    <widget class="QMenu" name="Preferences">
     <property name="title">

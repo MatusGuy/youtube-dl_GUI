@@ -210,7 +210,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.MainWidget)
         self.MenuBar = QtWidgets.QMenuBar(MainWindow)
         self.MenuBar.setGeometry(QtCore.QRect(0, 0, 986, 21))
-        self.MenuBar.setContextMenuPolicy(QtCore.Qt.NoContextMenu)
+        self.MenuBar.setContextMenuPolicy(QtCore.Qt.PreventContextMenu)
         self.MenuBar.setObjectName("MenuBar")
         self.Preferences = QtWidgets.QMenu(self.MenuBar)
         self.Preferences.setObjectName("Preferences")
