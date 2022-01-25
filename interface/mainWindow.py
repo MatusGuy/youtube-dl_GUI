@@ -96,6 +96,7 @@ class MainWindow(ui,QObject):
         self.DwItems.installEventFilter(self)
         self.DownloadedItems.triggered.connect(lambda: self.SetDwItemsOpen(self.DownloadedItems.isChecked()))
         self.DwItems.setStyle(QStyleFactory.create("WindowsVista"))
+        self.DwItemsListWidget.setStyle(QStyleFactory.create("Fusion"))
 
         self.LightOption.triggered.connect(self.ToLightTheme)
         self.DarkOption.triggered.connect(self.ToDarkTheme)
