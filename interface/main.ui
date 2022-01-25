@@ -17,11 +17,19 @@
    <iconset>
     <normaloff>../assets/ytdl.png</normaloff>../assets/ytdl.png</iconset>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QToolButton:hover,.QPushButton:hover{
+		background-color: rgb(0, 120, 215)
+}
+
+QDockWidget {
+		background-color: rgb(205, 205, 205);
+		color: rgb(0, 0, 0)
+}</string>
+  </property>
   <widget class="QWidget" name="MainWidget">
    <property name="styleSheet">
-    <string notr="true">QToolButton:hover,.QPushButton:hover{
-	 background-color: rgb(0, 120, 215)
-}</string>
+    <string notr="true"/>
    </property>
    <layout class="QGridLayout" name="gridLayout">
     <item row="2" column="0">
@@ -448,13 +456,16 @@ download!</string>
     </item>
     <item row="4" column="0">
      <spacer name="vSpacer1">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
       <property name="sizeType">
        <enum>QSizePolicy::MinimumExpanding</enum>
       </property>
       <property name="sizeHint" stdset="0">
        <size>
         <width>20</width>
-        <height>40</height>
+        <height>0</height>
        </size>
       </property>
      </spacer>
@@ -467,8 +478,11 @@ download!</string>
      <x>0</x>
      <y>0</y>
      <width>986</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
+   </property>
+   <property name="contextMenuPolicy">
+    <enum>Qt::NoContextMenu</enum>
    </property>
    <widget class="QMenu" name="Preferences">
     <property name="title">
@@ -556,6 +570,12 @@ download!</string>
      </property>
      <item row="0" column="0">
       <widget class="QPlainTextEdit" name="ConsoleTextBox">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>100</verstretch>
+        </sizepolicy>
+       </property>
        <property name="cursor" stdset="0">
         <cursorShape>IBeamCursor</cursorShape>
        </property>
@@ -587,11 +607,8 @@ font: 9pt &quot;Consolas&quot;;</string>
    <property name="minimumSize">
     <size>
      <width>350</width>
-     <height>115</height>
+     <height>91</height>
     </size>
-   </property>
-   <property name="layoutDirection">
-    <enum>Qt::LeftToRight</enum>
    </property>
    <property name="features">
     <set>QDockWidget::AllDockWidgetFeatures</set>

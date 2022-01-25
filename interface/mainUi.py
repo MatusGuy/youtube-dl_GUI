@@ -18,10 +18,16 @@ class Ui_MainWindow(object):
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("../assets/ytdl.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
-        self.MainWidget = QtWidgets.QWidget(MainWindow)
-        self.MainWidget.setStyleSheet("QToolButton:hover,.QPushButton:hover{\n"
-"     background-color: rgb(0, 120, 215)\n"
+        MainWindow.setStyleSheet("QToolButton:hover,.QPushButton:hover{\n"
+"        background-color: rgb(0, 120, 215)\n"
+"}\n"
+"\n"
+"QDockWidget {\n"
+"        background-color: rgb(205, 205, 205);\n"
+"        color: rgb(0, 0, 0)\n"
 "}")
+        self.MainWidget = QtWidgets.QWidget(MainWindow)
+        self.MainWidget.setStyleSheet("")
         self.MainWidget.setObjectName("MainWidget")
         self.gridLayout = QtWidgets.QGridLayout(self.MainWidget)
         self.gridLayout.setObjectName("gridLayout")
@@ -199,11 +205,12 @@ class Ui_MainWindow(object):
         self.gridLayout_7.addWidget(self.FileSizeLabel, 0, 6, 1, 1)
         self.gridLayout_6.addWidget(self.DownloadInfo, 1, 1, 1, 1)
         self.gridLayout.addWidget(self.DownloadWidget, 3, 0, 1, 1)
-        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.MinimumExpanding)
+        spacerItem = QtWidgets.QSpacerItem(20, 0, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.MinimumExpanding)
         self.gridLayout.addItem(spacerItem, 4, 0, 1, 1)
         MainWindow.setCentralWidget(self.MainWidget)
         self.MenuBar = QtWidgets.QMenuBar(MainWindow)
-        self.MenuBar.setGeometry(QtCore.QRect(0, 0, 986, 26))
+        self.MenuBar.setGeometry(QtCore.QRect(0, 0, 986, 21))
+        self.MenuBar.setContextMenuPolicy(QtCore.Qt.NoContextMenu)
         self.MenuBar.setObjectName("MenuBar")
         self.Preferences = QtWidgets.QMenu(self.MenuBar)
         self.Preferences.setObjectName("Preferences")
@@ -240,6 +247,11 @@ class Ui_MainWindow(object):
         self.gridLayout_9.setContentsMargins(0, 0, 0, 0)
         self.gridLayout_9.setObjectName("gridLayout_9")
         self.ConsoleTextBox = QtWidgets.QPlainTextEdit(self.ConsoleWidget)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(100)
+        sizePolicy.setHeightForWidth(self.ConsoleTextBox.sizePolicy().hasHeightForWidth())
+        self.ConsoleTextBox.setSizePolicy(sizePolicy)
         self.ConsoleTextBox.viewport().setProperty("cursor", QtGui.QCursor(QtCore.Qt.IBeamCursor))
         self.ConsoleTextBox.setStyleSheet("background-color: rgb(12, 12, 12);\n"
 "color: rgb(204, 204, 204);\n"
@@ -258,8 +270,7 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(1)
         sizePolicy.setHeightForWidth(self.DwItems.sizePolicy().hasHeightForWidth())
         self.DwItems.setSizePolicy(sizePolicy)
-        self.DwItems.setMinimumSize(QtCore.QSize(350, 115))
-        self.DwItems.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.DwItems.setMinimumSize(QtCore.QSize(350, 91))
         self.DwItems.setFeatures(QtWidgets.QDockWidget.AllDockWidgetFeatures)
         self.DwItems.setObjectName("DwItems")
         self.DwItemsListWidget = QtWidgets.QWidget()
