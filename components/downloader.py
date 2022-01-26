@@ -131,7 +131,10 @@ class Downloader(QThread):
             cut1 = text.split("] ")[1]
             cut2 = cut1.split("% ")
             result = cut2[0].replace(" ","0")
-            self.download_info["CURR"]["PROGRESS"]=int(float(result))
+
+            totalFiles = int(self.download_info["TOTAL_FILES"])
+            fileNum = int(self.download_info["CURR"]["FILE_NUM"])
+            self.download_info["CURR"]["PROGRESS"] = int( (float(result) // totalFiles) + ((100 // totalFiles) * (fileNum-1)) )
 
             otherInfo = cut2[1].split(" ")
             self.download_info["CURR"]["FILE_SIZE"] = otherInfo[1]
