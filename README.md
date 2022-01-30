@@ -1,3 +1,7 @@
+## ANTIVIRUS FALSE POSITIVE WARNING
+  The way the app is compiled is recognized as virus according to the majority of antivirus software.
+  For now, please make an exception in your antivirus and stop bothering me
+
 # youtube-dl GUI
 
 - For Windows 64-bit systems
@@ -6,4 +10,4 @@
 ### Usage *(breif)*
 Specify the URL for the video/playlist/channel, choose the output file, press download, and your video should start downloading.
 
-![image](https://user-images.githubusercontent.com/85036874/149655817-f2d0a375-183d-4cd9-b3cd-93b79f73ff9f.png)
+![image](https://user-images.githubusercontent.com/85036874/151715636-5014f8d1-3db4-4dbf-a7ca-18d640814975.png)
