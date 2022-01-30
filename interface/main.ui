@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>986</width>
-    <height>512</height>
+    <height>748</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
@@ -18,7 +18,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>../assets/ytdl.png</normaloff>../assets/ytdl.png</iconset>
+    <normaloff>C:/Users/Mateus/.designer/assets/ytdl.png</normaloff>C:/Users/Mateus/.designer/assets/ytdl.png</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true">QToolButton:hover,.QPushButton:hover{
@@ -35,6 +35,41 @@ QDockWidget {
     <string notr="true"/>
    </property>
    <layout class="QGridLayout" name="gridLayout">
+    <property name="sizeConstraint">
+     <enum>QLayout::SetMinAndMaxSize</enum>
+    </property>
+    <item row="0" column="0">
+     <widget class="QGroupBox" name="InputGroup">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>70</height>
+       </size>
+      </property>
+      <property name="title">
+       <string>Input</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_5">
+       <property name="topMargin">
+        <number>11</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="QLabel" name="UrlLabel">
+         <property name="text">
+          <string>YouTube URL</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="UrlTextBox">
+         <property name="toolTip">
+          <string>Input URL for your youtube video, playlist, or channel</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
     <item row="2" column="0">
      <widget class="QGroupBox" name="OutputGroup">
       <property name="sizePolicy">
@@ -278,48 +313,48 @@ QDockWidget {
       </layout>
      </widget>
     </item>
-    <item row="0" column="0">
-     <widget class="QGroupBox" name="InputGroup">
-      <property name="maximumSize">
+    <item row="3" column="0">
+     <spacer name="vSpacer1">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::MinimumExpanding</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
        <size>
-        <width>16777215</width>
-        <height>70</height>
+        <width>0</width>
+        <height>0</height>
        </size>
       </property>
-      <property name="title">
-       <string>Input</string>
-      </property>
-      <layout class="QGridLayout" name="gridLayout_5">
-       <property name="topMargin">
-        <number>11</number>
-       </property>
-       <item row="0" column="0">
-        <widget class="QLabel" name="UrlLabel">
-         <property name="text">
-          <string>YouTube URL</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QLineEdit" name="UrlTextBox">
-         <property name="toolTip">
-          <string>Input URL for your youtube video, playlist, or channel</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
+     </spacer>
     </item>
-    <item row="3" column="0">
-     <widget class="QWidget" name="DownloadWidget" native="true">
+    <item row="4" column="0">
+     <widget class="QGroupBox" name="DownloadGroupBox">
       <property name="maximumSize">
        <size>
         <width>16777215</width>
         <height>80</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">alternate-background-color: rgb(255, 255, 0);</string>
+      </property>
+      <property name="title">
+       <string>Download information</string>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
+      </property>
       <layout class="QGridLayout" name="gridLayout_6">
-       <item row="0" column="0">
+       <item row="1" column="1">
+        <widget class="QProgressBar" name="DownloadProgress">
+         <property name="value">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
         <widget class="QCommandLinkButton" name="DownloadButton">
          <property name="enabled">
           <bool>true</bool>
@@ -364,14 +399,7 @@ download!</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
-        <widget class="QProgressBar" name="DownloadProgress">
-         <property name="value">
-          <number>0</number>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
+       <item row="2" column="1">
         <widget class="QWidget" name="DownloadInfo" native="true">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -457,22 +485,6 @@ download!</string>
       </layout>
      </widget>
     </item>
-    <item row="4" column="0">
-     <spacer name="vSpacer1">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::MinimumExpanding</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>0</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="MenuBar">
@@ -503,13 +515,14 @@ download!</string>
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>../assets/kcoloredit.png</normaloff>../assets/kcoloredit.png</iconset>
+       <normaloff>C:/Users/Mateus/.designer/assets/kcoloredit.png</normaloff>C:/Users/Mateus/.designer/assets/kcoloredit.png</iconset>
      </property>
      <addaction name="LightOption"/>
      <addaction name="DarkOption"/>
     </widget>
     <addaction name="ConsoleOption"/>
     <addaction name="DownloadedItems"/>
+    <addaction name="DownloadGraph"/>
     <addaction name="separator"/>
     <addaction name="Theme"/>
    </widget>
@@ -523,7 +536,7 @@ download!</string>
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>../assets/help_index.png</normaloff>../assets/help_index.png</iconset>
+       <normaloff>C:/Users/Mateus/.designer/assets/help_index.png</normaloff>C:/Users/Mateus/.designer/assets/help_index.png</iconset>
      </property>
      <addaction name="youtube_dlHelp"/>
      <addaction name="ffmpegHelp"/>
@@ -672,6 +685,43 @@ font: 9pt &quot;Consolas&quot;;</string>
     </layout>
    </widget>
   </widget>
+  <widget class="QDockWidget" name="DwGraphDock">
+   <property name="minimumSize">
+    <size>
+     <width>76</width>
+     <height>140</height>
+    </size>
+   </property>
+   <property name="windowTitle">
+    <string>Download graph</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>4</number>
+   </attribute>
+   <widget class="QWidget" name="DwGraphDockWidget">
+    <layout class="QGridLayout" name="gridLayout_11">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item row="0" column="0">
+      <widget class="PlotWidget" name="DwGraph" native="true">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(0, 0, 0);</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="About">
    <property name="icon">
     <iconset>
@@ -780,8 +830,34 @@ font: 9pt &quot;Consolas&quot;;</string>
    <property name="text">
     <string>Downloaded items</string>
    </property>
+   <property name="shortcut">
+    <string>F10</string>
+   </property>
+  </action>
+  <action name="DownloadGraph">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../assets/kchart.png</normaloff>../assets/kchart.png</iconset>
+   </property>
+   <property name="text">
+    <string>Download graph</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+I</string>
+   </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PlotWidget</class>
+   <extends>QWidget</extends>
+   <header>pyqtgraph</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>UrlTextBox</tabstop>
   <tabstop>VideoOption</tabstop>

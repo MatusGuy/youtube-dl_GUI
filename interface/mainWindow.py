@@ -3,10 +3,11 @@ sys.path.insert(1,'.')
 
 from webbrowser import open_new_tab as OpenURL
 from pathlib import Path
+import numpy as np
 
 from interface.mainUi import Ui_MainWindow as ui
 
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QLabel, QFileDialog, QTableWidgetItem, QStyleFactory
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QLabel, QFileDialog, QTableWidgetItem, QStyleFactory, QDockWidget
 from PyQt5.QtGui import QIcon, QPixmap, QPalette, QColor
 from PyQt5.QtCore import QObject, Qt, QEvent
 
@@ -63,6 +64,7 @@ class MainWindow(ui,QObject):
     def eventFilter(self, a0:QObject, a1:QEvent) -> bool:
         if a0 is self.ConsoleDock and a1.type() == QEvent.Type.Close: self.ConsoleOption.setChecked(False)
         if a0 is self.DwItems and a1.type() == QEvent.Type.Close: self.DownloadedItems.setChecked(False)
+        if a0 is self.DwGraphDock and a1.type() == QEvent.Type.Close: self.DownloadGraph.setChecked(False)
         return super().eventFilter(a0, a1)
 
     def __init__(self,window:QMainWindow,app:QApplication,version:str="0.0.0.0",prefMng:pm=None):
@@ -74,6 +76,8 @@ class MainWindow(ui,QObject):
         super().setupUi(window)
         super().__init__()
         self.defaultStyleSheet = self.window.styleSheet()
+
+        self.window.resize(self.window.minimumSize())
 
         #self.MainWidget.setStyleSheet("")
 
@@ -87,7 +91,6 @@ class MainWindow(ui,QObject):
 
         self.CloseConsole()
         self.ConsoleDock.installEventFilter(self)
-        self.ConsoleDock.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.ConsoleDock.setStyle(QStyleFactory.create("WindowsVista"))
 
         self.ConsoleOption.toggled.connect(lambda: self.SetConsoleOpen(self.ConsoleOption.isChecked()))
@@ -97,6 +100,13 @@ class MainWindow(ui,QObject):
         self.DownloadedItems.triggered.connect(lambda: self.SetDwItemsOpen(self.DownloadedItems.isChecked()))
         self.DwItems.setStyle(QStyleFactory.create("WindowsVista"))
         self.DwItemsListWidget.setStyle(QStyleFactory.create("Fusion"))
+
+        self.CloseDwGraph()
+        self.DwGraphDock.setStyle(QStyleFactory.create("WindowsVista"))
+        self.DownloadGraph.triggered.connect(lambda: self.SetDwGraphOpen(self.DownloadGraph.isChecked()))
+        if pd.__PyDist__._isBundle:
+            data = np.random.normal(size=1000)
+            self.DwGraph.set
 
         self.LightOption.triggered.connect(self.ToLightTheme)
         self.DarkOption.triggered.connect(self.ToDarkTheme)
@@ -164,6 +174,12 @@ class MainWindow(ui,QObject):
             self.DwItemsList.setItem(index,1,QTableWidgetItem(item["SIZE"]))
             self.DwItemsList.setItem(index,2,QTableWidgetItem(item["TOTAL_TIME"]))
             self.DwItemsList.setItem(index,3,QTableWidgetItem(item["DESTINATION"]))
+    
+    def OpenDwGraph(self): self.DwGraphDock.show()
+    def CloseDwGraph(self): self.DwGraphDock.close()
+    def SetDwGraphOpen(self,open:bool):
+        if open: self.OpenDwGraph()
+        else: self.CloseDwGraph()
 
     def OpenAboutDialog(self): self.aboutDialog.Execute()
     def OpenGitHubIssues(self): OpenURL("https://github.com/MatusGuy/youtube-dl_GUI/issues")
@@ -190,6 +206,7 @@ class MainWindow(ui,QObject):
         self.DestinationButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/folder_yellow.png"))
         self.youtube_dlHelp.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/ytdl.png"))
         self.ffmpegHelp.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/ffmpeg.png"))
+        self.DownloadGraph.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/kchart.png"))
     
     def InitStatusBar(self):
         self.StatusBar.showMessage("Prepare to download.")
