@@ -26,6 +26,7 @@ class Dl_CompTest(object):
         if updatecode&self.downloader.DW_PROCESS:
             print (info["CURR"]["PROCESS"],end=' -> ')
             print ("downloaded: "+str(dwItems))
+            print (f"ETA: {info['CURR']['ETA']} \t FileSize:{info['CURR']['FILE_SIZE']} \t Speed:{info['CURR']['SPEED']}")
         #...
         
 
@@ -35,7 +36,7 @@ class Dl_CompTest(object):
 
         print ("Preparing Config")
         Config={
-            "URL":"https://www.youtube.com/watch?v=jNQXAC9IVRw",
+            "URL":"https://www.youtube.com/playlist?list=PLIHqGfTiPiMU3WV-xKngUA505BD-wBZDX",
             "AUDIO_ONLY":True,
             "OUTPUT":"testdw.mp3",
             "TEMPLATE":"",

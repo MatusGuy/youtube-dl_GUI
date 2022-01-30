@@ -131,17 +131,46 @@ class Downloader(QThread):
             cut1 = text.split("] ")[1]
             cut2 = cut1.split("% ")
             result = cut2[0].replace(" ","0")
+            currProgress = float(result)
 
             totalFiles = int(self.download_info["TOTAL_FILES"])
             fileNum = int(self.download_info["CURR"]["FILE_NUM"])
-            self.download_info["CURR"]["PROGRESS"] = int( (float(result) // totalFiles) + ((100 // totalFiles) * (fileNum-1)) )
+            progress = int( (float(result) // totalFiles) + ((100 // totalFiles) * (fileNum-1)) )
+            self.download_info["CURR"]["PROGRESS"] = progress
 
             otherInfo = cut2[1].split(" ")
             self.download_info["CURR"]["FILE_SIZE"] = otherInfo[1]
             try: self.downloaded_files[-1]["SIZE"] = otherInfo[1]
             except: pass
-            self.download_info["CURR"]["SPEED"] = otherInfo[3]
-            self.download_info["CURR"]["ETA"]  = otherInfo[5]
+            self.download_info["CURR"]["SPEED"] = otherInfo[4] if not otherInfo[3] else otherInfo[3]
+
+
+            size          = otherInfo[1]
+            sizePower     = 2 if "MiB" in size  else 1
+            sizeValue     = float(size.removesuffix("KiB").removesuffix("MiB"))
+            sizeBytes     = sizeValue*(1024**sizePower)
+
+            speed         = self.download_info["CURR"]["SPEED"]
+            #TODO: creata a try block to address speeds that are not "KiB/s" "MiB/s"
+            speedPower= 2 if "MiB/s" in speed else 1
+            speedValue    = float(speed.removesuffix("KiB/s").removesuffix("MiB/s"))
+            speedBytes    = speedValue *(1024**speedPower)
+
+            #totalFiles, fileNum, SizeBytes, speedBytes, progress
+
+            if totalFiles>0 and fileNum<=totalFiles and progress<=100.0 and progress>=0.0 and sizeBytes>0 and speedBytes>0:
+                totalBytestoDownload  = sizeBytes*totalFiles
+                currBytesDownloaded   = totalBytestoDownload*(float(progress)/100.0)
+                missingByteToDownload = totalBytestoDownload-currBytesDownloaded
+                missingDownloadTime   = missingByteToDownload/speedBytes
+                etaHours              = int(missingDownloadTime//(60*60))
+                etaMinutes            = int((missingDownloadTime%(60*60))//60)
+                etaSeconds            = int(missingDownloadTime%(60))
+
+                self.download_info["CURR"]["ETA"] = f"{etaHours:02}:{etaMinutes:02d}:{etaSeconds:02d}"
+            else:
+                self.download_info["CURR"]["ETA"] = ""
+
             resp|=0b00100
 
         # Get total time
