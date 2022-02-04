@@ -262,7 +262,7 @@ class MainWindow(ui,QObject):
 
         if disable:
             self.DownloadProgress.setValue(0)
-            self.FileSizeLabel.setText("Total file size: ")
+            self.FileSizeLabel.setText("File size: ")
             self.SpeedLabel.setText("Speed: ")
             self.ETALabel.setText("ETA: ")
             self.sbDwCurrLabel.setText("")
@@ -363,7 +363,7 @@ class MainWindow(ui,QObject):
             filter=filenameFilter
         )
 
-        return str(filename[0])
+        return str(filename[0])#.replace("/","\\")
         
     def ChangeSetting(self,setting:list,value):
         if self.prefMng and pd.__PyDist__._isBundle:
