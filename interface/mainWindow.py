@@ -81,7 +81,8 @@ class MainWindow(ui,QObject):
 
         self.DwGraphDock.setParent(None)
         self.DwGraphDock.deleteLater()
-        self.DownloadGraph.setDisabled(True)
+        self.DownloadGraph.setParent(None)
+        self.DownloadGraph.deleteLater()
 
         self.aboutDialog = aw(version)
         self.addSwitchesDialog = ad(windowicon=pd.__PyDist__._WorkDir+"assets/ytdl.png")
