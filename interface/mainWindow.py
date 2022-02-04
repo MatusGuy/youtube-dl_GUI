@@ -3,7 +3,7 @@ sys.path.insert(1,'.')
 
 from webbrowser import open_new_tab as OpenURL
 from pathlib import Path
-import numpy as np
+#import numpy as np
 
 from interface.mainUi import Ui_MainWindow as ui
 
@@ -79,7 +79,9 @@ class MainWindow(ui,QObject):
 
         self.window.resize(self.window.minimumSize())
 
-        #self.MainWidget.setStyleSheet("")
+        self.DwGraphDock.setParent(None)
+        self.DwGraphDock.deleteLater()
+        self.DownloadGraph.setDisabled(True)
 
         self.aboutDialog = aw(version)
         self.addSwitchesDialog = ad(windowicon=pd.__PyDist__._WorkDir+"assets/ytdl.png")
@@ -104,9 +106,6 @@ class MainWindow(ui,QObject):
         self.CloseDwGraph()
         self.DwGraphDock.setStyle(QStyleFactory.create("WindowsVista"))
         self.DownloadGraph.triggered.connect(lambda: self.SetDwGraphOpen(self.DownloadGraph.isChecked()))
-        if pd.__PyDist__._isBundle:
-            data = np.random.normal(size=1000)
-            self.DwGraph.set
 
         self.LightOption.triggered.connect(self.ToLightTheme)
         self.DarkOption.triggered.connect(self.ToDarkTheme)
