@@ -554,7 +554,7 @@ download!</string>
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>C:/Users/Mateus/.designer/assets/help_index.png</normaloff>C:/Users/Mateus/.designer/assets/help_index.png</iconset>
+       <normaloff>../assets/help_index.png</normaloff>../assets/help_index.png</iconset>
      </property>
      <addaction name="youtube_dlHelp"/>
      <addaction name="ffmpegHelp"/>
