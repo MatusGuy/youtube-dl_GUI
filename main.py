@@ -57,30 +57,8 @@ class Program(mw.MainWindow,QObject):
 
         return resp
     
-    def AlertVersion(self):
-        #print("version check")
-
-        if self.downloader.IsDownloading(): return
-
-        versionMsg = QMessageBox()
-        versionMsg.setIcon(QMessageBox.Icon.Information)
-        versionMsg.setWindowTitle("youtube-dl GUI")
-        versionMsg.setText("There's a new version of youtube-dl GUI available.\nRestart the application to apply it.\n\nClose the application?")
-        versionMsg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-        versionMsg.setWindowIcon(QIcon(pd.__PyDist__._WorkDir+'assets/ytdl.png'))
-        versionMsg.setModal(True)
-
-        def OpenConfirmation(button:QAbstractButton):
-            #print(f"open confirmation\nsaid yes: {button.text() == 'Yes'}\nbutton text: {button.text()}")
-            if button.text() == "&Yes":
-                self.window.close()
-            else:
-                self.versionChecker.StopChecking()
-                versionMsg.close()
-        
-        versionMsg.buttonClicked.connect(OpenConfirmation)
-
-        versionMsg.exec_()
+    def VersionResponse(self):
+        pass
     
     def DownloadCallback(self):
         if self.downloader.IsDownloading():
