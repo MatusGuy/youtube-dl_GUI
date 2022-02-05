@@ -7,7 +7,7 @@ from pathlib import Path
 
 from interface.mainUi import Ui_MainWindow as ui
 
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QLabel, QFileDialog, QTableWidgetItem, QStyleFactory, QDockWidget
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QLabel, QFileDialog, QTableWidgetItem, QStyleFactory, QMenu, QAction
 from PyQt5.QtGui import QIcon, QPixmap, QPalette, QColor
 from PyQt5.QtCore import QObject, Qt, QEvent
 
@@ -67,6 +67,14 @@ class MainWindow(ui,QObject):
         if a0 is self.DwGraphDock and a1.type() == QEvent.Type.Close: self.DownloadGraph.setChecked(False)
         return super().eventFilter(a0, a1)
 
+    def InitTestMenus(self):
+        testsMenu = QMenu("Tests/Debug",self.MenuBar)
+        self.MenuBar.addMenu(testsMenu)
+
+        versionCheckTrigger = QAction("Version alert dialog",testsMenu)
+        versionCheckTrigger.triggered.connect(self.AlertVersion)
+        testsMenu.addAction(versionCheckTrigger)
+
     def __init__(self,window:QMainWindow,app:QApplication,version:str="0.0.0.0",prefMng:pm=None):
         self.window = window
         self.app = app
@@ -90,6 +98,7 @@ class MainWindow(ui,QObject):
 
         self.InitIcons()
         self.InitStatusBar()
+        if not pd.__PyDist__._isBundle: self.InitTestMenus()
         self.DisableDownloadGui(True)
 
         self.CloseConsole()
@@ -107,6 +116,9 @@ class MainWindow(ui,QObject):
         self.CloseDwGraph()
         self.DwGraphDock.setStyle(QStyleFactory.create("WindowsVista"))
         self.DownloadGraph.triggered.connect(lambda: self.SetDwGraphOpen(self.DownloadGraph.isChecked()))
+
+        self.addSwitchesDialog.HelpMenu.setMenu(self.CommandHelpMenu)
+        self.addSwitchesDialog.HelpMenu.pressed.connect(self.YtdlGetHelp)
 
         self.LightOption.triggered.connect(self.ToLightTheme)
         self.DarkOption.triggered.connect(self.ToDarkTheme)
@@ -364,6 +376,19 @@ class MainWindow(ui,QObject):
         )
 
         return str(filename[0])#.replace("/","\\")
+
+    def AlertVersion(self) -> bool:
+        versionMsg = QMessageBox()
+        versionMsg.setIcon(QMessageBox.Icon.Information)
+        versionMsg.setWindowTitle("youtube-dl GUI")
+        versionMsg.setText("There's a new version of youtube-dl GUI available.\nRestart the application to apply it.\n\nClose the application?")
+        versionMsg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        versionMsg.setWindowIcon(QIcon(pd.__PyDist__._WorkDir+'assets/ytdl.png'))
+        versionMsg.setModal(True)
+
+        resp = versionMsg.exec_()
+        
+        return resp == QMessageBox.StandardButton.Yes # user has accepted to take the new version
         
     def ChangeSetting(self,setting:list,value):
         if self.prefMng and pd.__PyDist__._isBundle:
