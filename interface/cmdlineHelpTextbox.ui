@@ -51,7 +51,11 @@
 color: rgb(204, 204, 204);
 selection-color: rgb(12, 12, 12);
 selection-background-color: rgb(204, 204, 204);
-font: 9pt &quot;Consolas&quot;;</string>
+font: 9pt &quot;Consolas&quot;;
+
+QScrollBar{
+	color: rgb(255,55,55)
+};</string>
      </property>
      <property name="frameShape">
       <enum>QFrame::NoFrame</enum>

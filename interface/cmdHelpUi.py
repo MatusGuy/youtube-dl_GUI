@@ -27,7 +27,11 @@ class Ui_Cmd(object):
 "color: rgb(204, 204, 204);\n"
 "selection-color: rgb(12, 12, 12);\n"
 "selection-background-color: rgb(204, 204, 204);\n"
-"font: 9pt \"Consolas\";")
+"font: 9pt \"Consolas\";\n"
+"\n"
+"QScrollBar{\n"
+"    color: rgb(255,55,55)\n"
+"};")
         self.Text.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.Text.setReadOnly(True)
         self.Text.setPlainText("")

@@ -15,6 +15,15 @@ class CmdHelpDialog(ui,QDialog):
         self.setupUi(self)
         self.setWindowTitle(windowTitle)
         self.setWindowIcon(QIcon(pd.__PyDist__._WorkDir+"assets/ytdl.png"))
+        self.Text.setStyleSheet("""
+            .QPlainTextEdit{
+                background-color: rgb(12, 12, 12);
+                color: rgb(204, 204, 204);
+                selection-color: rgb(12, 12, 12);
+                selection-background-color: rgb(204, 204, 204);
+                font: 9pt "Consolas"
+            }
+        """)
         self.setWindowFlags(Qt.WindowType.WindowCloseButtonHint)
         #self.setModal(False)
 
