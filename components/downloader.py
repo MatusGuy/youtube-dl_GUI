@@ -136,7 +136,12 @@ class Downloader(QThread):
 
             totalFiles = int(self.download_info["TOTAL_FILES"])
             fileNum = int(self.download_info["CURR"]["FILE_NUM"])
-            progress = int( (currProgress / totalFiles) + ((100 / totalFiles) * (fileNum-1)) )
+            # TotalFiles, FileNum, CurrProgress
+            if totalFiles>0 and fileNum>0:
+                progress=int((((fileNum-1)/totalFiles) + ((currProgress/100)*(1/(totalFiles))))*100)
+            else:
+                progress=0
+            #progress = int( (currProgress / totalFiles) + ((100 / totalFiles) * (fileNum-1)) )
             self.download_info["CURR"]["PROGRESS"] = progress
 
             otherInfo = cut2[1].split(" ")
