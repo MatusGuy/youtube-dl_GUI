@@ -8,6 +8,8 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 
+from dist import pydist as pd
+
 class AdditionalSwitchesDialog(uis):
     gui = uis
     dialog = QDialog
@@ -20,6 +22,9 @@ class AdditionalSwitchesDialog(uis):
         
         self.dialog.setWindowIcon(QIcon(windowicon))
         self.TextEdit.setPlainText(savedswitches)
+        self.HelpMenu.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/help_index.png"))
+
+        self.OkButton.pressed.connect(self.Close)
     
     def Open(self):
         self.dialog.open()
@@ -34,4 +39,4 @@ class AdditionalSwitchesDialog(uis):
     def Set(self,value:str):
         self.TextEdit.setPlainText(value)
     def Get(self) -> str:
-        return self.TextEdit.toPlainText()
+        return self.TextEdit.toPlainText().replace("\r"," ").replace("\n"," ")
