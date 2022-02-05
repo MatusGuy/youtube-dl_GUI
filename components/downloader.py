@@ -105,8 +105,9 @@ class Downloader(QThread):
         #if params["PLAYLIST"]:
 
         command = f'{downloader} \"{params["URL"]}\" {options}{output}'
+        lincommand=f'{self.downloaderApp} \"{params["URL"]}\" {options}{output}'
         print(command)
-        return command
+        return command, lincommand
 
     def ProcessInfo(self,text:str|bytes):
         resp=0b00000
@@ -135,7 +136,7 @@ class Downloader(QThread):
 
             totalFiles = int(self.download_info["TOTAL_FILES"])
             fileNum = int(self.download_info["CURR"]["FILE_NUM"])
-            progress = int( (float(result) // totalFiles) + ((100 // totalFiles) * (fileNum-1)) )
+            progress = int( (currProgress / totalFiles) + ((100 / totalFiles) * (fileNum-1)) )
             self.download_info["CURR"]["PROGRESS"] = progress
 
             otherInfo = cut2[1].split(" ")
@@ -222,7 +223,8 @@ class Downloader(QThread):
     def StartDownload(self,params):
         ##print(params)
 
-        self.command = self._GetCommand(params)
+        self.command, lincmd = self._GetCommand(params)
+        self.Notify("Command line: "+lincmd)
         ##print(self.command)
 
         self.Reset()
