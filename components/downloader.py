@@ -158,9 +158,9 @@ class Downloader(QThread):
 
             speed         = self.download_info["CURR"]["SPEED"]
             #TODO: creata a try block to address speeds that are not "KiB/s" "MiB/s"
-            speedPower= 2 if "MiB/s" in speed else 1
+            speedPower    = 2 if "MiB/s" in speed else 1
             speedValue    = float(speed.removesuffix("KiB/s").removesuffix("MiB/s"))
-            speedBytes    = speedValue *(1024**speedPower)
+            speedBytes    = speedValue*(1024**speedPower)
 
             #totalFiles, fileNum, SizeBytes, speedBytes, progress
 
@@ -193,7 +193,7 @@ class Downloader(QThread):
             self.downloaded_files.append({
                 "FILENAME": self.download_info["CURR"]["FILE_NAME"],
                 "SIZE": "",
-                "TOTAL_TIME": "",
+                "TOTAL_TIME": "Downloading",
                 "DESTINATION": path.removesuffix("(tmp)")
             })
             resp|=0b01000
@@ -265,4 +265,5 @@ class Downloader(QThread):
         if not self._isworking:
             return
         self._isworking=False
+        self.downloaded_files[-1]["TOTAL_TIME"] = "Cancelled"
         self.process.terminate()
