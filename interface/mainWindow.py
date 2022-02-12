@@ -61,19 +61,17 @@ class MainWindow(ui,QObject):
 
     isDarkTheme = False
 
+    def _ExcludeObjects(self,objs:list[QObject]):
+        for obj in objs:
+            obj.setParent(None)
+            obj.deleteLater()
+
+
     def eventFilter(self, a0:QObject, a1:QEvent) -> bool:
         if a0 is self.ConsoleDock and a1.type() == QEvent.Type.Close: self.ConsoleOption.setChecked(False)
         if a0 is self.DwItems and a1.type() == QEvent.Type.Close: self.DownloadedItems.setChecked(False)
         if a0 is self.DwGraphDock and a1.type() == QEvent.Type.Close: self.DownloadGraph.setChecked(False)
         return super().eventFilter(a0, a1)
-
-    def InitTestMenus(self):
-        testsMenu = QMenu("Tests/Debug",self.MenuBar)
-        self.MenuBar.addMenu(testsMenu)
-
-        versionCheckTrigger = QAction("Version alert dialog",testsMenu)
-        versionCheckTrigger.triggered.connect(self.AlertVersion)
-        testsMenu.addAction(versionCheckTrigger)
 
     def __init__(self,window:QMainWindow,app:QApplication,version:str="0.0.0.0",prefMng:pm=None):
         self.window = window
@@ -87,10 +85,12 @@ class MainWindow(ui,QObject):
 
         self.window.resize(self.window.minimumSize())
 
-        self.DwGraphDock.setParent(None)
-        self.DwGraphDock.deleteLater()
-        self.DownloadGraph.setParent(None)
-        self.DownloadGraph.deleteLater()
+        self._ExcludeObjects([
+            self.DwGraphDock,
+            self.DownloadGraph,
+            self.MetadataOptions,
+            self.sep4
+        ])
 
         self.aboutDialog = aw(version)
         self.addSwitchesDialog = ad(windowicon=pd.__PyDist__._WorkDir+"assets/ytdl.png")
@@ -98,7 +98,6 @@ class MainWindow(ui,QObject):
 
         self.InitIcons()
         self.InitStatusBar()
-        if not pd.__PyDist__._isBundle: self.InitTestMenus()
         self.DisableDownloadGui(True)
 
         self.CloseConsole()
@@ -377,7 +376,7 @@ class MainWindow(ui,QObject):
 
         return str(filename[0])#.replace("/","\\")
 
-    def AlertVersion(self) -> bool:
+    def AlertVersionDialog(self) -> bool:
         versionMsg = QMessageBox()
         versionMsg.setIcon(QMessageBox.Icon.Information)
         versionMsg.setWindowTitle("youtube-dl GUI")

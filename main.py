@@ -1,8 +1,9 @@
 import sys,ctypes
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QObject
-from PyQt5.QtWidgets import QApplication,QMainWindow,QAbstractButton,QMessageBox
+from PyQt5.QtWidgets import QApplication,QMainWindow,QAbstractButton,QMessageBox,QMenu,QAction
 from dist import pydist as pd
+IS_BUNDLE = pd.__PyDist__._isBundle
 import py_mysplash as psh
 
 from components import downloader as dl, versionChecker as vc, prefMng as pm
@@ -32,6 +33,14 @@ class Program(mw.MainWindow,QObject):
 
     ignoredNewVersion = False
 
+    def InitTestMenus(self):
+        testsMenu = QMenu("Tests/Debug",self.MenuBar)
+        self.MenuBar.addMenu(testsMenu)
+
+        versionCheckTrigger = QAction("Version alert dialog",testsMenu)
+        versionCheckTrigger.triggered.connect(self.AlertVersion)
+        testsMenu.addAction(versionCheckTrigger)
+
     def setupUi(self, MainWindow:QMainWindow, app:QApplication):
         self.app = app
         self.app.setStyle("Fusion")
@@ -45,6 +54,7 @@ class Program(mw.MainWindow,QObject):
             version=pd.__PyDist__.GetAppVersion(),
             prefMng=self.prefMng
         )
+        if not IS_BUNDLE: self.InitTestMenus()
 
         #self.Downloader = dl.Downloader(".\\youtube-dl\\")
 
@@ -57,8 +67,9 @@ class Program(mw.MainWindow,QObject):
 
         return resp
     
-    def VersionResponse(self):
-        pass
+    def AlertVersion(self):
+        resp = self.AlertVersionDialog()
+        if resp: self.app.quit()
     
     def DownloadCallback(self):
         if self.downloader.IsDownloading():
