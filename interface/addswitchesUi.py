@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'addswitches.ui'
+# Form implementation generated from reading ui file 'e:\SOFTWARE\PythonProjects\youtubedl_GUI_pyqt\interface\addswitches.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.6
 #
@@ -40,13 +40,13 @@ class Ui_AdditionalSwitches(object):
         self.gridLayout.addWidget(self.listWidget, 3, 0, 1, 6)
         self.toolButton_2 = QtWidgets.QToolButton(AdditionalSwitches)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("../assets/minus.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("e:\\SOFTWARE\\PythonProjects\\youtubedl_GUI_pyqt\\interface\\../assets/minus.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.toolButton_2.setIcon(icon)
         self.toolButton_2.setObjectName("toolButton_2")
         self.gridLayout.addWidget(self.toolButton_2, 1, 2, 1, 1)
         self.toolButton = QtWidgets.QToolButton(AdditionalSwitches)
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("../assets/plus.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap("e:\\SOFTWARE\\PythonProjects\\youtubedl_GUI_pyqt\\interface\\../assets/plus.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.toolButton.setIcon(icon1)
         self.toolButton.setObjectName("toolButton")
         self.gridLayout.addWidget(self.toolButton, 1, 1, 1, 1)

@@ -1,20 +1,24 @@
 import sys
 sys.path.insert(1,".")
-from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import QObject, QEvent
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from mainWindow import MainWindow as mw
 from components.prefMng import PreferencesManager as pm
 from dist import pydist as pd
 
-class MW_CompTest(object):
+class MW_CompTest(QObject):
+
     def main(self,window:QMainWindow,app:QApplication):
+        self.window = window
+
         print("Main window component test: start")
         
-        self.ui = mw(window,app,prefMng=pm("sad.json"))
+        self.ui = mw(self.window,app,prefMng=pm("sad.json"))
 
         self.ui.SetDownloadCallback(self.DownloadCallback)
 
-        window.show()
+        self.window.installEventFilter(self)
+        self.window.show()
 
         self.ui.SetURL("http://test.site.me")
         self.ui.SetAudioOnly(False)
@@ -30,7 +34,8 @@ class MW_CompTest(object):
                 "FILENAME": "filename",
                 "SIZE": "size",
                 "TOTAL_TIME": "time",
-                "DESTINATION": "dest"
+                "DESTINATION": "dest",
+                "STARTED": "started"
             }])
 
         app.exec_()
@@ -45,6 +50,7 @@ class MW_CompTest(object):
         self.ui.AppendConsole("Start downloading...")
         self.ui.ShowStatusMessage("Operating: test")
 
+        self.ui.SetProgress(100)
         self.ui.AppendConsole("Download ended.")
         self.ui.DownloadEndDialog(1,"errormessage goes here")
 

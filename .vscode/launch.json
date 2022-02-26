@@ -75,6 +75,14 @@
             "args": [""]
         },
         {
+            "name": "Python: widgets - Downloaded list menu (Component Test)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}\\interface\\DownloadedListMenu_CompTest.py",
+            "console": "integratedTerminal",
+            "args": [""]
+        },
+        {
             "name": "Python: Current file",
             "type": "python",
             "request": "launch",

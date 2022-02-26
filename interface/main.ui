@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>986</width>
-    <height>748</height>
+    <height>747</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
@@ -31,6 +31,24 @@ QDockWidget {
 }</string>
   </property>
   <widget class="QWidget" name="MainWidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>526</width>
+     <height>364</height>
+    </size>
+   </property>
    <property name="styleSheet">
     <string notr="true"/>
    </property>
@@ -96,25 +114,6 @@ QDockWidget {
             </property>
            </widget>
           </item>
-          <item row="1" column="1" colspan="3">
-           <widget class="QLineEdit" name="RangeInput">
-            <property name="minimumSize">
-             <size>
-              <width>100</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>100</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the range for download. &lt;/p&gt;&lt;p&gt;- &lt;span style=&quot; font-weight:600;&quot;&gt;'' &lt;/span&gt;Leaving it empty downloads all items.&lt;/p&gt;&lt;p&gt;- &lt;span style=&quot; font-weight:600;&quot;&gt;m-n &lt;/span&gt;Download from specified range.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;- 1,2,..n &lt;/span&gt;Download selected items.&lt;/p&gt;&lt;p&gt;- &lt;span style=&quot; font-weight:600;&quot;&gt;x,m-n,y,z&lt;/span&gt; Download specific items and from range.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-           </widget>
-          </item>
           <item row="1" column="0">
            <widget class="QLabel" name="RangeLabel">
             <property name="sizePolicy">
@@ -134,10 +133,38 @@ QDockWidget {
             </property>
            </widget>
           </item>
-          <item row="0" column="1" colspan="3">
-           <widget class="QLineEdit" name="TemplateInput">
+          <item row="1" column="1" colspan="2">
+           <widget class="QLineEdit" name="RangeInput">
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>100</width>
+              <height>16777215</height>
+             </size>
+            </property>
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Append information to the end of your chosen output.&lt;/p&gt;&lt;p&gt;- &lt;span style=&quot; font-weight:600;&quot;&gt;%(title)s&lt;/span&gt; - video title&lt;/p&gt;&lt;p&gt;- &lt;span style=&quot; font-weight:600;&quot;&gt;%(alt_title)s&lt;/span&gt; - alternative video title&lt;/p&gt;&lt;p&gt;- &lt;span style=&quot; font-weight:600;&quot;&gt;%(id)s&lt;/span&gt; - video id&lt;/p&gt;&lt;p&gt;- &lt;span style=&quot; font-weight:600;&quot;&gt;%(creator)s&lt;/span&gt; - video creator&lt;/p&gt;&lt;p&gt;- &lt;span style=&quot; font-weight:600;&quot;&gt;%(playlist_title)s&lt;/span&gt; - playlist title&lt;/p&gt;&lt;p&gt;- &lt;span style=&quot; font-weight:600;&quot;&gt;%(playlist_index)s&lt;/span&gt; - video position in the playlist&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Need the full list? Look for youtube-dl's README.md file at GitHub.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the range for download. &lt;/p&gt;&lt;p&gt;- &lt;span style=&quot; font-weight:600;&quot;&gt;'' &lt;/span&gt;Leaving it empty downloads all items.&lt;/p&gt;&lt;p&gt;- &lt;span style=&quot; font-weight:600;&quot;&gt;m-n &lt;/span&gt;Download from specified range.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;- 1,2,..n &lt;/span&gt;Download selected items.&lt;/p&gt;&lt;p&gt;- &lt;span style=&quot; font-weight:600;&quot;&gt;x,m-n,y,z&lt;/span&gt; Download specific items and from range.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1" colspan="2">
+           <widget class="QComboBox" name="TemplateInput">
+            <property name="editable">
+             <bool>true</bool>
+            </property>
+            <property name="maxVisibleItems">
+             <number>5</number>
+            </property>
+            <property name="maxCount">
+             <number>5</number>
+            </property>
+            <property name="duplicatesEnabled">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -588,6 +615,8 @@ download!</string>
     <property name="title">
      <string>Preferences</string>
     </property>
+    <addaction name="ProxySettings"/>
+    <addaction name="separator"/>
     <addaction name="AdditionalSwitches"/>
    </widget>
    <widget class="QMenu" name="ViewMenu">
@@ -700,7 +729,7 @@ font: 9pt &quot;Consolas&quot;;</string>
   </widget>
   <widget class="QDockWidget" name="DwItems">
    <property name="sizePolicy">
-    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
      <horstretch>1</horstretch>
      <verstretch>1</verstretch>
     </sizepolicy>
@@ -715,12 +744,18 @@ font: 9pt &quot;Consolas&quot;;</string>
     <set>QDockWidget::AllDockWidgetFeatures</set>
    </property>
    <property name="windowTitle">
-    <string>Downloaded items</string>
+    <string>Downloaded files</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
    </attribute>
    <widget class="QWidget" name="DwItemsListWidget">
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+      <horstretch>2</horstretch>
+      <verstretch>2</verstretch>
+     </sizepolicy>
+    </property>
     <layout class="QGridLayout" name="gridLayout_10">
      <property name="leftMargin">
       <number>0</number>
@@ -743,11 +778,11 @@ font: 9pt &quot;Consolas&quot;;</string>
         <set>QAbstractItemView::NoEditTriggers</set>
        </property>
        <attribute name="horizontalHeaderDefaultSectionSize">
-        <number>120</number>
+        <number>114</number>
        </attribute>
        <column>
         <property name="text">
-         <string>Video</string>
+         <string>File</string>
         </property>
        </column>
        <column>
@@ -762,7 +797,7 @@ font: 9pt &quot;Consolas&quot;;</string>
        </column>
        <column>
         <property name="text">
-         <string>Destination</string>
+         <string>Started in</string>
         </property>
        </column>
       </widget>
@@ -937,6 +972,18 @@ font: 9pt &quot;Consolas&quot;;</string>
     <string>Ctrl+Shift+I</string>
    </property>
   </action>
+  <action name="ProxySettings">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../assets/proxy.png</normaloff>../assets/proxy.png</iconset>
+   </property>
+   <property name="text">
+    <string>Proxy settings</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -950,7 +997,6 @@ font: 9pt &quot;Consolas&quot;;</string>
   <tabstop>UrlTextBox</tabstop>
   <tabstop>VideoOption</tabstop>
   <tabstop>AudioOption</tabstop>
-  <tabstop>TemplateInput</tabstop>
   <tabstop>RangeInput</tabstop>
   <tabstop>DestinationButton</tabstop>
   <tabstop>DestinationInput</tabstop>

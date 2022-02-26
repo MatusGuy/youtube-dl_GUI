@@ -1,6 +1,6 @@
 import sys,os
 import subprocess as sp
-from PyQt5.QtCore import pyqtSignal, QThread
+from PyQt5.QtCore import pyqtSignal, QThread, QTime
 from pathlib import Path
 
 
@@ -230,7 +230,7 @@ class Downloader(QThread):
         ##print(params)
 
         self.command, lincmd = self._GetCommand(params)
-        self.Notify("Command line: "+lincmd)
+        self.Notify(f'<body style="color:aqua;">Command line: {lincmd}</body>')
         ##print(self.command)
 
         self.Reset()

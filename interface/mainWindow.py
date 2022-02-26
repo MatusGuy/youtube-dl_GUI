@@ -7,9 +7,10 @@ from pathlib import Path
 
 from interface.mainUi import Ui_MainWindow as ui
 
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QLabel, QFileDialog, QTableWidgetItem, QStyleFactory, QMenu, QAction
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QLabel, QFileDialog, QTableWidgetItem, QStyleFactory
 from PyQt5.QtGui import QIcon, QPixmap, QPalette, QColor
 from PyQt5.QtCore import QObject, Qt, QEvent
+from PyQt5.QtWinExtras import QWinTaskbarProgress
 
 EXCLUDE_DISABLED = False
 
@@ -66,6 +67,8 @@ class MainWindow(ui,QObject):
     aboutDialog = aw
     addSwitchesDialog = ad
 
+    taskbarProgress = QWinTaskbarProgress()
+
     prefMng = None
 
     isDarkTheme = False
@@ -101,6 +104,8 @@ class MainWindow(ui,QObject):
             self.sep4
         ])
 
+        self.DownloadProgress.setProperty("global",True)
+
         self.aboutDialog = aw(version)
         self.addSwitchesDialog = ad(windowicon=pd.__PyDist__._WorkDir+"assets/ytdl.png")
         self.LoadSettings()
@@ -120,6 +125,7 @@ class MainWindow(ui,QObject):
         self.DownloadedItems.triggered.connect(lambda: self.SetDwItemsOpen(self.DownloadedItems.isChecked()))
         self.DwItems.setStyle(QStyleFactory.create("WindowsVista"))
         self.DwItemsListWidget.setStyle(QStyleFactory.create("Fusion"))
+        self.DwItemsList.setColumnWidth(0,230)
 
         self.CloseDwGraph()
         self.DwGraphDock.setStyle(QStyleFactory.create("WindowsVista"))
@@ -134,6 +140,7 @@ class MainWindow(ui,QObject):
         self.DarkOption.triggered.connect(self.ToDarkTheme)
 
         self.DestinationButton.pressed.connect(lambda: self.SetOutput(self.DestinationSelectPrompt()))
+        self.UrlTextBox.textEdited.connect(self.RangeInput.clear)
 
         self.About.triggered.connect(self.OpenAboutDialog)
         self.Support.triggered.connect(self.OpenGitHubIssues)
@@ -174,6 +181,7 @@ class MainWindow(ui,QObject):
         else: self.CloseConsole()
     def SetConsole(self,text:str): self.ConsoleTextBox.setPlainText(text)
     def AppendConsole(self,text:str): self.ConsoleTextBox.appendPlainText(text)
+    def AppendConsoleHtml(self,text:str): self.ConsoleTextBox.appendHtml(text)
     def ClearConsole(self): self.ConsoleTextBox.clear()
     def GetConsole(self) -> str: return self.ConsoleTextBox.toPlainText()
 
@@ -244,8 +252,8 @@ class MainWindow(ui,QObject):
     def SetOutput(self,output:str): self.DestinationInput.setText(output), self.ChangeSetting(["savedConfig","destination"],self.GetOutput())
     def GetOutput(self) -> str: return self.DestinationInput.text()
 
-    def SetTemplate(self,template:str): self.TemplateInput.setText(template), self.ChangeSetting(["savedConfig","template"],self.GetTemplate())
-    def GetTemplate(self) -> str: return self.TemplateInput.text()
+    def SetTemplate(self,template:str): self.TemplateInput.setCurrentText(template), self.ChangeSetting(["savedConfig","template"],self.GetTemplate())
+    def GetTemplate(self) -> str: return self.TemplateInput.currentText()
     
     def SetRange(self,range:str): self.RangeInput.setText(range), self.ChangeSetting(["savedConfig","range"],self.GetRange())
     def GetRange(self) -> str: return self.RangeInput.text()
@@ -253,7 +261,10 @@ class MainWindow(ui,QObject):
     def SetAudioOnly(self,audioOnly:bool): self.AudioOption.setChecked(audioOnly), self.ChangeSetting(["savedConfig","audioOnly"],self.GetAudioOnly())
     def GetAudioOnly(self) -> bool: return self.AudioOption.isChecked()
 
-    def SetProgress(self,value:int): self.DownloadProgress.setValue(value)
+    def SetProgress(self,value:int):
+        self.DownloadProgress.setValue(value)
+        #self.taskbarProgress.resume()
+        self.taskbarProgress.setValue(value)
     def GetProgress(self) -> int: return self.DownloadProgress.value()
 
     def SetDownloadText(self,text:str): self.DownloadButton.setText(text)
@@ -300,10 +311,12 @@ class MainWindow(ui,QObject):
         self.SetDownloadText("Start\ndownload!")
         self.DownloadIcon()
         self.DownloadButton.setToolTip("Finally, download!")
+        self.taskbarProgress.stop()
     def CancelButtonState(self):
         self.SetDownloadText("Cancel\ndownload!")
         self.CancelIcon()
         self.DownloadButton.setToolTip("Cancel download!")
+        self.taskbarProgress.resume()
 
     def ShowStatusMessage(self,text:str,duration:int=-1):
         if not duration == -1:

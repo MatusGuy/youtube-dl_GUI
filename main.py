@@ -1,7 +1,7 @@
 import sys,ctypes
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QObject
-from PyQt5.QtWidgets import QApplication,QMainWindow,QAbstractButton,QMessageBox,QMenu,QAction
+from PyQt5.QtCore import QObject,QEvent
+from PyQt5.QtWidgets import QApplication,QMainWindow,QLineEdit,QMenu,QAction
 from dist import pydist as pd
 IS_BUNDLE = pd.__PyDist__._isBundle
 import py_mysplash as psh
@@ -33,6 +33,11 @@ class Program(mw.MainWindow,QObject):
 
     ignoredNewVersion = False
 
+    def eventFilter(self, a0: 'QObject', a1: 'QEvent') -> bool:
+        if a0 is self.window:
+            if a1.type() is QEvent.Type.Show: self.taskbarProgress.setVisible(True)
+        return super().eventFilter(a0, a1)
+
     def InitTestMenus(self):
         testsMenu = QMenu("Tests/Debug",self.MenuBar)
         self.MenuBar.addMenu(testsMenu)
@@ -41,11 +46,16 @@ class Program(mw.MainWindow,QObject):
         versionCheckTrigger.triggered.connect(self.AlertVersion)
         testsMenu.addAction(versionCheckTrigger)
 
+        action= QAction(QIcon("assets/folder_yellow.png"),"normal action",self.UrlTextBox)
+        self.DownloadProgress.addAction(action)
+        testsMenu.addAction(action)
+
     def setupUi(self, MainWindow:QMainWindow, app:QApplication):
         self.app = app
         self.app.setStyle("Fusion")
 
         self.window = MainWindow
+        self.window.installEventFilter(self)
 
         self.prefMng = pm.PreferencesManager(currSjson)
         resp=super().__init__(
@@ -58,7 +68,7 @@ class Program(mw.MainWindow,QObject):
 
         #self.Downloader = dl.Downloader(".\\youtube-dl\\")
 
-        self.downloader = dl.Downloader(pd.__PyDist__._WorkDir+"youtube-dl\\",self.AppendConsole,self.Downloaded_Ended,self.DistributeDWInfo)
+        self.downloader = dl.Downloader(pd.__PyDist__._WorkDir+"youtube-dl\\",self.AppendConsoleHtml,self.Downloaded_Ended,self.DistributeDWInfo)
 
         self.SetDownloadCallback(self.DownloadCallback)
 
@@ -74,14 +84,14 @@ class Program(mw.MainWindow,QObject):
     def DownloadCallback(self):
         if self.downloader.IsDownloading():
             self.downloader.CancelDownload()
-            self.AppendConsole("Cancelled download!")
+            self.AppendConsoleHtml('<body style="color:red;">Canceled download!</body>')
             self.DownloadButtonState()
             self.DisableDownloadGui(True)
-            self.ShowStatusMessage("Cancelled download")
+            self.ShowStatusMessage("Canceled download")
         else:
             self.ClearConsole()
             self.CancelButtonState()
-            self.AppendConsole("Starting download...")
+            self.AppendConsoleHtml('<body style="color:aqua;">Starting download...</body>')
             self.ShowStatusMessage("Starting download")
             self.DisableDownloadGui(False)
 
@@ -109,9 +119,10 @@ class Program(mw.MainWindow,QObject):
 
     def Downloaded_Ended(self,errorcode):
         self.ShowStatusMessage("Download ended",200000)
-        self.AppendConsole("Download process ended")
+        self.AppendConsoleHtml('<body style="color:aqua;">Download process ended</body>')
         self.DownloadEndDialog(errorcode,self.downloader.download_info["ERROR"])
         self.DownloadButtonState()
+        self.DisableDownloadGui(True)
 
 def window():
     app = QApplication(sys.argv)
@@ -126,7 +137,7 @@ def window():
     program.setupUi(window,app)
 
     #QtCore.QTimer.singleShot(250, HideSplash)
-    psh.Splash_loadcomplete(2000)
+    psh.Splash_loadcomplete(750)
 
     window.show()
     sys.exit(app.exec_())

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'addswitches_simple.ui'
+# Form implementation generated from reading ui file 'e:\SOFTWARE\PythonProjects\youtubedl_GUI_pyqt\interface\addswitches_simple.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.6
 #
@@ -17,7 +17,7 @@ class Ui_AdditionalSwitches(object):
         AdditionalSwitches.setWindowModality(QtCore.Qt.ApplicationModal)
         AdditionalSwitches.resize(468, 294)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("../assets/ytdl.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("e:\\SOFTWARE\\PythonProjects\\youtubedl_GUI_pyqt\\interface\\../assets/ytdl.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         AdditionalSwitches.setWindowIcon(icon)
         AdditionalSwitches.setLocale(QtCore.QLocale(QtCore.QLocale.English, QtCore.QLocale.UnitedKingdom))
         AdditionalSwitches.setSizeGripEnabled(True)
@@ -42,19 +42,14 @@ class Ui_AdditionalSwitches(object):
         self.gridLayout = QtWidgets.QGridLayout(self.GroupBox)
         self.gridLayout.setContentsMargins(-1, 11, -1, -1)
         self.gridLayout.setObjectName("gridLayout")
-        self.TextEdit = QtWidgets.QPlainTextEdit(self.GroupBox)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        sizePolicy.setHorizontalStretch(1)
-        sizePolicy.setVerticalStretch(1)
-        sizePolicy.setHeightForWidth(self.TextEdit.sizePolicy().hasHeightForWidth())
-        self.TextEdit.setSizePolicy(sizePolicy)
-        font = QtGui.QFont()
-        font.setFamily("Consolas")
-        self.TextEdit.setFont(font)
-        self.TextEdit.setLineWrapMode(QtWidgets.QPlainTextEdit.WidgetWidth)
-        self.TextEdit.setPlainText("")
-        self.TextEdit.setObjectName("TextEdit")
-        self.gridLayout.addWidget(self.TextEdit, 0, 0, 1, 1)
+        self.scrollArea = QTagEdit(self.GroupBox)
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollArea.setObjectName("scrollArea")
+        self.scrollAreaWidgetContents = QtWidgets.QWidget()
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 428, 210))
+        self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
+        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+        self.gridLayout.addWidget(self.scrollArea, 0, 0, 1, 1)
         self.gridLayout_2.addWidget(self.GroupBox, 0, 0, 1, 4)
         self.HelpMenu = QtWidgets.QToolButton(AdditionalSwitches)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Preferred)
@@ -65,7 +60,7 @@ class Ui_AdditionalSwitches(object):
         self.HelpMenu.setMinimumSize(QtCore.QSize(0, 0))
         self.HelpMenu.setMaximumSize(QtCore.QSize(16777215, 16777215))
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("../assets/help_index.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap("e:\\SOFTWARE\\PythonProjects\\youtubedl_GUI_pyqt\\interface\\../assets/help_index.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.HelpMenu.setIcon(icon1)
         self.HelpMenu.setPopupMode(QtWidgets.QToolButton.MenuButtonPopup)
         self.HelpMenu.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
@@ -83,3 +78,4 @@ class Ui_AdditionalSwitches(object):
         self.OkButton.setText(_translate("AdditionalSwitches", "OK"))
         self.GroupBox.setTitle(_translate("AdditionalSwitches", "Additional youtube-dl command line switches"))
         self.HelpMenu.setText(_translate("AdditionalSwitches", "Help"))
+from PyQt5.QtCustom import QTagEdit
