@@ -11,6 +11,10 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QLabel, QFil
 from PyQt5.QtGui import QIcon, QPixmap, QPalette, QColor
 from PyQt5.QtCore import QObject, Qt, QEvent
 
+EXCLUDE_DISABLED = False
+
+from interface.DownloadedListMenu import DownloadedListMenu as DWLMenu
+
 from dist import pydist as pd
 
 from interface.aboutWindow import AboutDialog as aw
@@ -38,6 +42,8 @@ class MainWindow(ui,QObject):
     lightTheme.setColor(QPalette.ColorRole.Link, QColor(0, 0, 255, 255))
     lightTheme.setColor(QPalette.ColorRole.Highlight, QColor(48, 140, 198, 255))
     lightTheme.setColor(QPalette.ColorRole.HighlightedText, QColor(255, 255, 255, 255))
+    lightTheme.setColor(QPalette.ColorGroup.Disabled, QPalette.ColorRole.Text, Qt.GlobalColor.gray)
+    lightTheme.setColor(QPalette.ColorGroup.Disabled, QPalette.ColorRole.Foreground, Qt.GlobalColor.gray)
 
     darkTheme = QPalette()
     darkTheme.setColor(QPalette.ColorRole.Window, QColor(53, 53, 53))
@@ -53,6 +59,9 @@ class MainWindow(ui,QObject):
     darkTheme.setColor(QPalette.ColorRole.Link, QColor(42, 130, 218))
     darkTheme.setColor(QPalette.ColorRole.Highlight, QColor(42, 130, 218))
     darkTheme.setColor(QPalette.ColorRole.HighlightedText, Qt.GlobalColor.black)
+    darkTheme.setColor(QPalette.ColorGroup.Disabled, QPalette.ColorRole.Light, QColor(25, 25, 25))
+    darkTheme.setColor(QPalette.ColorGroup.Disabled, QPalette.ColorRole.Text, Qt.GlobalColor.gray)
+    darkTheme.setColor(QPalette.ColorGroup.Disabled, QPalette.ColorRole.Foreground, Qt.GlobalColor.gray)
 
     aboutDialog = aw
     addSwitchesDialog = ad
@@ -85,7 +94,7 @@ class MainWindow(ui,QObject):
 
         self.window.resize(self.window.minimumSize())
 
-        self._ExcludeObjects([
+        if EXCLUDE_DISABLED: self._ExcludeObjects([
             self.DwGraphDock,
             self.DownloadGraph,
             self.MetadataOptions,
