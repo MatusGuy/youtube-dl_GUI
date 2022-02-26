@@ -125,6 +125,8 @@ class MainWindow(ui,QObject):
         self.DwGraphDock.setStyle(QStyleFactory.create("WindowsVista"))
         self.DownloadGraph.triggered.connect(lambda: self.SetDwGraphOpen(self.DownloadGraph.isChecked()))
 
+        DWLMenu(self.DwItemsList,self.app.clipboard(),self.DwItemsListWidget)
+
         self.addSwitchesDialog.HelpMenu.setMenu(self.CommandHelpMenu)
         self.addSwitchesDialog.HelpMenu.pressed.connect(self.YtdlGetHelp)
 
@@ -180,20 +182,20 @@ class MainWindow(ui,QObject):
     def SetDwItemsOpen(self,open:bool):
         if open: self.OpenDwItems()
         else: self.CloseDwItems()
-    def AddDwItemsRow(self,pos:int): self.DwItemsList.insertRow(pos)
+    def AddDwItemsRow(self,pos:int):
+        self.DwItemsList.insertRow(pos)
+        self.DwItemsList.setRowHeight(pos,20)
     def ListToDwList(self,dwList:list):
         self.DwItemsList.setRowCount(0)
         for item in dwList:
             index = dwList.index(item)
             self.AddDwItemsRow(index)
 
-            videoItem = QTableWidgetItem(item["FILENAME"])
-            self.DwItemsList.setItem(index,0,videoItem)
-            #TODO: add context menu with play button on cells appearing to be on the video column of the list
+            self.DwItemsList.setItem(index,0,QTableWidgetItem(item["DESTINATION"]))
 
             self.DwItemsList.setItem(index,1,QTableWidgetItem(item["SIZE"]))
             self.DwItemsList.setItem(index,2,QTableWidgetItem(item["TOTAL_TIME"]))
-            self.DwItemsList.setItem(index,3,QTableWidgetItem(item["DESTINATION"]))
+            self.DwItemsList.setItem(index,3,QTableWidgetItem(item["STARTED"]))
     
     def OpenDwGraph(self): self.DwGraphDock.show()
     def CloseDwGraph(self): self.DwGraphDock.close()
@@ -227,6 +229,7 @@ class MainWindow(ui,QObject):
         self.youtube_dlHelp.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/ytdl.png"))
         self.ffmpegHelp.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/ffmpeg.png"))
         self.DownloadGraph.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/kchart.png"))
+        self.ProxySettings.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/proxy.png"))
     
     def InitStatusBar(self):
         self.StatusBar.showMessage("Prepare to download.")
