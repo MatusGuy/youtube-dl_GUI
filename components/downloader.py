@@ -194,7 +194,8 @@ class Downloader(QThread):
                 "FILENAME": self.download_info["CURR"]["FILE_NAME"],
                 "SIZE": "",
                 "TOTAL_TIME": "Downloading",
-                "DESTINATION": path.removesuffix("(tmp)")
+                "DESTINATION": path.removesuffix("(tmp)"),
+                "STARTED": QTime.currentTime().toString("HH:mm:ss")
             })
             resp|=0b01000
 
@@ -265,5 +266,5 @@ class Downloader(QThread):
         if not self._isworking:
             return
         self._isworking=False
-        self.downloaded_files[-1]["TOTAL_TIME"] = "Cancelled"
+        self.downloaded_files[-1]["TOTAL_TIME"] = "Canceled"
         self.process.terminate()
