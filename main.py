@@ -5,6 +5,9 @@ from PyQt5.QtWidgets import QApplication,QMainWindow,QLineEdit,QMenu,QAction
 from dist import pydist as pd
 IS_BUNDLE = pd.__PyDist__._isBundle
 import py_mysplash as psh
+from ctypes import WinDLL
+dll = WinDLL(pd.__PyDist__._WorkDir+"dist\\Microsoft.WindowsAPICodePack.Shell.dll")
+print(dll._name)
 
 from components import downloader as dl, versionChecker as vc, prefMng as pm
 
