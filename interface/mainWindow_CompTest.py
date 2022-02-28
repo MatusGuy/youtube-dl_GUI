@@ -17,8 +17,8 @@ class MW_CompTest(QObject):
 
         self.ui.SetDownloadCallback(self.DownloadCallback)
 
-        self.window.installEventFilter(self)
-        self.window.show()
+        #self.window.installEventFilter(self)
+        #self.window.show()
 
         self.ui.SetURL("http://test.site.me")
         self.ui.SetAudioOnly(False)

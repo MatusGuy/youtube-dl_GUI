@@ -5,9 +5,6 @@ from PyQt5.QtWidgets import QApplication,QMainWindow,QLineEdit,QMenu,QAction
 from dist import pydist as pd
 IS_BUNDLE = pd.__PyDist__._isBundle
 import py_mysplash as psh
-from ctypes import WinDLL
-dll = WinDLL(pd.__PyDist__._WorkDir+"dist\\Microsoft.WindowsAPICodePack.Shell.dll")
-print(dll._name)
 
 from components import downloader as dl, versionChecker as vc, prefMng as pm
 
@@ -35,11 +32,6 @@ class Program(mw.MainWindow,QObject):
     error = ""
 
     ignoredNewVersion = False
-
-    def eventFilter(self, a0: 'QObject', a1: 'QEvent') -> bool:
-        if a0 is self.window:
-            if a1.type() is QEvent.Type.Show: self.taskbarProgress.setVisible(True)
-        return super().eventFilter(a0, a1)
 
     def InitTestMenus(self):
         testsMenu = QMenu("Tests/Debug",self.MenuBar)
@@ -137,13 +129,10 @@ def window():
         app=app,
         version=pd.__PyDist__.GetAppVersion(),
         prefMng=pm.PreferencesManager(currSjson))
-    program.setupUi(window,app)
 
-    #QtCore.QTimer.singleShot(250, HideSplash)
-    psh.Splash_loadcomplete(750)
+    psh.Splash_loadcomplete(0)
 
-    window.show()
-    sys.exit(app.exec_())
+    app.exec_()
 
 if __name__ == '__main__':
     ctypes.windll.user32.ShowWindow( ctypes.windll.kernel32.GetConsoleWindow(), 0 )

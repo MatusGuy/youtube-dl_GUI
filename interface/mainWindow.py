@@ -7,10 +7,10 @@ from pathlib import Path
 
 from interface.mainUi import Ui_MainWindow as ui
 
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QLabel, QFileDialog, QTableWidgetItem, QStyleFactory
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QLabel, QFileDialog, QTableWidgetItem, QStyleFactory, QStyle
 from PyQt5.QtGui import QIcon, QPixmap, QPalette, QColor
 from PyQt5.QtCore import QObject, Qt, QEvent
-from PyQt5.QtWinExtras import QWinTaskbarProgress
+from PyQt5.QtWinExtras import QWinTaskbarButton
 
 EXCLUDE_DISABLED = False
 
@@ -67,8 +67,6 @@ class MainWindow(ui,QObject):
     aboutDialog = aw
     addSwitchesDialog = ad
 
-    taskbarProgress = QWinTaskbarProgress()
-
     prefMng = None
 
     isDarkTheme = False
@@ -95,16 +93,12 @@ class MainWindow(ui,QObject):
         super().__init__()
         self.defaultStyleSheet = self.window.styleSheet()
 
-        self.window.resize(self.window.minimumSize())
-
         if EXCLUDE_DISABLED: self._ExcludeObjects([
             self.DwGraphDock,
             self.DownloadGraph,
             self.MetadataOptions,
             self.sep4
         ])
-
-        self.DownloadProgress.setProperty("global",True)
 
         self.aboutDialog = aw(version)
         self.addSwitchesDialog = ad(windowicon=pd.__PyDist__._WorkDir+"assets/ytdl.png")
@@ -127,10 +121,6 @@ class MainWindow(ui,QObject):
         self.DwItemsListWidget.setStyle(QStyleFactory.create("Fusion"))
         self.DwItemsList.setColumnWidth(0,230)
 
-        self.CloseDwGraph()
-        self.DwGraphDock.setStyle(QStyleFactory.create("WindowsVista"))
-        self.DownloadGraph.triggered.connect(lambda: self.SetDwGraphOpen(self.DownloadGraph.isChecked()))
-
         DWLMenu(self.DwItemsList,self.app.clipboard(),self.DwItemsListWidget)
 
         self.addSwitchesDialog.HelpMenu.setMenu(self.CommandHelpMenu)
@@ -150,6 +140,20 @@ class MainWindow(ui,QObject):
         self.ffmpegHelp.triggered.connect(self.FfmpegGetHelp)
 
         self.app.aboutToQuit.connect(self.OnAppQuit)
+
+        self.window.show() ##############################
+        self.CloseDwGraph()
+        self._ExcludeObjects([self.DwGraphDock])
+        self.window.resize(self.window.minimumSize())
+
+        self.taskbarButton = QWinTaskbarButton(self.window)
+        self.taskbarButton.setWindow(self.window.windowHandle())
+        
+        self.taskbarProgress = self.taskbarButton.progress()
+        self.taskbarProgress.setMinimum(0)
+        self.taskbarProgress.setMaximum(100)
+        self.taskbarProgress.setValue(0)
+        self.taskbarProgress.show()
     
     def LoadSettings(self):
         settings = self.prefMng.settings
