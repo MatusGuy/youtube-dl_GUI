@@ -20,7 +20,7 @@ class AdditionalSwitchesDialog(ui):
         super().setupUi(self.dialog)
         
         self.dialog.setWindowIcon(QIcon(windowicon))
-        #self.TextEdit.setPlainText(savedswitches)
+        self.TextEdit.setPlainText(savedswitches)
         self.HelpMenu.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/help_index.png"))
 
         self.OkButton.pressed.connect(self.Close)
@@ -36,6 +36,6 @@ class AdditionalSwitchesDialog(ui):
         return self.Get()
     
     def Set(self,value:str):
-        pass#self.TextEdit.setPlainText(value)
+        return self.TextEdit.setPlainText(value)
     def Get(self) -> str:
-        pass#return self.TextEdit.toPlainText().replace("\r"," ").replace("\n"," ")
+        return self.TextEdit.toPlainText().replace("\r"," ").replace("\n"," ")
