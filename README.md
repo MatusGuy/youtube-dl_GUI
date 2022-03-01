@@ -1,6 +1,8 @@
 ## ANTIVIRUS FALSE POSITIVE WARNING
   The way the app is compiled is recognized as virus according to the majority of antivirus software.
   For now, please make an exception in your antivirus and stop bothering me
+  
+  [See issue #1](https://github.com/MatusGuy/youtube-dl_GUI/issues/1)
 
 # youtube-dl GUI
 
