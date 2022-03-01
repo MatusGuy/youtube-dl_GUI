@@ -1,8 +1,7 @@
 import sys
 sys.path.insert(1,'.')
 
-from interface.addswitches_simpleUi import Ui_AdditionalSwitches as uis
-from interface.addswitchesUi import Ui_AdditionalSwitches as ui
+from interface.addswitches_simpleUi import Ui_AdditionalSwitches as ui
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon
@@ -10,8 +9,8 @@ from PyQt5.QtCore import Qt
 
 from dist import pydist as pd
 
-class AdditionalSwitchesDialog(uis):
-    gui = uis
+class AdditionalSwitchesDialog(ui):
+    gui = ui
     dialog = QDialog
 
     resp = str
