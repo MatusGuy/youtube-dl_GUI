@@ -229,18 +229,18 @@ class MainWindow(ui,QObject):
     
     def InitIcons(self):
         self.window.setWindowIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/ytdl.png")))
-        self.Theme.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/kcoloredit.png")))
-        self.AdditionalSwitches.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/edit_add.png")))
+        self.Theme.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/theme.png")))
+        self.AdditionalSwitches.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/switch-plus.png")))
         self.ConsoleOption.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/terminal.png")))
         self.DownloadedItems.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/view_text.png"))
         self.CommandHelpMenu.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/help_index.png")))
-        self.Support.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/susehelpcenter.png")))
+        self.Support.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/helpcenter.png")))
         self.About.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/info.png")))
         self.DownloadButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/forward.png"))
         self.DestinationButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/folder_yellow.png"))
         self.youtube_dlHelp.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/ytdl.png"))
         self.ffmpegHelp.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/ffmpeg.png"))
-        self.DownloadGraph.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/kchart.png"))
+        self.DownloadGraph.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/chart.png"))
         self.ProxySettings.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/proxy.png"))
     
     def InitStatusBar(self):
