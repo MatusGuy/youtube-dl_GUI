@@ -629,7 +629,7 @@ download!</string>
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>C:/Users/Mateus/.designer/assets/kcoloredit.png</normaloff>C:/Users/Mateus/.designer/assets/kcoloredit.png</iconset>
+       <normaloff>../assets/theme.png</normaloff>../assets/theme.png</iconset>
      </property>
      <addaction name="LightOption"/>
      <addaction name="DarkOption"/>
@@ -857,7 +857,7 @@ font: 9pt &quot;Consolas&quot;;</string>
   <action name="AdditionalSwitches">
    <property name="icon">
     <iconset>
-     <normaloff>../assets/edit_add.png</normaloff>../assets/edit_add.png</iconset>
+     <normaloff>../assets/switch-plus.png</normaloff>../assets/switch-plus.png</iconset>
    </property>
    <property name="text">
     <string>Additional switches</string>
@@ -887,7 +887,7 @@ font: 9pt &quot;Consolas&quot;;</string>
   <action name="youtube_dlHelp">
    <property name="icon">
     <iconset>
-     <normaloff>../assets/ytdl.png</normaloff>../assets/ytdl.png</iconset>
+     <normaloff>C:/Users/Mateus/.designer/assets/ytdl.png</normaloff>C:/Users/Mateus/.designer/assets/ytdl.png</iconset>
    </property>
    <property name="text">
     <string>youtube-dl</string>
@@ -899,7 +899,7 @@ font: 9pt &quot;Consolas&quot;;</string>
   <action name="ffmpegHelp">
    <property name="icon">
     <iconset>
-     <normaloff>../assets/ffmpeg.png</normaloff>../assets/ffmpeg.png</iconset>
+     <normaloff>C:/Users/Mateus/.designer/assets/ffmpeg.png</normaloff>C:/Users/Mateus/.designer/assets/ffmpeg.png</iconset>
    </property>
    <property name="text">
     <string>ffmpeg</string>
@@ -911,7 +911,7 @@ font: 9pt &quot;Consolas&quot;;</string>
   <action name="Support">
    <property name="icon">
     <iconset>
-     <normaloff>../assets/susehelpcenter.png</normaloff>../assets/susehelpcenter.png</iconset>
+     <normaloff>../assets/helpcenter.png</normaloff>../assets/helpcenter.png</iconset>
    </property>
    <property name="text">
     <string>Support</string>
@@ -963,7 +963,7 @@ font: 9pt &quot;Consolas&quot;;</string>
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>../assets/kchart.png</normaloff>../assets/kchart.png</iconset>
+     <normaloff>../assets/chart.png</normaloff>../assets/chart.png</iconset>
    </property>
    <property name="text">
     <string>Download graph</string>

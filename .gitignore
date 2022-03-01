@@ -10,7 +10,7 @@ dist/EncodeLink.py
 dist/test/*
 *.ini
 .env/*
-assets/unused/otherIcons/*
+assets/unused/otherIcons*/*
 lang/*
 dist/youtube-dl_GUI.bak
 .venv/*

@@ -1,9 +1,10 @@
 import sys,ctypes
-from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QObject,QEvent
-from PyQt5.QtWidgets import QApplication,QMainWindow,QLineEdit,QMenu,QAction
+from PyQt5.QtGui import QIcon, QColor
+from PyQt5.QtCore import QObject
+from PyQt5.QtWidgets import QApplication,QMainWindow,QMenu,QAction
 from dist import pydist as pd
 IS_BUNDLE = pd.__PyDist__._isBundle
+
 import py_mysplash as psh
 
 from components import downloader as dl, versionChecker as vc, prefMng as pm
@@ -45,32 +46,38 @@ class Program(mw.MainWindow,QObject):
         self.DownloadProgress.addAction(action)
         testsMenu.addAction(action)
 
-    def setupUi(self, MainWindow:QMainWindow, app:QApplication):
+    def __init__(self, MainWindow:QMainWindow, app:QApplication):
         self.app = app
         self.app.setStyle("Fusion")
 
         self.window = MainWindow
-        self.window.installEventFilter(self)
 
         self.prefMng = pm.PreferencesManager(currSjson)
+
         resp=super().__init__(
             window=self.window,
             app=self.app,
             version=pd.__PyDist__.GetAppVersion(),
             prefMng=self.prefMng
         )
-        if not IS_BUNDLE: self.InitTestMenus()
+        if IS_BUNDLE == False: self.InitTestMenus()
 
         #self.Downloader = dl.Downloader(".\\youtube-dl\\")
 
         self.downloader = dl.Downloader(pd.__PyDist__._WorkDir+"youtube-dl\\",self.AppendConsoleHtml,self.Downloaded_Ended,self.DistributeDWInfo)
 
-        self.SetDownloadCallback(self.DownloadCallback)
+        #self.SetDownloadCallback(self.DownloadCallback)
+        self.InitConnections()
+        self.SetProgressColour()
 
         self.versionChecker = vc.VersionChecker(self.AlertVersion,60000)
         self.versionChecker.StartChecking()
 
         return resp
+
+    def InitConnections(self):
+        self.SetDownloadCallback(self.DownloadCallback)
+        self.taskbarCancelButton.clicked.connect(self.DownloadCallback)
     
     def AlertVersion(self):
         resp = self.AlertVersionDialog()
@@ -84,6 +91,8 @@ class Program(mw.MainWindow,QObject):
             self.DisableDownloadGui(True)
             self.ShowStatusMessage("Canceled download")
         else:
+            self.SetProgressColour()
+            self.UndefinedProgress()
             self.ClearConsole()
             self.CancelButtonState()
             self.AppendConsoleHtml('<body style="color:aqua;">Starting download...</body>')
@@ -101,7 +110,10 @@ class Program(mw.MainWindow,QObject):
             self.downloader.StartDownload(Config)
 
     def DistributeDWInfo(self,updatecode,info:dict,dwList:dict):
+        self.DefinedProgress()
         self.ShowStatusMessage("Processing: "+info["CURR"]["PROCESS"])
+        if info["CURR"]["PROCESS"] == "Download": self.SetProgressColour()
+        else: self.SetProgressColour(QColor(100, 127, 17))
         self.SetDownloadInfo(
             eta=info["CURR"]["ETA"],
             speed=info["CURR"]["SPEED"],
@@ -125,10 +137,9 @@ def window():
     window = QMainWindow()
 
     program = Program(
-        window=window,
-        app=app,
-        version=pd.__PyDist__.GetAppVersion(),
-        prefMng=pm.PreferencesManager(currSjson))
+        MainWindow=window,
+        app=app
+    )
 
     psh.Splash_loadcomplete(0)
 
@@ -137,4 +148,4 @@ def window():
 if __name__ == '__main__':
     ctypes.windll.user32.ShowWindow( ctypes.windll.kernel32.GetConsoleWindow(), 0 )
 
-    window()
+    sys.exit(window())

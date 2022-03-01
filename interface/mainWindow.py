@@ -3,14 +3,14 @@ sys.path.insert(1,'.')
 
 from webbrowser import open_new_tab as OpenURL
 from pathlib import Path
-#import numpy as np
+from types import FunctionType
 
 from interface.mainUi import Ui_MainWindow as ui
 
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QLabel, QFileDialog, QTableWidgetItem, QStyleFactory, QStyle
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QLabel, QFileDialog, QTableWidgetItem, QStyleFactory, QDesktopWidget
 from PyQt5.QtGui import QIcon, QPixmap, QPalette, QColor
 from PyQt5.QtCore import QObject, Qt, QEvent
-from PyQt5.QtWinExtras import QWinTaskbarButton
+from PyQt5.QtWinExtras import QWinTaskbarButton, QWinThumbnailToolBar, QWinThumbnailToolButton
 
 EXCLUDE_DISABLED = False
 
@@ -78,12 +78,14 @@ class MainWindow(ui,QObject):
 
 
     def eventFilter(self, a0:QObject, a1:QEvent) -> bool:
+        if a0 is self.window and a1.type() == QEvent.Type.Close: self.app.quit()
+
         if a0 is self.ConsoleDock and a1.type() == QEvent.Type.Close: self.ConsoleOption.setChecked(False)
         if a0 is self.DwItems and a1.type() == QEvent.Type.Close: self.DownloadedItems.setChecked(False)
         if a0 is self.DwGraphDock and a1.type() == QEvent.Type.Close: self.DownloadGraph.setChecked(False)
         return super().eventFilter(a0, a1)
 
-    def __init__(self,window:QMainWindow,app:QApplication,version:str="0.0.0.0",prefMng:pm=None):
+    def __init__(self,window:QMainWindow,app:QApplication,version:str="0.0.0.0",prefMng:pm=None,whileInit:FunctionType=None):
         self.window = window
         self.app = app
         self.app.setStyle("Fusion")
@@ -141,10 +143,14 @@ class MainWindow(ui,QObject):
 
         self.app.aboutToQuit.connect(self.OnAppQuit)
 
-        self.window.show() ##############################
+        if whileInit!=None: whileInit()
+
         self.CloseDwGraph()
         self._ExcludeObjects([self.DwGraphDock])
         self.window.resize(self.window.minimumSize())
+        self.CenterWindow()
+        self.window.show() ##############################
+        #self.window.frameGeometry().moveCenter(QDesktopWidget().availableGeometry().center())
 
         self.taskbarButton = QWinTaskbarButton(self.window)
         self.taskbarButton.setWindow(self.window.windowHandle())
@@ -154,6 +160,20 @@ class MainWindow(ui,QObject):
         self.taskbarProgress.setMaximum(100)
         self.taskbarProgress.setValue(0)
         self.taskbarProgress.show()
+
+        self.taskbarToolBar = QWinThumbnailToolBar(self.window)
+        self.taskbarToolBar.setWindow(self.window.windowHandle())
+
+        self.taskbarCancelButton = QWinThumbnailToolButton(self.taskbarToolBar)
+        self.taskbarCancelButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/stop.png"))
+        self.taskbarCancelButton.setToolTip("Stop downloading!")
+        self.taskbarCancelButton.setEnabled(False)
+
+        self.taskbarToolBar.addButton(self.taskbarCancelButton)
+    
+    def CenterWindow(self):
+        center = QDesktopWidget().availableGeometry().center()
+        self.window.move(int(center.x()/2),int(center.y()/2))
     
     def LoadSettings(self):
         settings = self.prefMng.settings
@@ -267,9 +287,22 @@ class MainWindow(ui,QObject):
 
     def SetProgress(self,value:int):
         self.DownloadProgress.setValue(value)
-        #self.taskbarProgress.resume()
         self.taskbarProgress.setValue(value)
     def GetProgress(self) -> int: return self.DownloadProgress.value()
+    def UndefinedProgress(self):
+        self.DownloadProgress.setFormat(self.DownloadProgress.format().replace(
+            "%p",
+            str(self.DownloadProgress.value())
+        ))
+        self.DownloadProgress.setRange(0,0)
+        self.taskbarProgress.setRange(0,0)
+    def DefinedProgress(self):
+        self.DownloadProgress.setFormat("%p%")
+        self.DownloadProgress.setRange(0,100)
+        self.taskbarProgress.setRange(0,100)
+    def SetProgressColour(self,colour:QColor=QColor(57,165,234)):
+        c = colour
+        self.DownloadProgress.setStyleSheet(f"selection-background-color: rgb({c.red()},{c.green()},{c.blue()})")
 
     def SetDownloadText(self,text:str): self.DownloadButton.setText(text)
     
@@ -315,12 +348,13 @@ class MainWindow(ui,QObject):
         self.SetDownloadText("Start\ndownload!")
         self.DownloadIcon()
         self.DownloadButton.setToolTip("Finally, download!")
-        self.taskbarProgress.stop()
+        self.taskbarCancelButton.setEnabled(False)
     def CancelButtonState(self):
         self.SetDownloadText("Cancel\ndownload!")
         self.CancelIcon()
         self.DownloadButton.setToolTip("Cancel download!")
         self.taskbarProgress.resume()
+        self.taskbarCancelButton.setEnabled(True)
 
     def ShowStatusMessage(self,text:str,duration:int=-1):
         if not duration == -1:
@@ -365,15 +399,22 @@ class MainWindow(ui,QObject):
                 }
             ''')
             msg.setDetailedText(str(error))
+            self.taskbarProgress.stop()
+            self.SetProgressColour(QColor(201, 13, 13))
         elif errorcode==1:
             msg.setIcon(QMessageBox.Information)
             msg.setText("Canceled by user!")
+            self.taskbarProgress.stop()
+            self.SetProgressColour(QColor(201, 13, 13))
         else:
             msg.setText("Finished downloading successfully!")
             msg.setIcon(QMessageBox.Information)
             msg.setStandardButtons(QMessageBox.StandardButton.Open | QMessageBox.StandardButton.Ok)
+            self.SetProgressColour(QColor(34, 159, 17))
         
         result = msg.exec_()
+        self.taskbarProgress.setValue(0)
+        self.SetProgressColour()
 
         if result == QMessageBox.StandardButton.Open:
             output = self.DestinationInput.text()

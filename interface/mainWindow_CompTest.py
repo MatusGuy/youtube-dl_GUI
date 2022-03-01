@@ -1,7 +1,8 @@
 import sys
 sys.path.insert(1,".")
-from PyQt5.QtCore import QObject, QEvent
+from PyQt5.QtCore import QObject
 from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt5.QtGui import QColor
 from mainWindow import MainWindow as mw
 from components.prefMng import PreferencesManager as pm
 from dist import pydist as pd
@@ -19,6 +20,8 @@ class MW_CompTest(QObject):
 
         #self.window.installEventFilter(self)
         #self.window.show()
+
+        self.ui.SetProgressColour(QColor(177, 150, 62))
 
         self.ui.SetURL("http://test.site.me")
         self.ui.SetAudioOnly(False)
