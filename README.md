@@ -12,4 +12,4 @@
 ### Usage *(breif)*
 Specify the URL for the video/playlist/channel, choose the output file, press download, and your video should start downloading.
 
-![image](https://user-images.githubusercontent.com/85036874/151715636-5014f8d1-3db4-4dbf-a7ca-18d640814975.png)
+![image](https://user-images.githubusercontent.com/85036874/156631975-95e85391-0808-4791-a2b7-f6d7e070a9cf.png)
