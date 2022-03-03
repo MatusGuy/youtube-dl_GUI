@@ -615,6 +615,7 @@ download!</string>
     <property name="title">
      <string>Preferences</string>
     </property>
+    <addaction name="PreferNotif"/>
     <addaction name="ProxySettings"/>
     <addaction name="separator"/>
     <addaction name="AdditionalSwitches"/>
@@ -887,7 +888,7 @@ font: 9pt &quot;Consolas&quot;;</string>
   <action name="youtube_dlHelp">
    <property name="icon">
     <iconset>
-     <normaloff>C:/Users/Mateus/.designer/assets/ytdl.png</normaloff>C:/Users/Mateus/.designer/assets/ytdl.png</iconset>
+     <normaloff>../assets/ytdl.png</normaloff>../assets/ytdl.png</iconset>
    </property>
    <property name="text">
     <string>youtube-dl</string>
@@ -899,7 +900,7 @@ font: 9pt &quot;Consolas&quot;;</string>
   <action name="ffmpegHelp">
    <property name="icon">
     <iconset>
-     <normaloff>C:/Users/Mateus/.designer/assets/ffmpeg.png</normaloff>C:/Users/Mateus/.designer/assets/ffmpeg.png</iconset>
+     <normaloff>../assets/ffmpeg.png</normaloff>../assets/ffmpeg.png</iconset>
    </property>
    <property name="text">
     <string>ffmpeg</string>
@@ -973,8 +974,11 @@ font: 9pt &quot;Consolas&quot;;</string>
    </property>
   </action>
   <action name="ProxySettings">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset>
@@ -982,6 +986,21 @@ font: 9pt &quot;Consolas&quot;;</string>
    </property>
    <property name="text">
     <string>Proxy settings</string>
+   </property>
+  </action>
+  <action name="PreferNotif">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../assets/bell.png</normaloff>../assets/bell.png</iconset>
+   </property>
+   <property name="text">
+    <string>Prefer notifications over message boxes</string>
    </property>
   </action>
  </widget>
@@ -997,7 +1016,11 @@ font: 9pt &quot;Consolas&quot;;</string>
   <tabstop>UrlTextBox</tabstop>
   <tabstop>VideoOption</tabstop>
   <tabstop>AudioOption</tabstop>
+  <tabstop>TemplateInput</tabstop>
   <tabstop>RangeInput</tabstop>
+  <tabstop>ExportMetadata</tabstop>
+  <tabstop>ExportCover</tabstop>
+  <tabstop>EmbedSubtitles</tabstop>
   <tabstop>DestinationButton</tabstop>
   <tabstop>DestinationInput</tabstop>
   <tabstop>DownloadButton</tabstop>
