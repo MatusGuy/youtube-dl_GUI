@@ -6,15 +6,16 @@ from PyQt5.QtGui import QColor
 from mainWindow import MainWindow as mw
 from components.prefMng import PreferencesManager as pm
 from dist import pydist as pd
+from os import getcwd as cwd
 
 class MW_CompTest(QObject):
 
     def main(self,window:QMainWindow,app:QApplication):
         self.window = window
 
-        print("Main window component test: start")
+        print(f"Main window component test ({cwd()}): start")
         
-        self.ui = mw(self.window,app,prefMng=pm("sad.json"))
+        self.ui = mw(self.window,app,prefMng=pm("testSettings.json"))
 
         self.ui.SetDownloadCallback(self.DownloadCallback)
 

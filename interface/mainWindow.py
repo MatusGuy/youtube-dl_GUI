@@ -7,7 +7,8 @@ from types import FunctionType
 
 from interface.mainUi import Ui_MainWindow as ui
 
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QLabel, QFileDialog, QTableWidgetItem, QStyleFactory, QDesktopWidget
+from PyQt5.QtWidgets import (QMainWindow, QApplication, QMessageBox, QLabel, QFileDialog, QTableWidgetItem,
+                             QStyleFactory, QDesktopWidget, QDockWidget, QInputDialog, QAction)
 from PyQt5.QtGui import QIcon, QPixmap, QPalette, QColor
 from PyQt5.QtCore import QObject, Qt, QEvent
 from PyQt5.QtWinExtras import QWinTaskbarButton, QWinThumbnailToolBar, QWinThumbnailToolButton
@@ -104,7 +105,6 @@ class MainWindow(ui,QObject):
 
         self.aboutDialog = aw(version)
         self.addSwitchesDialog = ad(windowicon=pd.__PyDist__._WorkDir+"assets/ytdl.png")
-        self.LoadSettings()
 
         self.InitIcons()
         self.InitStatusBar()
@@ -118,10 +118,12 @@ class MainWindow(ui,QObject):
 
         self.CloseDwItems()
         self.DwItems.installEventFilter(self)
-        self.DownloadedItems.triggered.connect(lambda: self.SetDwItemsOpen(self.DownloadedItems.isChecked()))
+        self.DownloadedItems.toggled.connect(lambda: self.SetDwItemsOpen(self.DownloadedItems.isChecked()))
         self.DwItems.setStyle(QStyleFactory.create("WindowsVista"))
         self.DwItemsListWidget.setStyle(QStyleFactory.create("Fusion"))
         self.DwItemsList.setColumnWidth(0,230)
+
+        self.LoadSettings()
 
         DWLMenu(self.DwItemsList,self.app.clipboard(),self.DwItemsListWidget)
 
@@ -138,6 +140,8 @@ class MainWindow(ui,QObject):
         self.Support.triggered.connect(self.OpenGitHubIssues)
         self.AdditionalSwitches.triggered.connect(self.OpenAdditionalSwitchesDialog)
 
+        self.ProxySettings.triggered.connect(self.ProxySettingsDialog)
+
         self.youtube_dlHelp.triggered.connect(self.YtdlGetHelp)
         self.ffmpegHelp.triggered.connect(self.FfmpegGetHelp)
 
@@ -147,14 +151,16 @@ class MainWindow(ui,QObject):
 
         self.CloseDwGraph()
         self._ExcludeObjects([self.DwGraphDock])
-        self.window.resize(self.window.minimumSize())
         self.CenterWindow()
         self.window.show() ##############################
         #self.window.frameGeometry().moveCenter(QDesktopWidget().availableGeometry().center())
 
+        self.InitWinTaskbarFeatures()
+
+    def InitWinTaskbarFeatures(self):
         self.taskbarButton = QWinTaskbarButton(self.window)
         self.taskbarButton.setWindow(self.window.windowHandle())
-        
+
         self.taskbarProgress = self.taskbarButton.progress()
         self.taskbarProgress.setMinimum(0)
         self.taskbarProgress.setMaximum(100)
@@ -170,13 +176,14 @@ class MainWindow(ui,QObject):
         self.taskbarCancelButton.setEnabled(False)
 
         self.taskbarToolBar.addButton(self.taskbarCancelButton)
-    
+
     def CenterWindow(self):
         center = QDesktopWidget().availableGeometry().center()
         self.window.move(int(center.x()/2),int(center.y()/2))
     
     def LoadSettings(self):
         settings = self.prefMng.settings
+
         self.SetURL(settings["savedConfig"]["url"])
         self.SetAudioOnly(settings["savedConfig"]["audioOnly"])
         self.SetTemplate(settings["savedConfig"]["template"])
@@ -186,17 +193,74 @@ class MainWindow(ui,QObject):
         if settings["savedConfig"]["destination"] == "<DEFAULT>":
             self.SetOutput(str(Path.home())+"\\.mp4")
 
+        self.SetTemplateHistory(settings["templateHistory"])
+
+        self.ProxySettings.setChecked(settings["proxy"][0])
+        self.ProxySettings.setProperty("SERVER",settings["proxy"][1])
+
         if settings["isDarkTheme"]:
             self.ToDarkTheme()
         else:
             self.ToLightTheme()
 
-        self.window.removeDockWidget(self.ConsoleDock)
-        self.window.addDockWidget(Qt.DockWidgetArea(settings["dockWidgetAreas"]["console"]),self.ConsoleDock)
-        self.window.removeDockWidget(self.DwItems)
-        self.window.addDockWidget(Qt.DockWidgetArea(settings["dockWidgetAreas"]["dwList"]),self.DwItems)
+        self.window.resize(
+            settings["window"]["size"]["x"],
+            settings["window"]["size"]["y"]
+        )
+
+        self.LoadDockWidget(self.ConsoleDock,"console",self.ConsoleOption)
+        self.LoadDockWidget(self.DwItems,"dwList",self.DownloadedItems)
         
         self.SetAdditionalSwitches(settings["additionalSwitches"])
+    
+    def DockArea2Orientation(self,area:Qt.DockWidgetArea) -> Qt.Orientation|None:
+        if area == Qt.DockWidgetArea.RightDockWidgetArea or area == Qt.DockWidgetArea.LeftDockWidgetArea: return Qt.Orientation.Horizontal
+        if area == Qt.DockWidgetArea.TopDockWidgetArea or area == Qt.DockWidgetArea.BottomDockWidgetArea: return Qt.Orientation.Vertical
+        return None
+    
+    def LoadDockWidget(self,dock:QDockWidget,key:str,action:QAction):
+        print(dock.windowTitle())
+
+        dockprefs = self.prefMng.settings["dockWidgetPrefs"][key]
+
+        self.window.removeDockWidget(dock)
+        self.window.addDockWidget(Qt.DockWidgetArea(dockprefs["area"]),dock)
+        self.window.resizeDocks(
+            [dock],
+            [dockprefs["size"]["x"] if self.DockArea2Orientation(dockprefs["area"]) else dockprefs["size"]["y"]],
+            self.DockArea2Orientation(dockprefs["area"])
+        )
+
+        action.setChecked(dockprefs["open"])
+
+        dock.setProperty("SAVED_VISIBLE",dock.isVisible())
+        def SaveVisibility(visible:bool):
+            print(visible)
+            if self.window.isVisible(): dock.setProperty("SAVED_VISIBLE",visible)
+        
+        dock.visibilityChanged.connect(SaveVisibility)
+
+    def SaveDockWidget(self,dock:QDockWidget,key:str):
+        print(dock.windowTitle())
+        toset_dockprefs = ["dockWidgetPrefs",key]
+
+        self.ChangeSetting(toset_dockprefs+["open"],dock.property("SAVED_VISIBLE"))
+        self.ChangeSetting(toset_dockprefs+["area"],self.window.dockWidgetArea(dock))
+        self.ChangeSetting(toset_dockprefs+["size","x"],dock.width())
+        self.ChangeSetting(toset_dockprefs+["size","y"],dock.height())
+
+    def ProxySettingsDialog(self):
+        if self.ProxySettings.isChecked():
+            server,ok = QInputDialog.getText(
+                None,
+                "Proxy settings",
+                "Insert the proxy server below",
+                text=self.GetProxy()[1]
+            )
+            if ok: self.ProxySettings.setProperty("SERVER",server)
+            if not ok: self.ProxySettings.setChecked(False)
+    def GetProxy(self) -> tuple[str,bool]:
+        return (self.ProxySettings.isChecked(),self.ProxySettings.property("SERVER"))
     
     def OpenConsole(self): self.ConsoleDock.show()
     def CloseConsole(self): self.ConsoleDock.close()
@@ -262,6 +326,8 @@ class MainWindow(ui,QObject):
         self.ffmpegHelp.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/ffmpeg.png"))
         self.DownloadGraph.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/chart.png"))
         self.ProxySettings.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/proxy.png"))
+        self.PreferNotif.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/bell.png"))
+
     
     def InitStatusBar(self):
         self.StatusBar.showMessage("Prepare to download.")
@@ -278,6 +344,10 @@ class MainWindow(ui,QObject):
 
     def SetTemplate(self,template:str): self.TemplateInput.setCurrentText(template), self.ChangeSetting(["savedConfig","template"],self.GetTemplate())
     def GetTemplate(self) -> str: return self.TemplateInput.currentText()
+    def SetTemplateHistory(self,templates:list[str]):
+        self.TemplateInput.clear()
+        for item in templates: self.TemplateInput.addItem(item)
+    def GetTemplateHistory(self) -> list[str]: return [self.TemplateInput.itemText(i) for i in range(self.TemplateInput.count())]
     
     def SetRange(self,range:str): self.RangeInput.setText(range), self.ChangeSetting(["savedConfig","range"],self.GetRange())
     def GetRange(self) -> str: return self.RangeInput.text()
@@ -469,14 +539,23 @@ class MainWindow(ui,QObject):
         self.ChangeSetting(["savedConfig","template"],self.GetTemplate())
         self.ChangeSetting(["savedConfig","range"],self.GetRange())
         self.ChangeSetting(["savedConfig","destination"],self.GetOutput())
+        self.ChangeSetting(["proxy",0],self.GetProxy()[0])
+        self.ChangeSetting(["proxy",1],self.GetProxy()[1])
+
+        self.ChangeSetting(["templateHistory"],self.GetTemplateHistory())
 
         self.ChangeSetting(["isDarkTheme"],self.DarkOption.isChecked())
         self.ChangeSetting(["additionalSwitches"],self.GetAdditionalSwitches())
 
-        self.ChangeSetting(["dockWidgetAreas","console"],self.window.dockWidgetArea(self.ConsoleDock))
-        self.ChangeSetting(["dockWidgetAreas","dwList"],self.window.dockWidgetArea(self.DwItems))
+        self.ChangeSetting(["window","size","x"],self.window.width())
+        self.ChangeSetting(["window","size","y"],self.window.height())
+
+        self.SaveDockWidget(self.ConsoleDock,"console")
+        self.SaveDockWidget(self.DwItems,"dwList")
 
         self.prefMng.WriteJSON(self.prefMng.filename,self.prefMng.settings)
+
+        self._ExcludeObjects(self.window.children())
 
     def RefreshStyle(self): self.app.setStyle('Fusion')
     def RefreshStyleSheet(self): self.window.setStyleSheet(self.defaultStyleSheet)

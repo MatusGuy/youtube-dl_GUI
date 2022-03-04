@@ -106,6 +106,7 @@ class Program(mw.MainWindow,QObject):
                 "TEMPLATE":self.GetTemplate(),
                 "RANGE":self.GetRange(),
                 "EXTRA":self.GetAdditionalSwitches(),
+                "PROXY":self.GetProxy()
             }
             self.downloader.StartDownload(Config)
 

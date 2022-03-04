@@ -102,11 +102,11 @@ class Downloader(QThread):
         if len(params["RANGE"]): options += f"--playlist-items {params['RANGE']} "
         if len(params["EXTRA"]): options += f"{params['EXTRA']} "
         
-        #if params["PLAYLIST"]:
+        if params["PROXY"][0]: options += f'--proxy {params["PROXY"][1]} '
 
         command = f'{downloader} \"{params["URL"]}\" {options}{output}'
         lincommand=f'{self.downloaderApp} \"{params["URL"]}\" {options}{output}'
-        print(command)
+
         return command, lincommand
 
     def ProcessInfo(self,text:str|bytes):

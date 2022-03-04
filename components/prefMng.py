@@ -6,7 +6,7 @@ from dist import pydist as pd
 class PreferencesManager(object):
 
     settings=None
-    default_data={  "version": "1.3.0",
+    default_data={  "version": "2.1.0",
                     "isDarkTheme": False,
                     "savedConfig": {
                         "url": "https://www.youtube.com/watch?v=jNQXAC9IVRw",
@@ -16,10 +16,32 @@ class PreferencesManager(object):
                         "destination": "<DEFAULT>"
                     },
                     "additionalSwitches": "",
-                    "dockWidgetAreas": {
-                        "console": 8,
-                        "dwList": 2
-                    }
+                    "templateHistory": [],
+                    "dockWidgetPrefs": {
+                        "console": {
+                            "open": False,
+                            "area": 8,
+                            "size": {
+                                "x": 985,
+                                "y": 194
+                            }
+                        },
+                        "dwList": {
+                            "open": False,
+                            "area": 2,
+                            "size": {
+                                "x": 455,
+                                "y": 365
+                            }
+                        },
+                    },
+                    "window": {
+                        "size": {
+                            "x": 985,
+                            "y": 450
+                        }
+                    },
+                    "proxy": [False,""]
                 }
 
     filename=None
