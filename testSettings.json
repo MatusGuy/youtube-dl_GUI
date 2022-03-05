@@ -1,12 +1,12 @@
 {
-    "version": "2.0.1",
+    "version": "2.1.0",
     "isDarkTheme": false,
     "savedConfig": {
-        "url": "http://test.site.me",
+        "url": "https://www.youtube.com/watch?v=jNQXAC9IVRw",
         "audioOnly": false,
-        "template": "%(title)s - AB",
+        "template": "%(title)s",
         "range": "",
-        "destination": "C:\\"
+        "destination": "<DEFAULT>"
     },
     "additionalSwitches": "",
     "templateHistory": [],
@@ -15,16 +15,16 @@
             "open": false,
             "area": 8,
             "size": {
-                "x": 100,
-                "y": 30
+                "x": 985,
+                "y": 194
             }
         },
         "dwList": {
             "open": false,
             "area": 2,
             "size": {
-                "x": 350,
-                "y": 91
+                "x": 455,
+                "y": 365
             }
         }
     },

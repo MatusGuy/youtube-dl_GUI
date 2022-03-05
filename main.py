@@ -36,15 +36,27 @@ class Program(mw.MainWindow,QObject):
 
     def InitTestMenus(self):
         testsMenu = QMenu("Tests/Debug",self.MenuBar)
-        self.MenuBar.addMenu(testsMenu)
 
         versionCheckTrigger = QAction("Version alert dialog",testsMenu)
         versionCheckTrigger.triggered.connect(self.AlertVersion)
         testsMenu.addAction(versionCheckTrigger)
 
+        addDwListItem = QAction("Add item to dw list",testsMenu)
+        example=[{
+            "FILENAME": "filename",
+            "SIZE": "size",
+            "TOTAL_TIME": "time",
+            "DESTINATION": "dest",
+            "STARTED": "started"
+        }]
+        addDwListItem.triggered.connect(lambda: self.ListToDwList(example))
+        testsMenu.addAction(addDwListItem)
+
         action= QAction(QIcon("assets/folder_yellow.png"),"normal action",self.UrlTextBox)
         self.DownloadProgress.addAction(action)
         testsMenu.addAction(action)
+
+        self.MenuBar.addMenu(testsMenu)
 
     def __init__(self, MainWindow:QMainWindow, app:QApplication):
         self.app = app
