@@ -19,7 +19,7 @@ class DownloadedListMenu(QMenu):
         self.table = table
         self.InitMenu()
         widget.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-        widget.customContextMenuRequested.connect(self.Execute)
+        widget.customContextMenuRequested.connect(lambda: self.Execute())
 
     def GetSelectedItem(self) -> QTableWidgetItem: return self.table.selectedItems()[0]
     
