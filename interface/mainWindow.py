@@ -23,6 +23,7 @@ from interface.aboutWindow import AboutDialog as aw
 from interface.addswitchesDialog import AdditionalSwitchesDialog as ad
 from interface.cmdhelpWindow import CmdHelpDialog as ch
 from components.prefMng import PreferencesManager as pm
+from interface.Completers import templateCompleter
 
 class MainWindow(ui,QObject):
     window = QMainWindow
