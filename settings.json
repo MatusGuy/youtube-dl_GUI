@@ -1,5 +1,5 @@
 {
-    "version": "2.0.1",
+    "version": "2.1.0",
     "isDarkTheme": false,
     "savedConfig": {
         "url": "https://www.youtube.com/watch?v=jNQXAC9IVRw",
@@ -9,6 +9,7 @@
         "destination": "<DEFAULT>"
     },
     "additionalSwitches": "",
+    "templateHistory": [],
     "dockWidgetPrefs": {
         "console": {
             "open": false,
@@ -25,6 +26,12 @@
                 "x": 455,
                 "y": 365
             }
+        }
+    },
+    "window": {
+        "size": {
+            "x": 985,
+            "y": 450
         }
     },
     "proxy": [
