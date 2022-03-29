@@ -21,7 +21,7 @@ class Program(mw.MainWindow,QObject):
     app = QApplication
 
     downloader = dl.Downloader
-    versionChecker = vc.VersionChecker
+    #versionChecker = vc.VersionChecker
     prefMng = pm.PreferencesManager
 
     showConsole = False
@@ -82,8 +82,8 @@ class Program(mw.MainWindow,QObject):
         self.InitConnections()
         self.SetProgressColour()
 
-        self.versionChecker = vc.VersionChecker(self.AlertVersion,60000)
-        self.versionChecker.StartChecking()
+        #self.versionChecker = vc.VersionChecker(self.AlertVersion,60000)
+        #self.versionChecker.StartChecking()
 
         return resp
 
