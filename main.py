@@ -9,6 +9,8 @@ import py_mysplash as psh
 
 from components import downloader as dl, versionChecker as vc, prefMng as pm
 
+from components import ConsoleR as cr
+
 from interface import mainWindow as mw
 
 #from settingsGuis.themePrompt_class import Ui_ChangeTheme as ThemesGui
@@ -155,10 +157,12 @@ def window():
     )
 
     psh.Splash_loadcomplete(0)
-
+    #cr.attach_console()
     app.exec_()
+    #cr.detach_console()
 
 if __name__ == '__main__':
+    
     ctypes.windll.user32.ShowWindow( ctypes.windll.kernel32.GetConsoleWindow(), 0 )
 
     sys.exit(window())
