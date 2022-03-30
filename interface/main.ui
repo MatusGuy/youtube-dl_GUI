@@ -992,9 +992,6 @@ font: 9pt &quot;Consolas&quot;;</string>
    <property name="checkable">
     <bool>true</bool>
    </property>
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
    <property name="icon">
     <iconset>
      <normaloff>../assets/bell.png</normaloff>../assets/bell.png</iconset>

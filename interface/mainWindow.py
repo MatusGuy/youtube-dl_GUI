@@ -13,11 +13,14 @@ from PyQt5.QtGui import QIcon, QPixmap, QPalette, QColor
 from PyQt5.QtCore import QObject, Qt, QEvent
 from PyQt5.QtWinExtras import QWinTaskbarButton, QWinThumbnailToolBar, QWinThumbnailToolButton
 
+from win10toast_click import ToastNotifier
+
 EXCLUDE_DISABLED = False
 
 from interface.DownloadedListMenu import DownloadedListMenu as DWLMenu
 
 from dist import pydist as pd
+WDIR = pd.__PyDist__._WorkDir
 
 from interface.aboutWindow import AboutDialog as aw
 from interface.addswitchesDialog import AdditionalSwitchesDialog as ad
@@ -199,6 +202,8 @@ class MainWindow(ui,QObject):
         self.ProxySettings.setChecked(settings["proxy"][0])
         self.ProxySettings.setProperty("SERVER",settings["proxy"][1])
 
+        self.PreferNotif.setChecked(settings["preferNotif"])
+
         if settings["isDarkTheme"]:
             self.ToDarkTheme()
         else:
@@ -313,21 +318,7 @@ class MainWindow(ui,QObject):
     def FfmpegGetHelp(self): ch("ffmpeg command line help").GetHelp(pd.__PyDist__._WorkDir+"youtube-dl\\ffmpeg.exe --help")
     
     def InitIcons(self):
-        self.window.setWindowIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/ytdl.png")))
-        self.Theme.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/theme.png")))
-        self.AdditionalSwitches.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/switch-plus.png")))
-        self.ConsoleOption.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/terminal.png")))
-        self.DownloadedItems.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/view_text.png"))
-        self.CommandHelpMenu.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/help_index.png")))
-        self.Support.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/helpcenter.png")))
-        self.About.setIcon(QIcon(QPixmap(pd.__PyDist__._WorkDir+"assets/info.png")))
-        self.DownloadButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/forward.png"))
-        self.DestinationButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/folder_yellow.png"))
-        self.youtube_dlHelp.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/ytdl.png"))
-        self.ffmpegHelp.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/ffmpeg.png"))
-        self.DownloadGraph.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/chart.png"))
-        self.ProxySettings.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/proxy.png"))
-        self.PreferNotif.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/bell.png"))
+        self.PreferNotif.setIcon(QIcon(WDIR+"assets/bell.png"))
 
     
     def InitStatusBar(self):
@@ -483,6 +474,18 @@ class MainWindow(ui,QObject):
             msg.setStandardButtons(QMessageBox.StandardButton.Open | QMessageBox.StandardButton.Ok)
             self.SetProgressColour(QColor(34, 159, 17))
         
+        if self.PreferNotif.isChecked():
+            self.notif = ToastNotifier()
+            self.notif.show_toast(
+                title=msg.text(),
+                msg=msg.detailedText(),
+                icon_path=WDIR+"assets\\ytdl.ico",
+                duration=None,
+                threaded=False,
+                callback_on_click=self.window.activateWindow
+            )
+            #self.notif.wnd_proc(self.window.winId(),"","","") # sample data, just end my notification already
+        else:
         result = msg.exec_()
         self.taskbarProgress.setValue(0)
         self.SetProgressColour()
@@ -535,6 +538,12 @@ class MainWindow(ui,QObject):
             self.prefMng.SetSetting(setting,value)
         
     def OnAppQuit(self):
+        try:
+            self.notif.wnd_proc()
+            self.notif._thread.stop()
+        except:
+            pass
+
         self.ChangeSetting(["savedConfig","url"],self.GetURL())
         self.ChangeSetting(["savedConfig","audioOnly"],self.GetAudioOnly())
         self.ChangeSetting(["savedConfig","template"],self.GetTemplate())
@@ -542,6 +551,7 @@ class MainWindow(ui,QObject):
         self.ChangeSetting(["savedConfig","destination"],self.GetOutput())
         self.ChangeSetting(["proxy",0],self.GetProxy()[0])
         self.ChangeSetting(["proxy",1],self.GetProxy()[1])
+        self.ChangeSetting(["preferNotif"],self.PreferNotif.isChecked())
 
         self.ChangeSetting(["templateHistory"],self.GetTemplateHistory())
 

@@ -426,7 +426,6 @@ class Ui_MainWindow(object):
         self.ProxySettings.setObjectName("ProxySettings")
         self.PreferNotif = QtWidgets.QAction(MainWindow)
         self.PreferNotif.setCheckable(True)
-        self.PreferNotif.setEnabled(False)
         icon14 = QtGui.QIcon()
         icon14.addPixmap(QtGui.QPixmap("e:\\SOFTWARE\\PythonProjects\\youtubedl_GUI_pyqt\\interface\\../assets/bell.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.PreferNotif.setIcon(icon14)
