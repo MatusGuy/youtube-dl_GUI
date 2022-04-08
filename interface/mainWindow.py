@@ -406,6 +406,16 @@ class MainWindow(ui,QObject):
 
     def SetDownloadCallback(self,callback): self.DownloadButton.pressed.connect(callback)
 
+    def DownloadingTaskbarOverlay(self):
+        self.taskbarButton.setOverlayIcon(QIcon(WDIR+"assets/drive-download.png"))
+        self.taskbarButton.setOverlayAccessibleDescription("Downloading")
+    def OperatingTaskbarOverlay(self):
+        self.taskbarButton.setOverlayIcon(QIcon(WDIR+"assets/gear.png"))
+        self.taskbarButton.setOverlayAccessibleDescription("Operating")
+    def ClearTaskbarOverlay(self):
+        self.taskbarButton.clearOverlayIcon()
+        self.taskbarButton.setOverlayAccessibleDescription("")
+
     def DownloadButtonState(self):
         self.SetDownloadText("Start\ndownload!")
         self.DownloadIcon()
