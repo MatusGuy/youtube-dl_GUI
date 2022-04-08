@@ -17,7 +17,7 @@ class CH_CompTest(QtCore.QObject):
         
         self.dialog = CmdHelpDialog()
         
-        cmd = f'{pd.__PyDist__._WorkDir}youtube-dl\\ffmpeg.exe --help'
+        cmd = f'{pd.__PyDist__._WorkDir}youtube-dl\\youtube-dl.exe --help more'
         print("cmd: "+cmd)
         self.dialog.installEventFilter(self)
         self.dialog.GetHelp(cmd)
