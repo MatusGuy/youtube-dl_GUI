@@ -783,6 +783,11 @@ font: 9pt &quot;Consolas&quot;;</string>
        </attribute>
        <column>
         <property name="text">
+         <string>Started</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
          <string>File</string>
         </property>
        </column>
@@ -794,11 +799,6 @@ font: 9pt &quot;Consolas&quot;;</string>
        <column>
         <property name="text">
          <string>Total time</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Started in</string>
         </property>
        </column>
       </widget>

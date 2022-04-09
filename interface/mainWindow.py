@@ -307,11 +307,11 @@ class MainWindow(ui,QObject):
             index = dwList.index(item)
             self.AddDwItemsRow(index)
 
-            self.DwItemsList.setItem(index,0,QTableWidgetItem(item["DESTINATION"]))
+            self.DwItemsList.setItem(index,1,QTableWidgetItem(item["DESTINATION"]))
 
-            self.DwItemsList.setItem(index,1,QTableWidgetItem(item["SIZE"]))
-            self.DwItemsList.setItem(index,2,QTableWidgetItem(item["TOTAL_TIME"]))
-            self.DwItemsList.setItem(index,3,QTableWidgetItem(item["STARTED"]))
+            self.DwItemsList.setItem(index,2,QTableWidgetItem(item["SIZE"]))
+            self.DwItemsList.setItem(index,3,QTableWidgetItem(item["TOTAL_TIME"]))
+            self.DwItemsList.setItem(index,0,QTableWidgetItem(item["STARTED"]))
     
     def OpenDwGraph(self): self.DwGraphDock.show()
     def CloseDwGraph(self): self.DwGraphDock.close()
