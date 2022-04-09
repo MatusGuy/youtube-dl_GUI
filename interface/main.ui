@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>986</width>
-    <height>747</height>
+    <height>776</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
@@ -23,6 +23,10 @@
   <property name="styleSheet">
    <string notr="true">QToolButton:hover,.QPushButton:hover{
 		background-color: rgb(0, 120, 215)
+}
+
+QToolButton#CornerAbout:hover{
+		background-color: transparent
 }
 
 QDockWidget {
@@ -45,8 +49,8 @@ QDockWidget {
    </property>
    <property name="maximumSize">
     <size>
-     <width>526</width>
-     <height>364</height>
+     <width>16777215</width>
+     <height>16777215</height>
     </size>
    </property>
    <property name="styleSheet">
@@ -169,6 +173,13 @@ QDockWidget {
            </widget>
           </item>
          </layout>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="Line" name="sep1">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
         </widget>
        </item>
        <item row="0" column="0">
@@ -593,8 +604,15 @@ download!</string>
     <addaction name="separator"/>
     <addaction name="About"/>
    </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="AFOperation"/>
+   </widget>
    <addaction name="Preferences"/>
    <addaction name="ViewMenu"/>
+   <addaction name="menuTools"/>
    <addaction name="Help"/>
   </widget>
   <widget class="QStatusBar" name="StatusBar"/>
@@ -932,6 +950,15 @@ font: 9pt &quot;Consolas&quot;;</string>
     <string>Prefer notifications over message boxes</string>
    </property>
   </action>
+  <action name="AFOperation">
+   <property name="icon">
+    <iconset>
+     <normaloff>../assets/playlist.png</normaloff>../assets/playlist.png</iconset>
+   </property>
+   <property name="text">
+    <string>Album folder organizer</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -947,9 +974,6 @@ font: 9pt &quot;Consolas&quot;;</string>
   <tabstop>AudioOption</tabstop>
   <tabstop>TemplateInput</tabstop>
   <tabstop>RangeInput</tabstop>
-  <tabstop>ExportMetadata</tabstop>
-  <tabstop>ExportCover</tabstop>
-  <tabstop>EmbedSubtitles</tabstop>
   <tabstop>DestinationButton</tabstop>
   <tabstop>DestinationInput</tabstop>
   <tabstop>DownloadButton</tabstop>

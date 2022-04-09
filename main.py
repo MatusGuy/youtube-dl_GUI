@@ -150,6 +150,7 @@ class Program(mw.MainWindow,QObject):
         self.AppendConsoleHtml('<body style="color:aqua;">Download process ended</body>')
         self.DownloadEndDialog(errorcode,self.downloader.download_info["ERROR"])
         self.DownloadButtonState()
+        self.ClearTaskbarOverlay()
         self.DisableDownloadGui(True)
 
 def window():

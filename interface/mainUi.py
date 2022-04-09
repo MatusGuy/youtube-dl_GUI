@@ -14,13 +14,17 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(986, 747)
+        MainWindow.resize(986, 776)
         MainWindow.setContextMenuPolicy(QtCore.Qt.PreventContextMenu)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("C:/Users/Mateus/.designer/assets/ytdl.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         MainWindow.setStyleSheet("QToolButton:hover,.QPushButton:hover{\n"
 "        background-color: rgb(0, 120, 215)\n"
+"}\n"
+"\n"
+"QToolButton#CornerAbout:hover{\n"
+"        background-color: transparent\n"
 "}\n"
 "\n"
 "QDockWidget {\n"
@@ -34,7 +38,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.MainWidget.sizePolicy().hasHeightForWidth())
         self.MainWidget.setSizePolicy(sizePolicy)
         self.MainWidget.setMinimumSize(QtCore.QSize(0, 0))
-        self.MainWidget.setMaximumSize(QtCore.QSize(526, 364))
+        self.MainWidget.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.MainWidget.setStyleSheet("")
         self.MainWidget.setObjectName("MainWidget")
         self.gridLayout = QtWidgets.QGridLayout(self.MainWidget)
@@ -85,6 +89,11 @@ class Ui_MainWindow(object):
         self.TemplateInput.setObjectName("TemplateInput")
         self.gridLayout_3.addWidget(self.TemplateInput, 0, 1, 1, 2)
         self.gridLayout_2.addWidget(self.ConfigOutput, 0, 2, 1, 1)
+        self.sep1 = QtWidgets.QFrame(self.ConfigGroup)
+        self.sep1.setFrameShape(QtWidgets.QFrame.VLine)
+        self.sep1.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.sep1.setObjectName("sep1")
+        self.gridLayout_2.addWidget(self.sep1, 0, 1, 1, 1)
         self.MediaType = QtWidgets.QWidget(self.ConfigGroup)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -434,10 +443,7 @@ class Ui_MainWindow(object):
         MainWindow.setTabOrder(self.VideoOption, self.AudioOption)
         MainWindow.setTabOrder(self.AudioOption, self.TemplateInput)
         MainWindow.setTabOrder(self.TemplateInput, self.RangeInput)
-        MainWindow.setTabOrder(self.RangeInput, self.ExportMetadata)
-        MainWindow.setTabOrder(self.ExportMetadata, self.ExportCover)
-        MainWindow.setTabOrder(self.ExportCover, self.EmbedSubtitles)
-        MainWindow.setTabOrder(self.EmbedSubtitles, self.DestinationButton)
+        MainWindow.setTabOrder(self.RangeInput, self.DestinationButton)
         MainWindow.setTabOrder(self.DestinationButton, self.DestinationInput)
         MainWindow.setTabOrder(self.DestinationInput, self.DownloadButton)
         MainWindow.setTabOrder(self.DownloadButton, self.ConsoleTextBox)
@@ -456,9 +462,6 @@ class Ui_MainWindow(object):
         self.VideoOption.setText(_translate("MainWindow", "Video + Audio"))
         self.AudioOption.setToolTip(_translate("MainWindow", "Download audio only, ideal for music or sound effects"))
         self.AudioOption.setText(_translate("MainWindow", "Audio-only"))
-        self.ExportMetadata.setText(_translate("MainWindow", "Export metadata"))
-        self.ExportCover.setText(_translate("MainWindow", "Export cover art as thumbnail"))
-        self.EmbedSubtitles.setText(_translate("MainWindow", "Embed subtitles into video"))
         self.OutputGroup.setTitle(_translate("MainWindow", "Output"))
         self.DestinationInput.setToolTip(_translate("MainWindow", "The path to your final file"))
         self.DestinationLabel.setText(_translate("MainWindow", "Destination"))

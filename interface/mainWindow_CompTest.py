@@ -48,8 +48,12 @@ class MW_CompTest(QObject):
     
     def DownloadCallback(self):
         print ("DownloadCallBack")
+
+        self.ui.ClearConsole()
+
         self.ui.CancelIcon()
         self.ui.SetDownloadText("Cancel\ndownload!")
+        self.ui.OperatingTaskbarOverlay()
 
         self.ui.AppendConsole("Start downloading...")
         self.ui.ShowStatusMessage("Operating: test")
@@ -57,9 +61,11 @@ class MW_CompTest(QObject):
         self.ui.SetProgress(100)
         self.ui.AppendConsole("Download ended.")
         self.ui.DownloadEndDialog(1,"errormessage goes here")
+        self.ui.ClearTaskbarOverlay()
+
+        self.ui.AppendConsole("lots\nof\ntext\nbeing\nsent\nat\nthis\nvery\nmoment\n.\nisn't\nthat\namazing\n?\n!\n?\n\n\nno\n,\nyou're\nnot\nfunny\n,\nmat")
 
         self.ui.ClearStatusMessage()
-        self.ui.ClearConsole()
         self.ui.SetDownloadText("Start\ndownload!")
         self.ui.DownloadIcon()
 

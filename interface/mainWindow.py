@@ -8,7 +8,7 @@ from types import FunctionType
 from interface.mainUi import Ui_MainWindow as ui
 
 from PyQt5.QtWidgets import (QMainWindow, QApplication, QMessageBox, QLabel, QFileDialog, QTableWidgetItem,
-                             QStyleFactory, QDesktopWidget, QDockWidget, QInputDialog, QAction)
+                             QStyleFactory, QDesktopWidget, QDockWidget, QInputDialog, QAction, QToolButton)
 from PyQt5.QtGui import QIcon, QPixmap, QPalette, QColor
 from PyQt5.QtCore import QObject, Qt, QEvent
 from PyQt5.QtWinExtras import QWinTaskbarButton, QWinThumbnailToolBar, QWinThumbnailToolButton
@@ -110,7 +110,7 @@ class MainWindow(ui,QObject):
         ])
 
         self.aboutDialog = aw(version)
-        self.addSwitchesDialog = ad(windowicon=pd.__PyDist__._WorkDir+"assets/ytdl.png")
+        self.addSwitchesDialog = ad(windowicon=WDIR+"assets/ytdl.png")
 
         self.InitIcons()
         self.InitStatusBar()
@@ -364,11 +364,26 @@ Stopped at: #{self.a2fo.currNum+1} ({self.a2fo.progress}%)""")
     def GetAdditionalSwitches(self) -> str: return self.addSwitchesDialog.Get()
     def SetAdditionalSwitches(self,value:str): self.addSwitchesDialog.Set(value)
     
-    def YtdlGetHelp(self): ch().GetHelp(pd.__PyDist__._WorkDir+"youtube-dl\\youtube-dl.exe --help")
-    def FfmpegGetHelp(self): ch("ffmpeg command line help").GetHelp(pd.__PyDist__._WorkDir+"youtube-dl\\ffmpeg.exe --help")
+    def YtdlGetHelp(self): ch().GetHelp(WDIR+"youtube-dl\\youtube-dl.exe --help")
+    def FfmpegGetHelp(self): ch("ffmpeg command line help").GetHelp(WDIR+"youtube-dl\\ffmpeg.exe --help")
     
     def InitIcons(self):
+        self.window.setWindowIcon(QIcon(QPixmap(WDIR+"assets/ytdl.png")))
+        self.Theme.setIcon(QIcon(QPixmap(WDIR+"assets/theme.png")))
+        self.AdditionalSwitches.setIcon(QIcon(QPixmap(WDIR+"assets/switch-plus.png")))
+        self.ConsoleOption.setIcon(QIcon(QPixmap(WDIR+"assets/terminal.png")))
+        self.DownloadedItems.setIcon(QIcon(WDIR+"assets/view_text.png"))
+        self.CommandHelpMenu.setIcon(QIcon(QPixmap(WDIR+"assets/help_index.png")))
+        self.Support.setIcon(QIcon(QPixmap(WDIR+"assets/helpcenter.png")))
+        self.About.setIcon(QIcon(QPixmap(WDIR+"assets/info.png")))
+        self.DownloadButton.setIcon(QIcon(WDIR+"assets/forward.png"))
+        self.DestinationButton.setIcon(QIcon(WDIR+"assets/folder_yellow.png"))
+        self.youtube_dlHelp.setIcon(QIcon(WDIR+"assets/ytdl.png"))
+        self.ffmpegHelp.setIcon(QIcon(WDIR+"assets/ffmpeg.png"))
+        self.DownloadGraph.setIcon(QIcon(WDIR+"assets/chart.png"))
+        self.ProxySettings.setIcon(QIcon(WDIR+"assets/proxy.png"))
         self.PreferNotif.setIcon(QIcon(WDIR+"assets/bell.png"))
+        self.AFOperation.setIcon(QIcon(WDIR+"assets/playlist.png"))
 
     
     def InitStatusBar(self):
@@ -456,8 +471,8 @@ Stopped at: #{self.a2fo.currNum+1} ({self.a2fo.progress}%)""")
             self.sbDwCurrLabel.setText("")
             self.sbDwFilesLabel.setText("\t")
 
-    def DownloadIcon(self): self.DownloadButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/forward.png"))
-    def CancelIcon(self): self.DownloadButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/stop.png"))
+    def DownloadIcon(self): self.DownloadButton.setIcon(QIcon(WDIR+"assets/forward.png"))
+    def CancelIcon(self): self.DownloadButton.setIcon(QIcon(WDIR+"assets/stop.png"))
 
     def SetDownloadCallback(self,callback): self.DownloadButton.pressed.connect(callback)
 
@@ -557,21 +572,19 @@ Stopped at: #{self.a2fo.currNum+1} ({self.a2fo.progress}%)""")
             )
             #self.notif.wnd_proc(self.window.winId(),"","","") # sample data, just end my notification already
         else:
-        result = msg.exec_()
-        self.taskbarProgress.setValue(0)
-        self.SetProgressColour()
+            result = msg.exec_()
 
-        if result == QMessageBox.StandardButton.Open:
-            output = self.DestinationInput.text()
-            rfind1 = output.rfind('\\')
-            rfind2 = output.rfind('/')
-            if rfind1 > rfind2:
-                result = output[:rfind1+1]
-            else:
-                result = output[:rfind2+1]
-            wresult=result.replace('/','\\')
-            #print (wresult)
-            if len(wresult): os.system("explorer "+wresult)
+            if result == QMessageBox.StandardButton.Open:
+                output = self.DestinationInput.text()
+                rfind1 = output.rfind('\\')
+                rfind2 = output.rfind('/')
+                if rfind1 > rfind2:
+                    result = output[:rfind1+1]
+                else:
+                    result = output[:rfind2+1]
+                wresult=result.replace('/','\\')
+                #print (wresult)
+                if len(wresult): os.system("explorer "+wresult)
         
         self.taskbarProgress.setValue(0)
         self.SetProgressColour()
@@ -600,7 +613,7 @@ Stopped at: #{self.a2fo.currNum+1} ({self.a2fo.progress}%)""")
         versionMsg.setWindowTitle("youtube-dl GUI")
         versionMsg.setText("There's a new version of youtube-dl GUI available.\nRestart the application to apply it.\n\nClose the application?")
         versionMsg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-        versionMsg.setWindowIcon(QIcon(pd.__PyDist__._WorkDir+'assets/ytdl.png'))
+        versionMsg.setWindowIcon(QIcon(WDIR+'assets/ytdl.png'))
         versionMsg.setModal(True)
 
         resp = versionMsg.exec_()
