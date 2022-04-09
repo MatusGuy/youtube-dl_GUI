@@ -19,6 +19,8 @@ EXCLUDE_DISABLED = False
 
 from interface.DownloadedListMenu import DownloadedListMenu as DWLMenu
 
+from tools.Album2Folder import Album2Folder as a2f
+
 from dist import pydist as pd
 WDIR = pd.__PyDist__._WorkDir
 
@@ -71,6 +73,8 @@ class MainWindow(ui,QObject):
 
     aboutDialog = aw
     addSwitchesDialog = ad
+
+    a2fo = a2f()
 
     prefMng = None
 
@@ -146,6 +150,8 @@ class MainWindow(ui,QObject):
 
         self.ProxySettings.triggered.connect(self.ProxySettingsDialog)
 
+        self.AFOperation.triggered.connect(self.Album2Folder)
+
         self.youtube_dlHelp.triggered.connect(self.YtdlGetHelp)
         self.ffmpegHelp.triggered.connect(self.FfmpegGetHelp)
 
@@ -182,7 +188,7 @@ class MainWindow(ui,QObject):
         self.taskbarToolBar.setWindow(self.window.windowHandle())
 
         self.taskbarCancelButton = QWinThumbnailToolButton(self.taskbarToolBar)
-        self.taskbarCancelButton.setIcon(QIcon(pd.__PyDist__._WorkDir+"assets/stop.png"))
+        self.taskbarCancelButton.setIcon(QIcon(WDIR+"assets/stop.png"))
         self.taskbarCancelButton.setToolTip("Stop downloading!")
         self.taskbarCancelButton.setEnabled(False)
 
@@ -197,6 +203,39 @@ class MainWindow(ui,QObject):
     def CenterWindow(self):
         center = QDesktopWidget().availableGeometry().center()
         self.window.move(int(center.x()/2),int(center.y()/2))
+    
+    def Album2Folder(self,folder:str):
+        folder = QFileDialog.getExistingDirectory(
+            caption="Choose folder to operate",
+            directory=self.GetOutput(),
+            options=QFileDialog.Option.ShowDirsOnly
+        )
+
+        if folder:
+            self.a2fo.Album2Folder(folder,False)
+
+            msg = QMessageBox(
+                QMessageBox.Icon.Information,
+                "Album to folder organization",
+                "Completed."+("\t"*3),
+                QMessageBox.StandardButton.Ok
+            )
+            msg.setWindowIcon(self.AFOperation.icon())
+            msg.setDetailedText(f"""Standalone tool name: AFOperation
+Tool version: 1.0.0.1
+Last info message: {self.a2fo._process}
+Error: {self.a2fo._error}
+
+Operated directory: {folder}
+# of operated files: {self.a2fo.totalNum}
+Stopped at: #{self.a2fo.currNum+1} ({self.a2fo.progress}%)""")
+            msg.exec_()
+
+            self.a2fo.ClearError()
+            self.a2fo.SetProgress(0)
+            self.a2fo.ResetTotalFiles()
+            self.a2fo.SetProcess("")
+            self._ExcludeObjects([msg])
     
     def LoadSettings(self):
         settings = self.prefMng.settings
