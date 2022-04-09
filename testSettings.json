@@ -1,5 +1,5 @@
 {
-    "version": "2.2.0",
+    "version": "2.3.0",
     "isDarkTheme": false,
     "savedConfig": {
         "url": "https://www.youtube.com/watch?v=jNQXAC9IVRw",
@@ -9,6 +9,8 @@
         "destination": "<DEFAULT>"
     },
     "additionalSwitches": "",
+    "videoAdditionalSwitches": "",
+    "audioAdditionalSwitches": "",
     "templateHistory": [],
     "dockWidgetPrefs": {
         "console": {
