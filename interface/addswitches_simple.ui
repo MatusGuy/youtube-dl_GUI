@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>468</width>
+    <width>422</width>
     <height>294</height>
    </rect>
   </property>
@@ -58,8 +58,103 @@
       <property name="topMargin">
        <number>11</number>
       </property>
+      <item row="1" column="0">
+       <widget class="QTabWidget" name="Tabs">
+        <property name="styleSheet">
+         <string notr="true">QTextEdit{
+	background-color: transparent;
+	font: 10pt &quot;Consolas&quot;;
+}</string>
+        </property>
+        <widget class="QWidget" name="GlobalTab">
+         <attribute name="title">
+          <string>Global</string>
+         </attribute>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item row="0" column="0">
+           <widget class="QTextEdit" name="TextEdit">
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="VideoTab">
+         <attribute name="title">
+          <string>Video</string>
+         </attribute>
+         <layout class="QGridLayout" name="gridLayout_4">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item row="0" column="0">
+           <widget class="QTextEdit" name="VideoTextEdit">
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="AudioTab">
+         <attribute name="title">
+          <string>Audio</string>
+         </attribute>
+         <layout class="QGridLayout" name="gridLayout_5">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item row="0" column="0">
+           <widget class="QTextEdit" name="AudioTextEdit">
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </item>
       <item row="0" column="0">
-       <widget class="QTextEdit" name="TextEdit"/>
+       <widget class="QCheckBox" name="GlobalOption">
+        <property name="text">
+         <string>Use global additional switches</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
