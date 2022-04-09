@@ -41,6 +41,7 @@ class PreferencesManager(object):
                             "y": 450
                         }
                     },
+                    "proxy": [False,""],
                     "preferNotif": False
                 }
 
