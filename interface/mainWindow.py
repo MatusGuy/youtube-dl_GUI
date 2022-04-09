@@ -130,7 +130,7 @@ class MainWindow(ui,QObject):
         self.DwItemsListWidget.setStyle(QStyleFactory.create("Fusion"))
         self.DwItemsList.setColumnWidth(0,230)
 
-        self.AudioOption.toggled.connect(self.addSwitchesDialog._SetAudio)
+        self.addSwitchesDialog._SetAudio(self.AudioOption.isChecked())
         self.LoadSettings()
 
         DWLMenu(self.DwItemsList,self.app.clipboard(),self.DwItemsListWidget)
@@ -148,6 +148,7 @@ class MainWindow(ui,QObject):
         self.About.triggered.connect(self.OpenAboutDialog)
         self.Support.triggered.connect(self.OpenGitHubIssues)
         self.AdditionalSwitches.triggered.connect(self.OpenAdditionalSwitchesDialog)
+        self.AudioOption.toggled.connect(self.addSwitchesDialog._SetAudio)
 
         self.ProxySettings.triggered.connect(self.ProxySettingsDialog)
 

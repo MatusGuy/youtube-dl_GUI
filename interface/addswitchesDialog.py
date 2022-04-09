@@ -56,12 +56,12 @@ class AdditionalSwitchesDialog(ui):
     def Get(self) -> str:
         """Returns global + audio/video additional switches"""
         
-        if self.audio:
-            resp = self.GetAudio()
-        else:
-            resp = self.GetVideo()
+        resp = self.GetGlobal()+" "
 
-        resp += self.GetGlobal()
+        if self.audio:
+            resp += self.GetAudio()
+        else:
+            resp += self.GetVideo()
         
         return resp
     def GetGlobal(self) -> str:
