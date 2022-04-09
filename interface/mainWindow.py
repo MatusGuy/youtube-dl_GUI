@@ -187,7 +187,13 @@ class MainWindow(ui,QObject):
         self.taskbarCancelButton.setToolTip("Stop downloading!")
         self.taskbarCancelButton.setEnabled(False)
 
+        self.taskbarAboutButton = QWinThumbnailToolButton(self.taskbarToolBar)
+        self.taskbarAboutButton.setIcon(QIcon(WDIR+"assets/info.png"))
+        self.taskbarAboutButton.setToolTip("About youtube-dl GUI")
+        self.taskbarAboutButton.clicked.connect(self.About.trigger)
+
         self.taskbarToolBar.addButton(self.taskbarCancelButton)
+        self.taskbarToolBar.addButton(self.taskbarAboutButton)
 
     def CenterWindow(self):
         center = QDesktopWidget().availableGeometry().center()
