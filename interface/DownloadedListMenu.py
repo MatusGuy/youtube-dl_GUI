@@ -67,12 +67,12 @@ class DownloadedListMenu(QMenu):
         self.addAction(self.clearAction)
 
     def Execute(self):
-        if len(self.table.selectedItems())==1 and self.GetSelectedItem().column()==0:
+        if len(self.table.selectedItems())==1 and self.GetSelectedItem().column()==1:
             self.selected = self.GetSelectedItem()
             self.label.setText(self.selected.text())
         else:
             self.label.setText("invalid selection")
-        for item in self.itemSpecificActions: item.setEnabled(len(self.table.selectedItems())==1 and self.GetSelectedItem().column()==0)
+        for item in self.itemSpecificActions: item.setEnabled(len(self.table.selectedItems())==1 and self.GetSelectedItem().column()==1)
         if self.playAction.isEnabled() and self.openAction.isEnabled():
             for item in self.postDownloadingSpecificActions:
                 #get the text from the item in the selected row at the 3rd column
