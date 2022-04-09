@@ -16,6 +16,7 @@ from interface import mainWindow as mw
 #from settingsGuis.themePrompt_class import Ui_ChangeTheme as ThemesGui
 
 currSjson = pd.__PyDist__._ExecDir+"settings.json"
+testSjson = "testSettings.json"
 newSjson = pd.__PyDist__._WorkDir+"settings.json"
 
 class Program(mw.MainWindow,QObject):
@@ -66,7 +67,10 @@ class Program(mw.MainWindow,QObject):
 
         self.window = MainWindow
 
-        self.prefMng = pm.PreferencesManager(currSjson)
+        if IS_BUNDLE:
+            self.prefMng = pm.PreferencesManager(currSjson)
+        else:
+            self.prefMng = pm.PreferencesManager(testSjson)
 
         resp=super().__init__(
             window=self.window,

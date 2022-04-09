@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>422</width>
-    <height>294</height>
+    <width>387</width>
+    <height>310</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -58,13 +58,16 @@
       <property name="topMargin">
        <number>11</number>
       </property>
-      <item row="1" column="0">
+      <item row="0" column="0">
        <widget class="QTabWidget" name="Tabs">
         <property name="styleSheet">
          <string notr="true">QTextEdit{
 	background-color: transparent;
 	font: 10pt &quot;Consolas&quot;;
 }</string>
+        </property>
+        <property name="currentIndex">
+         <number>0</number>
         </property>
         <widget class="QWidget" name="GlobalTab">
          <attribute name="title">
@@ -144,16 +147,6 @@
           </item>
          </layout>
         </widget>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QCheckBox" name="GlobalOption">
-        <property name="text">
-         <string>Use global additional switches</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
        </widget>
       </item>
      </layout>

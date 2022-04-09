@@ -15,7 +15,7 @@ class Ui_AdditionalSwitches(object):
     def setupUi(self, AdditionalSwitches):
         AdditionalSwitches.setObjectName("AdditionalSwitches")
         AdditionalSwitches.setWindowModality(QtCore.Qt.ApplicationModal)
-        AdditionalSwitches.resize(422, 294)
+        AdditionalSwitches.resize(387, 310)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("e:\\SOFTWARE\\PythonProjects\\youtubedl_GUI_pyqt\\interface\\../assets/ytdl.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         AdditionalSwitches.setWindowIcon(icon)
@@ -78,11 +78,7 @@ class Ui_AdditionalSwitches(object):
         self.AudioTextEdit.setObjectName("AudioTextEdit")
         self.gridLayout_5.addWidget(self.AudioTextEdit, 0, 0, 1, 1)
         self.Tabs.addTab(self.AudioTab, "")
-        self.gridLayout.addWidget(self.Tabs, 1, 0, 1, 1)
-        self.GlobalOption = QtWidgets.QCheckBox(self.GroupBox)
-        self.GlobalOption.setChecked(True)
-        self.GlobalOption.setObjectName("GlobalOption")
-        self.gridLayout.addWidget(self.GlobalOption, 0, 0, 1, 1)
+        self.gridLayout.addWidget(self.Tabs, 0, 0, 1, 1)
         self.gridLayout_2.addWidget(self.GroupBox, 0, 0, 1, 4)
         self.HelpMenu = QtWidgets.QToolButton(AdditionalSwitches)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Preferred)
@@ -103,6 +99,7 @@ class Ui_AdditionalSwitches(object):
         self.gridLayout_2.addItem(spacerItem, 1, 0, 1, 2)
 
         self.retranslateUi(AdditionalSwitches)
+        self.Tabs.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(AdditionalSwitches)
 
     def retranslateUi(self, AdditionalSwitches):
@@ -113,5 +110,4 @@ class Ui_AdditionalSwitches(object):
         self.Tabs.setTabText(self.Tabs.indexOf(self.GlobalTab), _translate("AdditionalSwitches", "Global"))
         self.Tabs.setTabText(self.Tabs.indexOf(self.VideoTab), _translate("AdditionalSwitches", "Video"))
         self.Tabs.setTabText(self.Tabs.indexOf(self.AudioTab), _translate("AdditionalSwitches", "Audio"))
-        self.GlobalOption.setText(_translate("AdditionalSwitches", "Use global additional switches"))
         self.HelpMenu.setText(_translate("AdditionalSwitches", "Help"))

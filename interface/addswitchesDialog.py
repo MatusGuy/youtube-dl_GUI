@@ -40,15 +40,12 @@ class AdditionalSwitchesDialog(ui):
         return self.Get()
     
     def Set(self,value:str):
-        """Changes additional switches depending if global, video, or audio is chosen"""
+        """Changes audio/video additional switches"""
 
-        if self.GlobalOption.isChecked():
-            self.TextEdit.setPlainText(value)
+        if self.audio:
+            self.SetAudio(value)
         else:
-            if self.audio:
-                self.AudioTextEdit.setPlainText(value)
-            else:
-                self.VideoTextEdit.setPlainText(value)
+            self.SetVideo(value)
     def SetGlobal(self,value:str):
         self.TextEdit.setPlainText(value)
     def SetVideo(self,value:str):
@@ -57,15 +54,14 @@ class AdditionalSwitchesDialog(ui):
         self.AudioTextEdit.setPlainText(value)
 
     def Get(self) -> str:
-        """Returns additional switches depending if global, video, or audio is chosen"""
+        """Returns global + audio/video additional switches"""
         
-        if self.GlobalOption.isChecked():
-            resp = self.TextEdit.toPlainText()
+        if self.audio:
+            resp = self.GetAudio()
         else:
-            if self.audio:
-                resp = self.AudioTextEdit.toPlainText()
-            else:
-                resp = self.VideoTextEdit.toPlainText()
+            resp = self.GetVideo()
+
+        resp += self.GetGlobal()
         
         return resp
     def GetGlobal(self) -> str:

@@ -130,6 +130,7 @@ class MainWindow(ui,QObject):
         self.DwItemsListWidget.setStyle(QStyleFactory.create("Fusion"))
         self.DwItemsList.setColumnWidth(0,230)
 
+        self.AudioOption.toggled.connect(self.addSwitchesDialog._SetAudio)
         self.LoadSettings()
 
         DWLMenu(self.DwItemsList,self.app.clipboard(),self.DwItemsListWidget)
