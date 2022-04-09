@@ -139,6 +139,7 @@ class MainWindow(ui,QObject):
 
         self.DestinationButton.pressed.connect(lambda: self.SetOutput(self.DestinationSelectPrompt()))
         self.UrlTextBox.textEdited.connect(self.RangeInput.clear)
+        self.AudioOption.toggled.connect(self.SetAudioOnly)
 
         self.About.triggered.connect(self.OpenAboutDialog)
         self.Support.triggered.connect(self.OpenGitHubIssues)
@@ -344,7 +345,12 @@ class MainWindow(ui,QObject):
     def SetRange(self,range:str): self.RangeInput.setText(range), self.ChangeSetting(["savedConfig","range"],self.GetRange())
     def GetRange(self) -> str: return self.RangeInput.text()
     
-    def SetAudioOnly(self,audioOnly:bool): self.AudioOption.setChecked(audioOnly), self.ChangeSetting(["savedConfig","audioOnly"],self.GetAudioOnly())
+    def SetAudioOnly(self,audioOnly:bool):
+        self.AudioOption.setChecked(audioOnly)
+        if audioOnly and self.GetOutput().endswith(".mp4"):
+            self.SetOutput(self.GetOutput().removesuffix("4")+"3")
+        elif not audioOnly and self.GetOutput().endswith(".mp3"):
+            self.SetOutput(self.GetOutput().removesuffix("3")+"4")
     def GetAudioOnly(self) -> bool: return self.AudioOption.isChecked()
 
     def SetProgress(self,value:int):
