@@ -117,6 +117,7 @@ class MainWindow(ui,QObject):
         self.CloseConsole()
         self.ConsoleDock.installEventFilter(self)
         self.ConsoleDock.setStyle(QStyleFactory.create("WindowsVista"))
+        self.ConsoleTextBox.verticalScrollBar().setStyle(QStyleFactory.create("Fusion"))
 
         self.ConsoleOption.toggled.connect(lambda: self.SetConsoleOpen(self.ConsoleOption.isChecked()))
 
