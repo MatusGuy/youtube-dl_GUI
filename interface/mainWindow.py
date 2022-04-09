@@ -271,7 +271,9 @@ Stopped at: #{self.a2fo.currNum+1} ({self.a2fo.progress}%)""")
         self.LoadDockWidget(self.ConsoleDock,"console",self.ConsoleOption)
         self.LoadDockWidget(self.DwItems,"dwList",self.DownloadedItems)
         
-        self.SetAdditionalSwitches(settings["additionalSwitches"])
+        self.addSwitchesDialog.SetGlobal(settings["additionalSwitches"])
+        self.addSwitchesDialog.SetAudio(settings["audioAdditionalSwitches"])
+        self.addSwitchesDialog.SetVideo(settings["videoAdditionalSwitches"])
     
     def DockArea2Orientation(self,area:Qt.DockWidgetArea) -> Qt.Orientation|None:
         if area == Qt.DockWidgetArea.RightDockWidgetArea or area == Qt.DockWidgetArea.LeftDockWidgetArea: return Qt.Orientation.Horizontal
@@ -647,7 +649,10 @@ Stopped at: #{self.a2fo.currNum+1} ({self.a2fo.progress}%)""")
         self.ChangeSetting(["templateHistory"],self.GetTemplateHistory())
 
         self.ChangeSetting(["isDarkTheme"],self.DarkOption.isChecked())
-        self.ChangeSetting(["additionalSwitches"],self.GetAdditionalSwitches())
+
+        self.ChangeSetting(["additionalSwitches"],self.addSwitchesDialog.GetGlobal())
+        self.ChangeSetting(["videoAdditionalSwitches"],self.addSwitchesDialog.GetVideo())
+        self.ChangeSetting(["audioAdditionalSwitches"],self.addSwitchesDialog.GetAudio())
 
         self.ChangeSetting(["window","size","x"],self.window.width())
         self.ChangeSetting(["window","size","y"],self.window.height())
