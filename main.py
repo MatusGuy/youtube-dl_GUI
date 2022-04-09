@@ -127,8 +127,14 @@ class Program(mw.MainWindow,QObject):
     def DistributeDWInfo(self,updatecode,info:dict,dwList:dict):
         self.DefinedProgress()
         self.ShowStatusMessage("Processing: "+info["CURR"]["PROCESS"])
-        if info["CURR"]["PROCESS"] == "Download": self.SetProgressColour()
-        else: self.SetProgressColour(QColor(100, 127, 17))
+        if info["CURR"]["PROCESS"] == "Download":
+            self.DefinedProgress()
+            self.SetProgressColour()
+            self.DownloadingTaskbarOverlay()
+        else:
+            self.UndefinedProgress()
+            self.SetProgressColour(QColor(100, 127, 17))
+            self.OperatingTaskbarOverlay()
         self.SetDownloadInfo(
             eta=info["CURR"]["ETA"],
             speed=info["CURR"]["SPEED"],
