@@ -102,9 +102,7 @@ class MainWindow(ui,QObject):
 
         if EXCLUDE_DISABLED: self._ExcludeObjects([
             self.DwGraphDock,
-            self.DownloadGraph,
-            self.MetadataOptions,
-            self.sep4
+            self.DownloadGraph
         ])
 
         self.aboutDialog = aw(version)
