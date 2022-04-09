@@ -472,33 +472,39 @@ class MainWindow(ui,QObject):
         self.RefreshStyleSheet()
         self.SaveTheme(True)
     
+    def RestoreWindow(self):
+        self.window.activateWindow()
+
     def DownloadEndDialog(self,errorcode:int,error:str=""):
         msg = QMessageBox()
-        msg.setWindowIcon(QIcon(pd.__PyDist__._WorkDir+'assets/ytdl.png'))
+        msg.setWindowIcon(QIcon(WDIR+'assets/ytdl.png'))
         msg.setWindowTitle("youtube-dl GUI")
         msg.setStandardButtons(QMessageBox.StandardButton.Ok)
 
         if errorcode==1 and error:
-            msg.setIcon(QMessageBox.Critical)
+            msg.setIcon(QMessageBox.Icon.Critical)
             msg.setText("Finished downloading unsuccessfully!")
             msg.setStyleSheet('''
                 QTextEdit{
+                    color: red;
+                    background-color: black;
                     font: 12px "Consolas";
-                    selection-background-color: rgb(3,96,209);
-                    selection-color: rgb(217,217,217)
+                    selection-background-color: rgb(255,255,255);
+                    selection-color: rgb(14,14,14);
+                    border-radius: 4px;
                 }
             ''')
             msg.setDetailedText(str(error))
             self.taskbarProgress.stop()
             self.SetProgressColour(QColor(201, 13, 13))
         elif errorcode==1:
-            msg.setIcon(QMessageBox.Information)
+            msg.setIcon(QMessageBox.Icon.Information)
             msg.setText("Canceled by user!")
             self.taskbarProgress.stop()
             self.SetProgressColour(QColor(201, 13, 13))
         else:
             msg.setText("Finished downloading successfully!")
-            msg.setIcon(QMessageBox.Information)
+            msg.setIcon(QMessageBox.Icon.Information)
             msg.setStandardButtons(QMessageBox.StandardButton.Open | QMessageBox.StandardButton.Ok)
             self.SetProgressColour(QColor(34, 159, 17))
         
