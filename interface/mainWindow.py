@@ -530,6 +530,8 @@ Stopped at: #{self.a2fo.currNum+1} ({self.a2fo.progress}%)""")
         self.window.activateWindow()
 
     def DownloadEndDialog(self,errorcode:int,error:str=""):
+        self.DefinedProgress()
+
         msg = QMessageBox()
         msg.setWindowIcon(QIcon(WDIR+'assets/ytdl.png'))
         msg.setWindowTitle("youtube-dl GUI")
