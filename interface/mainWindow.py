@@ -152,6 +152,13 @@ class MainWindow(ui,QObject):
 
         self.app.aboutToQuit.connect(self.OnAppQuit)
 
+        self.CornerAbout = QToolButton(self.MenuBar)
+        self.CornerAbout.setIcon(QIcon(WDIR+"assets/info.png"))
+        self.CornerAbout.setAutoRaise(True)
+        self.CornerAbout.setStyleSheet("border: transparent")
+        self.CornerAbout.pressed.connect(self.About.trigger)
+        self.MenuBar.setCornerWidget(self.CornerAbout)
+
         if whileInit!=None: whileInit()
 
         self.CloseDwGraph()
