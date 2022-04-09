@@ -238,7 +238,6 @@ class MainWindow(ui,QObject):
         return None
     
     def LoadDockWidget(self,dock:QDockWidget,key:str,action:QAction):
-        print(dock.windowTitle())
 
         dockprefs = self.prefMng.settings["dockWidgetPrefs"][key]
 
@@ -254,13 +253,11 @@ class MainWindow(ui,QObject):
 
         dock.setProperty("SAVED_VISIBLE",dock.isVisible())
         def SaveVisibility(visible:bool):
-            print(visible)
             if self.window.isVisible(): dock.setProperty("SAVED_VISIBLE",visible)
         
         dock.visibilityChanged.connect(SaveVisibility)
 
     def SaveDockWidget(self,dock:QDockWidget,key:str):
-        print(dock.windowTitle())
         toset_dockprefs = ["dockWidgetPrefs",key]
 
         self.ChangeSetting(toset_dockprefs+["open"],dock.property("SAVED_VISIBLE"))
