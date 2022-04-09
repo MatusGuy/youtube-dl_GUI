@@ -535,6 +535,9 @@ class MainWindow(ui,QObject):
             wresult=result.replace('/','\\')
             #print (wresult)
             if len(wresult): os.system("explorer "+wresult)
+        
+        self.taskbarProgress.setValue(0)
+        self.SetProgressColour()
     
     def DestinationSelectPrompt(self) -> str:
         filenameFilter = ""
