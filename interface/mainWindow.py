@@ -318,7 +318,8 @@ class MainWindow(ui,QObject):
         if open: self.OpenDwGraph()
         else: self.CloseDwGraph()
 
-    def OpenAboutDialog(self): self.aboutDialog.Execute()
+    def OpenAboutDialog(self):
+        self.aboutDialog.Execute()
     def OpenGitHubIssues(self): OpenURL("https://github.com/MatusGuy/youtube-dl_GUI/issues")
     def OpenAdditionalSwitchesDialog(self) -> str:
         resp=self.addSwitchesDialog.Execute()
