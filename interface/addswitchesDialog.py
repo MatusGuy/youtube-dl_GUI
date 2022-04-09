@@ -55,10 +55,8 @@ class AdditionalSwitchesDialog(ui):
         self.VideoTextEdit.setPlainText(value)
     def SetAudio(self,value:str):
         self.AudioTextEdit.setPlainText(value)
-    
-    def _Get(self) -> str:
-        return self.TextEdit.toPlainText().replace("\r"," ").replace("\n"," ")
-    def Get(self):
+
+    def Get(self) -> str:
         """Returns additional switches depending if global, video, or audio is chosen"""
         
         if self.GlobalOption.isChecked():
@@ -70,9 +68,9 @@ class AdditionalSwitchesDialog(ui):
                 resp = self.VideoTextEdit.toPlainText()
         
         return resp
-    def GetGlobal(self):
+    def GetGlobal(self) -> str:
         return self.TextEdit.toPlainText()
-    def GetVideo(self):
+    def GetVideo(self) -> str:
         return self.VideoTextEdit.toPlainText()
-    def GetAudio(self):
+    def GetAudio(self) -> str:
         return self.AudioTextEdit.toPlainText()
