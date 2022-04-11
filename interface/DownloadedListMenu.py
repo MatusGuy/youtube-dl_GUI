@@ -76,6 +76,6 @@ class DownloadedListMenu(QMenu):
         if self.playAction.isEnabled() and self.openAction.isEnabled():
             for item in self.postDownloadingSpecificActions:
                 #get the text from the item in the selected row at the 3rd column
-                totalTimeStatus = self.table.item(self.table.indexFromItem(self.GetSelectedItem()).row(),2).text()
+                totalTimeStatus = self.table.item(self.table.indexFromItem(self.GetSelectedItem()).row(),3).text()
                 item.setEnabled(totalTimeStatus != "Downloading" and totalTimeStatus != "Canceled")
         self.exec_(QCursor.pos())

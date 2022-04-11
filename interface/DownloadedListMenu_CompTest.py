@@ -16,10 +16,10 @@ class MW_CompTest(object):
         self.table.setFixedSize(500,500)
         self.table.setColumnCount(10)
         self.table.setRowCount(10)
-        self.table.setItem(0,0,QTableWidgetItem("C:\\Users\\Mateus\\C - Me at the zoo.mp4"))
-        self.table.setItem(0,2,QTableWidgetItem("Downloading"))
-        self.table.setItem(1,0,QTableWidgetItem("C:\\Users\\Mateus\\D - Me not at the zoo.mp4"))
-        self.table.setItem(1,2,QTableWidgetItem("not downloading"))
+        self.table.setItem(0,1,QTableWidgetItem("C:\\Users\\Mateus\\C - Me at the zoo.mp4"))
+        self.table.setItem(0,3,QTableWidgetItem("Downloading"))
+        self.table.setItem(1,1,QTableWidgetItem("C:\\Users\\Mateus\\D - Me not at the zoo.mp4"))
+        self.table.setItem(1,3,QTableWidgetItem("not downloading"))
 
         self.menu = dwlmenu(self.table,app.clipboard(),self.widget)
 
