@@ -424,6 +424,7 @@ Stopped at: #{self.a2fo.currNum+1} ({self.a2fo.progress}%)""")
     def SetProgress(self,value:int):
         self.DownloadProgress.setValue(value)
         self.taskbarProgress.setValue(value)
+        self.window.setWindowTitle(f"youtube-dl GUI - {value}%")
     def GetProgress(self) -> int: return self.DownloadProgress.value()
     def UndefinedProgress(self):
         self.DownloadProgress.setFormat(self.DownloadProgress.format().replace(
@@ -432,10 +433,13 @@ Stopped at: #{self.a2fo.currNum+1} ({self.a2fo.progress}%)""")
         ))
         self.DownloadProgress.setRange(0,0)
         self.taskbarProgress.setRange(0,0)
+        self.window.setWindowTitle(f"youtube-dl GUI - Processing...")
     def DefinedProgress(self):
+        """DO THIS BEFORE CHANGING PROGRESS (i guess)"""
         self.DownloadProgress.setFormat("%p%")
         self.DownloadProgress.setRange(0,100)
         self.taskbarProgress.setRange(0,100)
+        self.window.setWindowTitle(f"youtube-dl GUI - ?%")
     def SetProgressColour(self,colour:QColor=QColor(57,165,234)):
         c = colour
         self.DownloadProgress.setStyleSheet(f"selection-background-color: rgb({c.red()},{c.green()},{c.blue()})")
@@ -594,6 +598,7 @@ Stopped at: #{self.a2fo.currNum+1} ({self.a2fo.progress}%)""")
         
         self.taskbarProgress.setValue(0)
         self.SetProgressColour()
+        self.window.setWindowTitle("youtube-dl GUI")
     
     def DestinationSelectPrompt(self) -> str:
         filenameFilter = ""
