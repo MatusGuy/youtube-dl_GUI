@@ -18,7 +18,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>C:/Users/Mateus/.designer/assets/ytdl.png</normaloff>C:/Users/Mateus/.designer/assets/ytdl.png</iconset>
+    <normaloff>../../../../Users/Mateus/.designer/assets/ytdl.png</normaloff>../../../../Users/Mateus/.designer/assets/ytdl.png</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true">QToolButton:hover,.QPushButton:hover{
@@ -908,9 +908,6 @@ font: 9pt &quot;Consolas&quot;;</string>
   <action name="DownloadGraph">
    <property name="checkable">
     <bool>true</bool>
-   </property>
-   <property name="enabled">
-    <bool>false</bool>
    </property>
    <property name="icon">
     <iconset>
