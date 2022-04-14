@@ -28,7 +28,8 @@ from interface.aboutWindow import AboutDialog as aw
 from interface.addswitchesDialog import AdditionalSwitchesDialog as ad
 from interface.cmdhelpWindow import CmdHelpDialog as ch
 from components.prefMng import PreferencesManager as pm
-from interface.Completers import templateCompleter
+
+import numpy
 
 class MainWindow(ui,QObject):
     window = QMainWindow
@@ -104,11 +105,6 @@ class MainWindow(ui,QObject):
         super().__init__()
         self.defaultStyleSheet = self.window.styleSheet()
 
-        if EXCLUDE_DISABLED: self._ExcludeObjects([
-            self.DwGraphDock,
-            self.DownloadGraph
-        ])
-
         self.aboutDialog = aw(version)
         self.addSwitchesDialog = ad(windowicon=WDIR+"assets/ytdl.png")
 
@@ -129,11 +125,12 @@ class MainWindow(ui,QObject):
         self.DwItems.setStyle(QStyleFactory.create("WindowsVista"))
         self.DwItemsListWidget.setStyle(QStyleFactory.create("Fusion"))
         self.DwItemsList.setColumnWidth(0,230)
+        DWLMenu(self.DwItemsList,self.app.clipboard(),self.DwItemsListWidget)
+
+        self.InitDwGraph()
 
         self.addSwitchesDialog._SetAudio(self.AudioOption.isChecked())
         self.LoadSettings()
-
-        DWLMenu(self.DwItemsList,self.app.clipboard(),self.DwItemsListWidget)
 
         self.addSwitchesDialog.HelpMenu.setMenu(self.CommandHelpMenu)
         self.addSwitchesDialog.HelpMenu.pressed.connect(self.YtdlGetHelp)
@@ -169,13 +166,25 @@ class MainWindow(ui,QObject):
         if whileInit!=None: whileInit()
 
         self.CloseDwGraph()
-        self._ExcludeObjects([self.DwGraphDock])
+        #self._ExcludeObjects([self.DwGraphDock])
         self.CenterWindow()
         self.window.show() ##############################
         #self.window.frameGeometry().moveCenter(QDesktopWidget().availableGeometry().center())
 
         self.InitWinTaskbarFeatures()
 
+    def InitDwGraph(self):
+        self.CloseDwGraph()
+        self.DwGraphDock.installEventFilter(self)
+        self.DownloadGraph.toggled.connect(self.SetDwGraphOpen)
+        self.DwGraphDock.setStyle(QStyleFactory.create("WindowsVista"))
+        
+        self.DwGraph.setLabel("left","Download speed",units="MiB/s")
+        self.DwGraph.setLabel("bottom","Download duration",units="s")
+        self.DwGraph.setDownsampling(mode="peak")
+        self.DwGraph.setClipToView(True)
+        self.DwGraph.setLimits(yMin=0)
+    
     def InitWinTaskbarFeatures(self):
         self.taskbarButton = QWinTaskbarButton(self.window)
         self.taskbarButton.setWindow(self.window.windowHandle())
