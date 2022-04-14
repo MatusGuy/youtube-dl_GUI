@@ -667,7 +667,5 @@ Stopped at: #{self.a2fo.currNum+1} ({self.a2fo.progress}%)""")
 
         self.prefMng.WriteJSON(self.prefMng.filename,self.prefMng.settings)
 
-        self._ExcludeObjects(self.window.children())
-
     def RefreshStyle(self): self.app.setStyle('Fusion')
     def RefreshStyleSheet(self): self.window.setStyleSheet(self.defaultStyleSheet)
