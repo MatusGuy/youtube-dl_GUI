@@ -20,6 +20,7 @@ class Downloader(QThread):
     download_info_default={
                     "IS_DOWNLOADING":False,
                     "TOTAL_FILES":1,
+                    "SPEED_FLOAT":0.0,
                     "CURR":{
                         "FILE_NAME":"",
                         "FILE_NUM":1,
@@ -161,6 +162,7 @@ class Downloader(QThread):
             speedPower    = 2 if "MiB/s" in speed else 1
             speedValue    = float(speed.removesuffix("KiB/s").removesuffix("MiB/s"))
             speedBytes    = speedValue*(1024**speedPower)
+            self.download_info["SPEED_FLOAT"] = speedValue
 
             #totalFiles, fileNum, SizeBytes, speedBytes, progress
 
