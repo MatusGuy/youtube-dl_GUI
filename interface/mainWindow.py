@@ -183,7 +183,13 @@ class MainWindow(ui,QObject):
         self.DwGraph.setLabel("bottom","Download duration",units="s")
         self.DwGraph.setDownsampling(mode="peak")
         self.DwGraph.setClipToView(True)
-        self.DwGraph.setLimits(yMin=0)
+        self.DwGraph.setLimits(yMin=0,xMin=0)
+
+        self.DwGraph.setAutoPan(x=True,y=True)
+        self.DwGraph.setAspectLocked(False)
+        self.DwGraph.setAutoVisible(y=1.0)
+        self.DwGraph.enableAutoRange('y', 0.95)
+        self.DwGraph.enableAutoRange('x', 0.95)
     
     def InitWinTaskbarFeatures(self):
         self.taskbarButton = QWinTaskbarButton(self.window)
