@@ -4,6 +4,7 @@ sys.path.insert(1,'.')
 from webbrowser import open_new_tab as OpenURL
 from pathlib import Path
 from types import FunctionType
+from ctypes import windll as ctypesWindll
 
 from interface.mainUi import Ui_MainWindow as ui
 
@@ -153,6 +154,7 @@ class MainWindow(ui,QObject):
         self.ProxySettings.triggered.connect(self.ProxySettingsDialog)
 
         self.AFOperation.triggered.connect(self.Album2Folder)
+        self.ShortcutSetup.triggered.connect(self.SetupStartMenuShortcut)
 
         self.youtube_dlHelp.triggered.connect(self.YtdlGetHelp)
         self.ffmpegHelp.triggered.connect(self.FfmpegGetHelp)
@@ -239,6 +241,10 @@ Stopped at: #{self.a2fo.currNum+1} ({self.a2fo.progress}%)""")
             self.a2fo.SetProcess("")
             self._ExcludeObjects([msg])
     
+    def SetupStartMenuShortcut(self):
+        # ask for admin to copy things into start menu folder
+        ctypesWindll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
+
     def LoadSettings(self):
         settings = self.prefMng.settings
 
