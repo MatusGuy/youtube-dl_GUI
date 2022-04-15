@@ -1,11 +1,13 @@
 import sys,ctypes
 from PyQt5.QtGui import QIcon, QColor
-from PyQt5.QtCore import QObject
+from PyQt5.QtCore import QObject, QElapsedTimer
 from PyQt5.QtWidgets import QApplication,QMainWindow,QMenu,QAction
 from dist import pydist as pd
 IS_BUNDLE = pd.__PyDist__._isBundle
 
-import py_mysplash as psh
+from numpy import array as pyCreateNdArray, append as ndArrayAppend
+
+#import py_mysplash as psh
 
 from components import downloader as dl, versionChecker as vc, prefMng as pm
 
@@ -34,6 +36,9 @@ class Program(mw.MainWindow,QObject):
     error = ""
 
     ignoredNewVersion = False
+
+    speedPlots = pyCreateNdArray([])
+    timePlots  = pyCreateNdArray([0])
 
     def InitTestMenus(self):
         testsMenu = QMenu("Tests/Debug",self.MenuBar)
@@ -85,6 +90,8 @@ class Program(mw.MainWindow,QObject):
         #self.SetDownloadCallback(self.DownloadCallback)
         self.InitConnections()
         self.SetProgressColour()
+
+        self.timePlotsTimer = QElapsedTimer()
 
         #self.versionChecker = vc.VersionChecker(self.AlertVersion,60000)
         #self.versionChecker.StartChecking()
@@ -145,9 +152,22 @@ class Program(mw.MainWindow,QObject):
             current=info["CURR"]["FILE_NAME"],
             files=f'{info["CURR"]["FILE_NUM"]}/{info["TOTAL_FILES"]}'
         )
+
         self.ListToDwList(dwList)
 
+        if info["CURR"]["PROCESS"] == "Download":
+            secs = self.timePlotsTimer.elapsed()
+            self.timePlotsTimer.invalidate()
+            ndArrayAppend(self.timePlots,self.timePlots[-1]+(secs*1000))
+
+            ndArrayAppend(self.speedPlots,info["SPEED_FLOAT"])
+            self.DwGraphPlot.setData(x=self.timePlots,y=self.speedPlots)
+        
+        self.timePlotsTimer.start()
+
     def Downloaded_Ended(self,errorcode):
+        self.timePlotsTimer.invalidate()
+
         self.ShowStatusMessage("Download ended",200000)
         self.AppendConsoleHtml('<body style="color:aqua;">Download process ended</body>')
         self.DownloadEndDialog(errorcode,self.downloader.download_info["ERROR"])
@@ -165,7 +185,7 @@ def window():
         app=app
     )
 
-    psh.Splash_loadcomplete(0)
+    #psh.Splash_loadcomplete(0)
     #cr.attach_console()
     app.exec_()
     #cr.detach_console()

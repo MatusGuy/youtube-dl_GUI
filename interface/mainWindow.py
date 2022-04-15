@@ -1,4 +1,5 @@
 import sys,os
+from turtle import width
 sys.path.insert(1,'.')
 
 from webbrowser import open_new_tab as OpenURL
@@ -14,6 +15,7 @@ from PyQt5.QtCore import QObject, Qt, QEvent
 from PyQt5.QtWinExtras import QWinTaskbarButton, QWinThumbnailToolBar, QWinThumbnailToolButton
 
 from win10toast_click import ToastNotifier
+from pyqtgraph import mkPen as pyqtgMkPen
 
 EXCLUDE_DISABLED = False
 
@@ -28,8 +30,6 @@ from interface.aboutWindow import AboutDialog as aw
 from interface.addswitchesDialog import AdditionalSwitchesDialog as ad
 from interface.cmdhelpWindow import CmdHelpDialog as ch
 from components.prefMng import PreferencesManager as pm
-
-import numpy
 
 class MainWindow(ui,QObject):
     window = QMainWindow
@@ -190,6 +190,8 @@ class MainWindow(ui,QObject):
         self.DwGraph.setAutoVisible(y=1.0)
         self.DwGraph.enableAutoRange('y', 0.95)
         self.DwGraph.enableAutoRange('x', 0.95)
+
+        self.DwGraphPlot = self.DwGraph.plot(pen=pyqtgMkPen(color=(45, 135, 255),width=4.5))
     
     def InitWinTaskbarFeatures(self):
         self.taskbarButton = QWinTaskbarButton(self.window)
