@@ -18,7 +18,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>C:/Users/Mateus/.designer/assets/ytdl.png</normaloff>C:/Users/Mateus/.designer/assets/ytdl.png</iconset>
+    <normaloff>../../../../Users/Mateus/.designer/assets/ytdl.png</normaloff>../../../../Users/Mateus/.designer/assets/ytdl.png</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true">QToolButton:hover,.QPushButton:hover{
@@ -609,6 +609,8 @@ download!</string>
      <string>Tools</string>
     </property>
     <addaction name="AFOperation"/>
+    <addaction name="separator"/>
+    <addaction name="ShortcutSetup"/>
    </widget>
    <addaction name="Preferences"/>
    <addaction name="ViewMenu"/>
@@ -957,6 +959,15 @@ font: 9pt &quot;Consolas&quot;;</string>
    </property>
    <property name="text">
     <string>Album folder organizer</string>
+   </property>
+  </action>
+  <action name="ShortcutSetup">
+   <property name="icon">
+    <iconset>
+     <normaloff>../assets/shortcut.png</normaloff>../assets/shortcut.png</iconset>
+   </property>
+   <property name="text">
+    <string>Start menu shortcut setup</string>
    </property>
   </action>
  </widget>
