@@ -9,8 +9,6 @@ import py_mysplash as psh
 
 from components import downloader as dl, versionChecker as vc, prefMng as pm
 
-from components import ConsoleR as cr
-
 from interface import mainWindow as mw
 
 #from settingsGuis.themePrompt_class import Ui_ChangeTheme as ThemesGui
